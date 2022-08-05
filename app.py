@@ -1,11 +1,8 @@
-from flask import Flask, render_template
+from website import create_app
 
-app = Flask(__name__)
 
-@app.route("/")
-@app.route("/index")
-def index():
-	return render_template("index.html")
+
+app = create_app()
 
 if __name__ == '__main__':
-	app.run(debug=True)
+  app.run(debug=True)
