@@ -1,0 +1,14 @@
+{
+  "name": "smaug",
+  "version": "1.0.0",
+  "description": "System Monitorowania i Audytu Użytecznych Gówienek",
+  "main": "index.js",
+  "devDependencies": {
+    "tailwindcss": "^3.1.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
