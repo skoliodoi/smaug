@@ -1,0 +1,73 @@
+{%extends "index.html"%}{%block title%}Historia sprzętu{%endblock%}{%block content%}
+
+<!-- This example requires Tailwind CSS v2.0+ -->
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-xl font-semibold text-gray-900">{{barcode}}</h1>
+      <p class="mt-2 text-sm text-gray-700">Dodany {{date}} przez {{creator}}</p>
+    </div>
+    <!-- <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+      <a href="/get_data"> <button type="button"
+          class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Pobierz
+          dostępny sprzęt</button></a>
+    </div> -->
+  </div>
+  <div class="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
+    <table class="min-w-full divide-y divide-gray-300">
+      <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Status</th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Mocarz ID osoby wypożyczającej
+          </th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Data udostępnienia
+          </th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Osoba udostępniająca
+          </th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Data zwrotu</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Osoba przyjmująca zwrot</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Uwagi</th>
+
+          <!-- <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Marka
+          </th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Model
+          </th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Serial</th>
+
+          <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+            <span class="sr-only">Edit</span>
+          </th> -->
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        {%for item in history%}
+        <tr>
+          <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+            {{item['rented_status']}}
+            <dl class="font-normal lg:hidden">
+              <dt class="sr-only">{{item['mocarz_id']}}</dt>
+              <dd class="mt-1 truncate text-gray-700">{{item['rent_date']}}</dd>
+              <dd class="mt-1 truncate text-gray-500 sm:hidden">{{item['who_rented']}}</dd>
+            </dl>
+          </td>
+          <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">{{item['mocarz_id']}}</td>
+          <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{item['rent_date']}}</td>
+          <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{item['who_rented']}}</td>
+          <td class="px-3 py-4 text-sm text-gray-500">{{item['return_date']}}</td>
+          <td class="px-3 py-4 text-sm text-gray-500">{{item['who_accepted_return'] }}</td>
+          <td class="px-3 py-4 text-sm text-gray-500">{{item['notes'] }}</td>
+
+        </tr>
+        {%endfor%}
+
+
+        <!-- More people... -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+{%endblock%}
