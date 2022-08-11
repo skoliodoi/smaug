@@ -15,7 +15,7 @@ def index():
         hardware_rented = 'Nieudostępniony'
         who_rented = ''
         rent_date = ''
-        if request.form.get('mocarz') != None and request.form.get('mocarz') != "":
+        if request.form.get('mocarz-id') != None and request.form.get('mocarz-id') != "":
             hardware_rented = 'Udostępniony'
             who_rented = 'Osoba udostępniająca'
             rent_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -24,14 +24,15 @@ def index():
             'type': request.form.get('type'),
             'mark': request.form.get('marka'),
             'model': request.form.get('model'),
+            'status': request.form.get('status'),
+            'bitlocker': request.form.get('bitlocker'),
             'serial': request.form.get('serial'),
-            'kartoteka': request.form.get('kartoteka'),
-            'mocarz_id': request.form.get('mocarz'),
+            'identyfikator': request.form.get('identyfikator'),
+            'klucz_odzyskiwana': request.form.get('klucz-odzyskiwania'),
+            'mocarz_id': request.form.get('mocarz-id'),
             'projekt': request.form.get('projekt'),
             'lokalizacja': request.form.get('lokalizacja'),
             'mpk': request.form.get('mpk'),
-            'bitlocker1': request.form.get('bitlocker-1'),
-            'bitlocker2': request.form.get('bitlocker-2'),
             'notes': request.form.get('notes'),
             'rented_status': hardware_rented,
             'upload_date': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -45,14 +46,31 @@ def index():
         return (redirect(url_for('main.index')))
     else:
         pass
-    return render_template('add_items.html', hardware_data=False, type_list=type, mark_list=marka, model_list=model, mpk_list=mpk, kartoteka=kartoteka, projekt=projekt, lokalizacja=lokalizacja)
+    return render_template('add_items.html',
+                           hardware_data=False,
+                           type_list=type,
+                           mark_list=marka,
+                           model_list=model,
+                           status_list=hardware_status,
+                           projekt=projekt,
+                           lokalizacja=lokalizacja)
 
 
 @main.route('/get_data')
 def get_data():
     free_items = items.find({'rented_status': "Nieudostępniony"})
-
     return render_template('all_items.html', items=free_items)
+
+
+@main.route('/paperwork', methods=['GET', 'POST'])
+def paperwork():
+    free_items = items.find({'rented_status': "Nieudostępniony"})
+    if request.method == 'POST':
+        barcodes = request.form.getlist('barcodes')
+        print(barcodes)
+        return redirect(url_for('main.paperwork'))
+
+    return render_template('add_paperwork.html', kartoteka=kartoteka, mpk_list=mpk, available_barcodes=free_items)
 
 
 @main.route('/rent_hardware/<barcode>', methods=['GET', 'POST'])

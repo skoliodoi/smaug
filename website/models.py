@@ -18,6 +18,8 @@ type = ['AccesPoint',
         'Zestaw WideoKonferencyjny',
         ]
 
+hardware_status = ['Sprawny', 'Uszkodzony/Serwis', 'Utylizacja']
+
 marka = ['AccesPoint',
          'ACER',
          'AOC',

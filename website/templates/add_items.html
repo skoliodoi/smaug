@@ -33,7 +33,7 @@
             <input type="text" name="barcode" id="barcode" autocomplete="barcode"
               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
           </div>
-          <div class="grid grid-cols-6 gap-8">
+          <div class="grid grid-cols-8 gap-8">
             <div class="col-span-6 sm:col-span-6 lg:col-span-2">
               <label for="type" class="block text-sm font-medium text-gray-700">Typ</label>
               <select id="type" name="type" autocomplete="type"
@@ -67,6 +67,20 @@
                 {%endfor%}
               </select>
             </div>
+            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+              <label for="status" class="block text-sm font-medium text-gray-700">Stan</label>
+              <select id="status" name="status" autocomplete="status"
+                class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                {%for status in status_list%}
+                <option>{{status}}</option>
+                {%endfor%}
+              </select>
+            </div>
+            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+              <label for="bitlocker" class="block text-sm font-medium text-gray-700">Pin/hasło (bitlocker)</label>
+              <input type="text" name="bitlocker" id="bitlocker" autocomplete="bitlocker"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
 
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
               <label for="serial" class="block text-sm font-medium text-gray-700">Nazwa/serial</label>
@@ -74,14 +88,17 @@
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <label for="kartoteka" class="block text-sm font-medium text-gray-700">Kartoteka Typ</label>
-              <select id="kartoteka" name="kartoteka" autocomplete="kartoteka"
-                class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option></option>
-                {%for typ in kartoteka%}
-                <option>{{typ}}</option>
-                {%endfor%}
-              </select>
+              <label for="identyfikator" class="block text-sm font-medium text-gray-700">Indentyfikator klucza
+                odzyskiwania
+              </label>
+              <input type="text" name="identyfikator" id="identyfikator" autocomplete="identyfikator"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+              <label for="klucz-odzyskiwania" class="block text-sm font-medium text-gray-700">Klucz/dysk odzyskiwania
+              </label>
+              <input type="text" name="klucz-odzyskiwania" id="klucz-odzyskiwania" autocomplete="klucz-odzyskiwania"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
 
 

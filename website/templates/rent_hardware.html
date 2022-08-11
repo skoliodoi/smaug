@@ -1,6 +1,6 @@
 <div class="col-span-6 sm:col-span-6 lg:col-span-2">
-  <label for="mocarz" class="block text-sm font-medium text-gray-700">Mocarz ID</label>
-  <input type="text" name="mocarz" id="mocarz" autocomplete="mocarz"
+  <label for="mocarz-id" class="block text-sm font-medium text-gray-700">Mocarz ID</label>
+  <input type="text" name="mocarz-id" id="mocarz-id" autocomplete="mocarz-id"
     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 </div>
 
@@ -27,25 +27,3 @@
   </select>
 </div>
 
-<div class="col-span-6 sm:col-span-3 lg:col-span-2">
-  <label for="mpk" class="block text-sm font-medium text-gray-700">MPK</label>
-  <select id="mpk" name="mpk" autocomplete="mpk"
-    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-    <option></option>
-    {%for each in mpk_list%}
-    <option>{{each}}</option>
-    {%endfor%}
-  </select>
-</div>
-<div class="col-span-6 sm:col-span-3 lg:col-span-2">
-  <label for="bitlocker-1" class="block text-sm font-medium text-gray-700">Indentyfikator klucza odzyskiwania
-  </label>
-  <input type="text" name="bitlocker-1" id="bitlocker-1" autocomplete="bitlocker-1"
-    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-</div>
-<div class="col-span-6 sm:col-span-3 lg:col-span-2">
-  <label for="bitlocker-2" class="block text-sm font-medium text-gray-700">Klucz/dysk odzyskiwania
-  </label>
-  <input type="text" name="bitlocker-2" id="bitlocker-2" autocomplete="bitlocker-2"
-    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-</div>
