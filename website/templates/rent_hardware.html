@@ -1,22 +1,26 @@
 <div class="col-span-6 sm:col-span-6 lg:col-span-2">
-  <label for="mocarz-id" class="block text-sm font-medium text-gray-700">Mocarz ID</label>
+  <!-- <label for="mocarz-id" class="block text-sm font-medium text-gray-700">Mocarz ID</label>
   <input type="text" name="mocarz-id" id="mocarz-id" autocomplete="mocarz-id"
-    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
+  {{form.mocarz_id.label(class="block text-sm font-medium text-gray-700")}}
+  {{form.mocarz_id(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
 </div>
 
 <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-  <label for="projekt" class="block text-sm font-medium text-gray-700">Projekt/Stanowisko</label>
+  <!-- <label for="projekt" class="block text-sm font-medium text-gray-700">Projekt/Stanowisko</label>
   <select id="projekt" name="projekt" autocomplete="projekt"
     class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
     <option></option>
     {%for p in projekt%}
     <option>{{p}}</option>
     {%endfor%}
-  </select>
+  </select> -->
+  {{form.projekt.label(class="block text-sm font-medium text-gray-700")}}
+  {{form.projekt(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
 </div>
 
 <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-  <label for="lokalizacja" class="block text-sm font-medium text-gray-700">Lokalizacja</label>
+  <!-- <label for="lokalizacja" class="block text-sm font-medium text-gray-700">Lokalizacja</label>
   <select id="lokalizacja" name="lokalizacja" autocomplete="lokalizacja"
     class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
     <option></option>
@@ -24,6 +28,8 @@
     {%for place in lokalizacja%}
     <option>{{place}}</option>
     {%endfor%}
-  </select>
+  </select> -->
+  {{form.lokalizacja.label(class="block text-sm font-medium text-gray-700")}}
+  {{form.lokalizacja(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
 </div>
 

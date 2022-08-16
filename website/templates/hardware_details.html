@@ -1,31 +1,53 @@
-<div class="col-span-6 sm:col-span-1">
-  <dt class="text-sm font-medium text-gray-500">Barcode</dt>
-  <dd class="mt-1 text-sm text-gray-900">{{hardware_data['barcode']}}</dd>
+<div class="grid grid-cols-8 gap-8">
+  <div class="col-span-6 sm:col-span-6 lg:col-span-6">
+    <dt class="text-sm font-medium text-gray-500">Barcode</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['barcode']}}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-6 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">Stanowisko</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['stanowisko']}}</dd>
+  </div>
 </div>
-<div class="grid grid-cols-6 gap-8">
+<div class="grid grid-cols-8 gap-8">
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Typ</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['type']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['typ']}}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Marka</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['mark']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['marka']}}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Model</dt>
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['model']}}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">Stan</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['stan']}}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">PIN/Hasło</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['bitlocker']}}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Nazwa/serial</dt>
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['serial']}}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-    <dt class="text-sm font-medium text-gray-500">Kartoteka typ</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['kartoteka']}}</dd>
+    <dt class="text-sm font-medium text-gray-500">
+      Indentyfikator klucza odzyskiwania</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['identyfikator']}}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">Klucz/dysk odzyskiwania</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['klucz_odzyskiwania']}}</dd>
+  </div>
+  <!-- <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">Kartoteka typ</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['kartoteka']}}</dd>
+  </div> -->
+  <!-- <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Status</dt>
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['rented_status']}}</dd>
-
-  </div>
+  </div> -->
 </div>

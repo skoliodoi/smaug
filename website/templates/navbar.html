@@ -41,16 +41,65 @@
       </div>
       <div class="hidden sm:block sm:ml-6">
         <div class="flex space-x-4">
+
+          <button id="dropdownDefault" data-dropdown-toggle="dropdown"
+            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+            type="button">Dodaj</button>
+          <!-- Dropdown menu -->
+          <div id="dropdown" class="z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 hidden"
+            style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(319px, 70px);"
+            data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="bottom">
+            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
+              <li>
+                <a href="/hardware/add"
+                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęt</a>
+              </li>
+              <li>
+                <a href="/paperwork/add"
+                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dokumenty</a>
+              </li>
+              <li>
+                <a href="#"
+                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęty
+                  administracyjne</a>
+              </li>
+            </ul>
+          </div>
+          <button id="show_all" data-dropdown-toggle="dropdown_show_all"
+            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+            type="button">Pokaż wszystkie</button>
+          <!-- Dropdown menu -->
+          <div id="dropdown_show_all" class="z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 hidden"
+            style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(319px, 70px);"
+            data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="bottom">
+            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="show_all">
+              <li>
+                <a href="/hardware/all"
+                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęty</a>
+              </li>
+              <li>
+                <a href="/paperwork/add"
+                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dokumenty</a>
+              </li>
+              <li>
+                <a href="#"
+                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęty
+                  administracyjne</a>
+              </li>
+            </ul>
+          </div>
+
           <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-          <a href="/" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-            aria-current="page">Dodaj/udostępnij sprzęt</a>
+          <!-- <a href="/hardware/add" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+            aria-current="page">Dodaj/udostępnij sprzęt</a> -->
 
-          <a href="/all"
-            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Pokaż wszystko</a>
+          <a href="/hardware/all"
+            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Pokaż
+            wszystko</a>
 
-          <a href="/paperwork"
-            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Księgowość</a>
-<!-- 
+          <!-- <a href="/paperwork"
+            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Księgowość</a> -->
+          <!-- 
           <a href="#"
             class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Calendar</a> -->
         </div>

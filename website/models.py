@@ -1,26 +1,28 @@
-type = ['AccesPoint',
-        'Drukarka',
-        'Komputer',
-        'Konsola',
-        'Laptop',
-        'Media Gateway',
-        'Monitor',
-        'NAS',
-        'Projektor',
-        'Radio',
-        'Router',
-        'Serwer',
-        'Switch',
-        'Telefon',
-        'Telefon IP',
-        'Telewizor',
-        'Terminal',
-        'Zestaw WideoKonferencyjny',
-        ]
+type = [
+    '',
+    'AccesPoint',
+    'Drukarka',
+    'Komputer',
+    'Konsola',
+    'Laptop',
+    'Media Gateway',
+    'Monitor',
+    'NAS',
+    'Projektor',
+    'Radio',
+    'Router',
+    'Serwer',
+    'Switch',
+    'Telefon',
+    'Telefon IP',
+    'Telewizor',
+    'Terminal',
+    'Zestaw WideoKonferencyjny',
+]
 
 hardware_status = ['Sprawny', 'Uszkodzony/Serwis', 'Utylizacja']
 
-marka = ['AccesPoint',
+marka = ['', 'AccesPoint',
          'ACER',
          'AOC',
          'APC',
@@ -54,7 +56,7 @@ marka = ['AccesPoint',
          'Xbox',
          ]
 
-model = ['1708 FPT',
+model = ['', '1708 FPT',
          '17S1SB',
          '1905FP',
          '1907FPT',
@@ -262,7 +264,7 @@ model = ['1708 FPT',
          'XL-B510',
          ]
 
-mpk = ['V101',
+mpk = ['','V101',
        'V106',
        'V107',
        'V108',
@@ -276,6 +278,6 @@ mpk = ['V101',
 
 kartoteka = ["Środek trwały", "Leasing"]
 
-projekt = ["Allegro", "Circle K", "PZU", "Also", "Dr Smile", "Zwift"]
+projekt = ['', "Allegro", "Circle K", "PZU", "Also", "Dr Smile", "Zwift"]
 
-lokalizacja = ["COW", "COL", "COLu"]
+lokalizacja = ['', "COW", "COL", "COLu"]

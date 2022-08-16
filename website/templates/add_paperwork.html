@@ -19,61 +19,65 @@
                     Przypisz sprzęt do tej faktury
                   </label>
                 </div> -->
-                <!-- <div class="col-span-6 sm:col-span-3 lg:col-span-6" id="add_paperwork_container">
-                  <label for="barcode" class="block text-sm font-medium text-gray-700 ">Barcode</label>
-                  <select id="barcode" name="barcode" autocomplete="barcode"
-                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-
-                    <option></option>
-
-
-                  </select>
-                </div> -->
+                <div class="col-span-6 sm:col-span-3 lg:col-span-6" id="add_paperwork_container">
+                  {%include "barcode_select.html"%}
+                </div>
 
 
               </div>
             </div>
           </div>
           <div class="grid grid-cols-6 gap-8">
+            {{form.hidden_tag()}}
 
             <div class="col-span-6 sm:col-span-3 lg:col-span-3">
-              <label for="barcode" class="block text-sm font-medium text-gray-700">Kartoteka NIW</label>
-              <input type="text" name="barcode" id="barcode" autocomplete="barcode"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              {{form.kartoteka.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.kartoteka(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              <!-- <label for="kartoteka_nr" class="block text-sm font-medium text-gray-700">Kartoteka NIW</label>
+              <input type="text" name="kartoteka_nr" id="kartoteka_nr" autocomplete="kartoteka_nr"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
             </div>
             <div class="col-span-6 sm:col-span-3 lg:col-span-3">
-              <label for="barcode" class="block text-sm font-medium text-gray-700">Numer zewnętrzny</label>
-              <input type="text" name="barcode" id="barcode" autocomplete="barcode"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              {{form.faktury.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.faktury(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              <!-- <label for="faktury" class="block text-sm font-medium text-gray-700">Numery faktur</label>
+              <input type="text" name="faktury" id="faktury" autocomplete="faktury"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
             </div>
           </div>
 
           <div class="grid grid-cols-6 gap-8">
 
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <label for="kartoteka" class="block text-sm font-medium text-gray-700">Kartoteka Typ</label>
-              <select id="kartoteka" name="kartoteka" autocomplete="kartoteka"
+              {{form.kartoteka_typ.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.kartoteka_typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              <!-- <label for="kartoteka_typ" class="block text-sm font-medium text-gray-700">Kartoteka Typ</label> -->
+              <!-- <select id="kartoteka_typ" name="kartoteka_typ" autocomplete="kartoteka_typ"
                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 <option></option>
                 {%for typ in kartoteka%}
                 <option>{{typ}}</option>
                 {%endfor%}
-              </select>
+              </select> -->
             </div>
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <label for="mpk" class="block text-sm font-medium text-gray-700">MPK</label>
+              {{form.mpk.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.mpk(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              <!-- <label for="mpk" class="block text-sm font-medium text-gray-700">MPK</label>
               <select id="mpk" name="mpk" autocomplete="mpk"
                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 <option></option>
                 {%for each in mpk_list%}
                 <option>{{each}}</option>
                 {%endfor%}
-              </select>
+              </select> -->
             </div>
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <label for="data" class="block text-sm font-medium text-gray-700">Data przyjęcia</label>
-              <input type="date"
-                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+              {{form.data_przyjecia.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.data_przyjecia(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              <!-- <label for="data" class="block text-sm font-medium text-gray-700">Data przyjęcia</label>
+              <input type="date" name="data_faktury"
+                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" /> -->
             </div>
 
           </div>
@@ -88,12 +92,11 @@
 
         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
           <button type="submit"
-            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dodaj</button>
         </div>
       </div>
     </form>
-
-
   </div>
 </div>
+
 {%endblock%}

@@ -28,36 +28,61 @@
             <!-- <p class="mt-1 text-sm text-gray-500">Use a permanent address where you can recieve mail.</p> -->
           </div>
           {%if hardware_data == False%}
-          <div class="col-span-6">
-            <label for="barcode" class="block text-sm font-medium text-gray-700">Barcode</label>
-            <input type="text" name="barcode" id="barcode" autocomplete="barcode"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <div class="grid grid-cols-8 gap-8">
+            <div class="col-span-6">
+              {{form.hidden_tag()}}
+              <!-- <label for="barcode" class="block text-sm font-medium text-gray-700">Barcode</label>
+              <input type="text" name="barcode" id="barcode" autocomplete="barcode"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
+              {{form.barcode.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.barcode(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+            </div>
+            <div class="col-span-6 sm:col-span-6 lg:col-span-2">
+              {{form.stanowisko.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.stanowisko(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              <!-- <label for="stanowisko" class="block text-sm font-medium text-gray-700">Stanowisko</label>
+              <select id="type" name="type" autocomplete="type"
+                class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option></option>
+                {%for stanowisko in stanowiska%}
+                <option>{{stanowisko}}</option>
+                {%endfor%}
+              </select> -->
+            </div>
           </div>
           <div class="grid grid-cols-8 gap-8">
             <div class="col-span-6 sm:col-span-6 lg:col-span-2">
-              <label for="type" class="block text-sm font-medium text-gray-700">Typ</label>
+              {{form.typ.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              <!-- <label for="type" class="block text-sm font-medium text-gray-700">Typ</label>
               <select id="type" name="type" autocomplete="type"
                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 <option></option>
                 {%for type in type_list%}
                 <option>{{type}}</option>
                 {%endfor%}
-              </select>
+              </select> -->
             </div>
 
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <label for="marka" class="block text-sm font-medium text-gray-700">Marka</label>
+              <!-- <label for="marka" class="block text-sm font-medium text-gray-700">Marka</label>
               <select id="marka" name="marka" autocomplete="marka"
                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 <option></option>
                 {%for mark in mark_list%}
                 <option>{{mark}}</option>
                 {%endfor%}
-              </select>
+              </select> -->
+              {{form.marka.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.marka(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
             </div>
 
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <label for="model" class="block text-sm font-medium text-gray-700">Model</label>
+              <!-- <label for="model" class="block text-sm font-medium text-gray-700">Model</label>
               <select id="model" name="model" autocomplete="model"
                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 <option></option>
@@ -65,40 +90,59 @@
                 {%for model in model_list%}
                 <option>{{model}}</option>
                 {%endfor%}
-              </select>
+              </select> -->
+              {{form.model.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.model(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
             </div>
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <label for="status" class="block text-sm font-medium text-gray-700">Stan</label>
+              <!-- <label for="status" class="block text-sm font-medium text-gray-700">Stan</label>
               <select id="status" name="status" autocomplete="status"
                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 {%for status in status_list%}
                 <option>{{status}}</option>
                 {%endfor%}
-              </select>
+              </select> -->
+              {{form.stan.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.stan(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
             </div>
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <label for="bitlocker" class="block text-sm font-medium text-gray-700">Pin/hasło (bitlocker)</label>
+              <!-- <label for="bitlocker" class="block text-sm font-medium text-gray-700">Pin/hasło (bitlocker)</label>
               <input type="text" name="bitlocker" id="bitlocker" autocomplete="bitlocker"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
+              {{form.bitlocker.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.bitlocker(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
             </div>
 
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <label for="serial" class="block text-sm font-medium text-gray-700">Nazwa/serial</label>
+              <!-- <label for="serial" class="block text-sm font-medium text-gray-700">Nazwa/serial</label>
               <input type="text" name="serial" id="serial" autocomplete="serial"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
+              {{form.serial.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.serial(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
             </div>
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <label for="identyfikator" class="block text-sm font-medium text-gray-700">Indentyfikator klucza
+              <!-- <label for="identyfikator" class="block text-sm font-medium text-gray-700">Indentyfikator klucza
                 odzyskiwania
               </label>
               <input type="text" name="identyfikator" id="identyfikator" autocomplete="identyfikator"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
+              {{form.identyfikator.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.identyfikator(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+              px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
             </div>
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <label for="klucz-odzyskiwania" class="block text-sm font-medium text-gray-700">Klucz/dysk odzyskiwania
+              <!-- <label for="klucz-odzyskiwania" class="block text-sm font-medium text-gray-700">Klucz/dysk odzyskiwania
               </label>
               <input type="text" name="klucz-odzyskiwania" id="klucz-odzyskiwania" autocomplete="klucz-odzyskiwania"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
+              {{form.klucz_odzyskiwania.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.klucz_odzyskiwania(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
             </div>
 
 
@@ -114,17 +158,19 @@
               {% include "rent_hardware.html"%}
             </div>
             <div>
-              <label for="notes" class="block text-sm font-medium text-gray-700">Notatki:</label>
+              <!-- <label for="notes" class="block text-sm font-medium text-gray-700">Notatki:</label>
               <div class="mt-1">
                 <textarea rows="4" name="notes" id="notes"
                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
-              </div>
+              </div> -->
+              {{form.notatki.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.notatki(class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md")}}
             </div>
           </div>
 
           <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
             <button type="submit"
-              class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+              class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dodaj</button>
           </div>
         </div>
     </form>
