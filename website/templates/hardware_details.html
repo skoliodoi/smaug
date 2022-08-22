@@ -7,8 +7,6 @@
     <dt class="text-sm font-medium text-gray-500">Stanowisko</dt>
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['stanowisko']}}</dd>
   </div>
-</div>
-<div class="grid grid-cols-8 gap-8">
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Typ</dt>
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['typ']}}</dd>
@@ -42,6 +40,12 @@
     <dt class="text-sm font-medium text-gray-500">Klucz/dysk odzyskiwania</dt>
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['klucz_odzyskiwania']}}</dd>
   </div>
+  {%if hardware_data['notatki']%}
+  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">Uwagi</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['notatki']}}</dd>
+  </div>
+  {%endif%}
   <!-- <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Kartoteka typ</dt>
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['kartoteka']}}</dd>

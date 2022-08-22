@@ -1,0 +1,48 @@
+<div class="grid grid-cols-8 gap-8">
+  <div class="col-span-6 sm:col-span-2 lg:col-span-3">
+    <dt class="text-sm font-medium text-gray-500">Nr kartoteki</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{paperwork_data['kartoteka']}}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-6 lg:col-span-3">
+    <dt class="text-sm font-medium text-gray-500">Typ kartoteki</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{paperwork_data['kartoteka_typ']}}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">MPK</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{paperwork_data['mpk']}}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+    <dt class="text-sm font-medium text-gray-500">Przypisane barcode'y</dt>
+    <dd class="mt-1 text-sm text-gray-900">            {%for each in paperwork_data['przypisane_barcodes']%}
+      {%if loop.index != paperwork_data['przypisane_barcodes']|length %}
+      {{each}},
+      {%else%}
+      {{each}}
+      {%endif%}
+      {%endfor%}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+    <dt class="text-sm font-medium text-gray-500">Przypisane faktury</dt>
+    <dd class="mt-1 text-sm text-gray-900">            {%for each in paperwork_data['przypisane_faktury']%}
+      {%if loop.index != paperwork_data['przypisane_faktury']|length %}
+      {{each}},
+      {%else%}
+      {{each}}
+      {%endif%}
+      {%endfor%}</dd>
+  </div>
+  {%if paperwork_data['notatki']%}
+  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">Uwagi</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{paperwork_data['notatki']}}</dd>
+  </div>
+  {%endif%}
+  <!-- <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">Kartoteka typ</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['kartoteka']}}</dd>
+  </div> -->
+  <!-- <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">Status</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['rented_status']}}</dd>
+  </div> -->
+</div>

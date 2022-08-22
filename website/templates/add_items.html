@@ -2,19 +2,17 @@
 {%endif%} {%endblock%} {%block content%}
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
   <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-          <div class="flex justify-between">
-            {%if hardware_data == False%}
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Dodaj urządzenie</h3>
-            {%else%}
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Udostępnij urządzenie</h3>
-            {%endif%}
+          <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">{{header_text}} urządzenie</h3>
+
             <div>
-              <div>
-                {%if hardware_data == False %}
-                <div class="form-check">
+              <div class="flex">
+                {%if hardware_data == False and edit == False %}
+                <div class="form-check" style="flex: 1">
+
                   <input
                     class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                     type="checkbox" value="" id="rent_hardware">
@@ -22,11 +20,20 @@
                     Chcę udostępnić ten sprzęt użytkownikowi
                   </label>
                 </div>
+
+                <a href="/hardware/add_file"
+                  class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+
+                  Dodaj z pliku</a>
+
                 {%endif%}
               </div>
+
+
             </div>
             <!-- <p class="mt-1 text-sm text-gray-500">Use a permanent address where you can recieve mail.</p> -->
           </div>
+
           {%if hardware_data == False%}
           <div class="grid grid-cols-8 gap-8">
             <div class="col-span-6">
@@ -51,8 +58,7 @@
                 {%endfor%}
               </select> -->
             </div>
-          </div>
-          <div class="grid grid-cols-8 gap-8">
+
             <div class="col-span-6 sm:col-span-6 lg:col-span-2">
               {{form.typ.label(class="block text-sm font-medium text-gray-700")}}
               {{form.typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
@@ -66,7 +72,6 @@
                 {%endfor%}
               </select> -->
             </div>
-
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
               <!-- <label for="marka" class="block text-sm font-medium text-gray-700">Marka</label>
               <select id="marka" name="marka" autocomplete="marka"
@@ -79,6 +84,7 @@
               {{form.marka.label(class="block text-sm font-medium text-gray-700")}}
               {{form.marka(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
               focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+
             </div>
 
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
@@ -141,7 +147,8 @@
               <input type="text" name="klucz-odzyskiwania" id="klucz-odzyskiwania" autocomplete="klucz-odzyskiwania"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
               {{form.klucz_odzyskiwania.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.klucz_odzyskiwania(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+              {{form.klucz_odzyskiwania(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm
+              py-2 px-3
               focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
             </div>
 
@@ -164,14 +171,15 @@
                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
               </div> -->
               {{form.notatki.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.notatki(class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md")}}
+              {{form.notatki(class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm
+              border-gray-300 rounded-md")}}
             </div>
           </div>
-
           <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
             <button type="submit"
-              class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dodaj</button>
+              class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{header_text}}</button>
           </div>
+
         </div>
     </form>
 

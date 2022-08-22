@@ -7,12 +7,44 @@
       <h1 class="text-xl font-semibold text-gray-900">Sprzęt</h1>
       <p class="mt-2 text-sm text-gray-700">Jaki sprzęcior, wariacie?</p>
     </div>
-    <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-      <a href="/hardware/get_data"> <button type="button"
-          class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Pobierz
-          dostępny sprzęt</button></a>
-    </div>
+
   </div>
+  <form action="" method="POST">
+    <div class="grid grid-cols-12 gap-4">
+      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+        {{form.typ.label(class="block text-sm font-medium text-gray-700")}}
+        {{form.typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+      </div>
+      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+        {{form.marka.label(class="block text-sm font-medium text-gray-700")}}
+        {{form.marka(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+      </div>
+      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+        {{form.model.label(class="block text-sm font-medium text-gray-700")}}
+        {{form.model(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+      </div>
+      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+        {{form.stan.label(class="block text-sm font-medium text-gray-700")}}
+        {{form.stan(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+      </div>
+      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+        {{form.rented.label(class="block text-sm font-medium text-gray-700")}}
+        {{form.rented(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+      </div>
+      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+        <br>
+        {{form.submit(class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600
+        px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2
+        focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto",style="cursor: pointer")}}
+      </div>
+
+    </div>
+  </form>
   <div class="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
     <table class="min-w-full divide-y divide-gray-300">
       <thead class="bg-gray-50">

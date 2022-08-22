@@ -8,6 +8,7 @@ from ..forms import AddPaperwork
 
 paperwork = Blueprint('paperwork', __name__)
 
+
 @paperwork.route('/add', methods=['GET', 'POST'])
 def add():
     form = AddPaperwork()
@@ -29,6 +30,12 @@ def add():
             db_items.update_one({'barcode': each}, {"$set": {
                 'kartoteka': form.kartoteka.data
             }})
-        return redirect(url_for('main.paperwork'))
+        return redirect(url_for('main.index'))
 
     return render_template('add_paperwork.html', form=form, available_barcodes=free_items)
+
+
+@paperwork.route('/all')
+def see_all():
+    all_items = db_paperwork.find({})
+    return render_template('all_papers.html', items=all_items)

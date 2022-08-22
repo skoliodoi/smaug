@@ -1,0 +1,101 @@
+{%extends "index.html"%}{%block title%}Zobacz wszystkie {%endblock%}{%block content%}
+
+<!-- This example requires Tailwind CSS v2.0+ -->
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-xl font-semibold text-gray-900">Dokumentacja</h1>
+      <p class="mt-2 text-sm text-gray-700">Jaki dokument, wariacie?</p>
+    </div>
+
+  </div>
+  <div class="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
+    <table class="min-w-full divide-y divide-gray-300">
+      <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Nr kartoteki
+          </th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Typ
+            kartoteki
+          </th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">MPK
+          </th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
+            Przypisane barcode'y:
+          </th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Przypisane faktury</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Uwagi</th>
+          <!-- <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+            <span class="sr-only">Edit</span>
+          </th> -->
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        {%for item in items%}
+        <tr>
+          <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+            {{item['kartoteka']}}
+            <dl class="font-normal lg:hidden">
+              <dt class="sr-only">{{item['kartoteka_typ']}}</dt>
+              <dd class="mt-1 truncate text-gray-700">{{item['mpk']}}</dd>
+              <dd class="mt-1 truncate text-gray-500 sm:hidden">
+                {%for each in item['przypisane_barcodes']%}
+                {{each}}
+                {%endfor%}
+              </dd>
+
+            </dl>
+          </td>
+          <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">{{item['kartoteka_typ']}}</td>
+          <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{item['mpk']}}</td>
+          <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+            {%for each in item['przypisane_barcodes']%}
+            {%if loop.index != item['przypisane_barcodes']|length %}
+            {{each}},
+            {%else%}
+            {{each}}
+            {%endif%}
+            {%endfor%}
+          <td class="px-3 py-4 text-sm text-gray-500">
+            {%for each in item['przypisane_faktury']%}
+            {%if loop.index != item['przypisane_faktury']|length %}
+            {{each}},
+            {%else%}
+            {{each}}
+            {%endif%}
+            {%endfor%}
+          </td>
+          <td class="px-3 py-4 text-sm text-gray-500">{{item['notatki']}}
+          </td>
+          <!-- <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+            <form method="POST">
+              <a href="/hardware/show_info/{{item['barcode']}}" class="text-indigo-600 hover:text-indigo-900">
+                <input type="button" name="{{item['barcode']}}">Zobacz szczegóły</a>
+            </form>
+            {%if item['rented_status'] == True%}
+            <form method="POST">
+              <a href="/hardware/return/{{item['barcode']}}" class="text-indigo-600 hover:text-indigo-900">
+                <input type="button" name="{{item['barcode']}}"> Zwróć sprzęt</a>
+            </form>
+            {%else%}
+            <form method="POST">
+              <a href="/hardware/rent/{{item['barcode']}}" class="text-indigo-600 hover:text-indigo-900">
+                <input type="button" name="{{item['barcode']}}"> Udostępnij sprzęt</a>
+            </form>
+            {%endif%}
+
+          </td> -->
+        </tr>
+        {%endfor%}
+
+
+        <!-- More people... -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+{%endblock%}
