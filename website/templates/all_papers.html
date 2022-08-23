@@ -25,9 +25,9 @@
           </th>
           <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Przypisane faktury</th>
           <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Uwagi</th>
-          <!-- <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+          <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
             <span class="sr-only">Edit</span>
-          </th> -->
+          </th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 bg-white">
@@ -67,24 +67,12 @@
           </td>
           <td class="px-3 py-4 text-sm text-gray-500">{{item['notatki']}}
           </td>
-          <!-- <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+          <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
             <form method="POST">
-              <a href="/hardware/show_info/{{item['barcode']}}" class="text-indigo-600 hover:text-indigo-900">
-                <input type="button" name="{{item['barcode']}}">Zobacz szczegóły</a>
+              <a href="/paperwork/edit/{{item['kartoteka']}}" class="text-indigo-600 hover:text-indigo-900">
+                <input type="button" name="{{item['kartoteka']}}">Edytuj szczegóły</a>
             </form>
-            {%if item['rented_status'] == True%}
-            <form method="POST">
-              <a href="/hardware/return/{{item['barcode']}}" class="text-indigo-600 hover:text-indigo-900">
-                <input type="button" name="{{item['barcode']}}"> Zwróć sprzęt</a>
-            </form>
-            {%else%}
-            <form method="POST">
-              <a href="/hardware/rent/{{item['barcode']}}" class="text-indigo-600 hover:text-indigo-900">
-                <input type="button" name="{{item['barcode']}}"> Udostępnij sprzęt</a>
-            </form>
-            {%endif%}
-
-          </td> -->
+          </td>
         </tr>
         {%endfor%}
 

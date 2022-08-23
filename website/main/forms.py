@@ -26,11 +26,21 @@ class AddHardwareFromField(FlaskForm):
   plik = FileField("Upload", validators=[validators.DataRequired()])
 
 class AddPaperwork(FlaskForm):
+  barcodes_form = StringField("Przypisane barcode'y:")
   kartoteka = StringField("Kartoteka NIW", validators=[validators.DataRequired()])
   faktury = StringField("Numery faktur")
   kartoteka_typ = SelectField("Kartoteka Typ", choices=["", "Środek trwały", "Leasing"], validators=[validators.DataRequired()], coerce=str)
   mpk = SelectField("MPK", choices=[val for val in mpk], validators=[validators.DataRequired()], coerce=str)
   data_przyjecia = DateField("Data przyjęcia", format='%Y-%m-%d')
+  notatki = TextAreaField("Notatki", render_kw={'rows': 4})
+
+# class EditPaperwork(FlaskForm):
+#   kartoteka = StringField("Kartoteka NIW", validators=[validators.DataRequired()])
+#   faktury = StringField("Numery faktur")
+#   kartoteka_typ = SelectField("Kartoteka Typ", choices=["", "Środek trwały", "Leasing"], validators=[validators.DataRequired()], coerce=str)
+#   mpk = SelectField("MPK", choices=[val for val in mpk], validators=[validators.DataRequired()], coerce=str)
+#   data_przyjecia = DateField("Data przyjęcia", format='%Y-%m-%d')
+#   notatki = TextAreaField("Notatki", render_kw={'rows': 4})
 
 class FilterHardware(FlaskForm):
   choices_list = [state for state in hardware_status]

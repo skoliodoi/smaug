@@ -8,6 +8,7 @@
   <title>Smaug-{% block title %}Home{% endblock %}</title>
   <!-- <script src="https://cdn.tailwindcss.com"></script> -->
   <link rel="stylesheet" href="{{url_for('static',filename='dist/output.css')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
   <script src="{{ url_for('static', filename='jquery.js') }}"></script>
 
 
@@ -32,7 +33,7 @@
   ```
 -->
   {% include "navbar.html"%}
-  <div class="bg-gray-100" style="height: 100vh;">
+  <div id="main-container" class="bg-gray-100">
 
 
 

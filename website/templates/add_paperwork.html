@@ -6,7 +6,7 @@
         <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
           <div class="flex justify-between">
             <div style="display: flex; align-items:center">
-              <h3 class="text-lg leading-6 font-medium text-gray-900">Dodaj
+              <h3 class="text-lg leading-6 font-medium text-gray-900">{{header_text}}
                 dokumentację</h3>
             </div>
             <div class="grid grid-cols-12 gap-8" style="display: flex; align-items: center; justify-content: end">
@@ -82,17 +82,28 @@
 
           </div>
           <div>
-            <label for="notes" class="block text-sm font-medium text-gray-700">Notatki:</label>
+            <!-- <label for="notes" class="block text-sm font-medium text-gray-700">Notatki:</label>
             <div class="mt-1">
               <textarea rows="4" name="notes" id="notes"
                 class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+            </div> -->
+            {{form.notatki.label(class="block text-sm font-medium text-gray-700")}}
+            <div class="mt-1">
+              {{form.notatki(class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm
+              border-gray-300 rounded-md")}}
             </div>
           </div>
+          {%if edit==True%}
+          <div>
+            {{form.barcodes_form.label(class="block text-sm font-medium text-gray-700")}}
+            {{form.barcodes_form(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+          </div>
+          {%endif%}
         </div>
 
         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
           <button type="submit"
-            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dodaj</button>
+            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{header_text}}</button>
         </div>
       </div>
     </form>
