@@ -1,189 +1,163 @@
 {%extends "index.html"%} {%block title%} {%if barcode == False%}Dodaj urządzenie {%else%} Udostępnij urządzenie
 {%endif%} {%endblock%} {%block content%}
-<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-  <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-    <form method="POST" enctype="multipart/form-data">
-      <div class="shadow sm:rounded-md sm:overflow-hidden">
-        <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-          <div>
-            <h3 class="text-lg leading-6 font-medium text-gray-900">{{header_text}} urządzenie</h3>
-
+<div class="page-container">
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+      <form method="POST" enctype="multipart/form-data">
+        <div class="shadow sm:rounded-md sm:overflow-hidden">
+          <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
             <div>
-              <div class="flex">
-                {%if hardware_data == False and edit == False %}
-                <div class="form-check" style="flex: 1">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">{{header_text}} urządzenie</h3>
 
-                  <input
-                    class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-                    type="checkbox" value="" id="rent_hardware">
-                  <label class="form-check-label inline-block text-gray-800" for="rent_hardware">
-                    Chcę udostępnić ten sprzęt użytkownikowi
-                  </label>
+              <div>
+                <div class="flex">
+                  {%if hardware_data == False and edit == False %}
+                  <div class="form-check" style="flex: 1">
+
+                    <input
+                      class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                      type="checkbox" value="" id="rent_hardware">
+                    <label class="form-check-label inline-block text-gray-800" for="rent_hardware">
+                      Chcę udostępnić ten sprzęt użytkownikowi
+                    </label>
+                  </div>
+
+                  <a href="/hardware/add_file" id="dodaj-plik"
+                    class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+
+                    Dodaj z pliku</a>
+
+                  {%endif%}
                 </div>
 
-                <a href="/hardware/add_file"
-                  class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
 
-                  Dodaj z pliku</a>
+              </div>
+              <!-- <p class="mt-1 text-sm text-gray-500">Use a permanent address where you can recieve mail.</p> -->
+            </div>
 
-                {%endif%}
+            {%if hardware_data == False%}
+            <div id="hardware_container">
+              <div class="grid grid-cols-10 gap-4">
+                <div class="col-span-6 lg:col-span-2">
+                  {{form.hidden_tag()}}
+                  {{form.barcode.label(class="block text-sm font-medium text-gray-700")}}
+                  {{form.barcode(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                </div>
+                <div class="col-span-6 sm:col-span-6 lg:col-span-2">
+                  {{form.stanowisko.label(class="block text-sm font-medium text-gray-700")}}
+                  {{form.stanowisko(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+                  px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                </div>
+
+                <div class="col-span-6 sm:col-span-6 lg:col-span-2">
+                  <div style="display: flex; justify-content: space-between">
+                    {{form.typ.label(class="block text-sm font-medium text-gray-700")}}
+                    <button type="button" id="cancel-typ"
+                      class="ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-gray-700 focus:text-gray-500 focus:outline-none">
+                      <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+                        <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {{form.typ(id="select-typ", class="mt-1 block w-full bg-white border border-gray-300 rounded-md
+                  shadow-sm py-2 px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                  {{form.nowy_typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+                  px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+
+                </div>
+
+                <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                  <div style="display: flex; justify-content: space-between">
+                    {{form.marka.label(class="block text-sm font-medium text-gray-700")}}
+                    <button type="button" id="cancel-marka"
+                      class="ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-gray-700 focus:text-gray-500 focus:outline-none">
+                      <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+                        <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+                      </svg>
+                    </button>
+                  </div>
+                  {{form.marka(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                  {{form.nowa_marka(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+                  px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                </div>
+
+                <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                  <div style="display: flex; justify-content: space-between">
+                    {{form.model.label(class="block text-sm font-medium text-gray-700")}}
+                    <button type="button" id="cancel-model"
+                      class="ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-gray-700 focus:text-gray-500 focus:outline-none">
+                      <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+                        <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+                      </svg>
+                    </button>
+                  </div>
+                  {{form.model(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                  {{form.nowy_model(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+                  px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                </div>
+
+                <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                  {{form.bitlocker.label(class="block text-sm font-medium text-gray-700")}}
+                  {{form.bitlocker(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+                  px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                </div>
+
+                <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                  {{form.serial.label(class="block text-sm font-medium text-gray-700")}}
+                  {{form.serial(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                </div>
+                <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                  {{form.identyfikator.label(class="block text-sm font-medium text-gray-700")}}
+                  {{form.identyfikator(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm
+                  py-2
+                  px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                </div>
+                <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                  {{form.klucz_odzyskiwania.label(class="block text-sm font-medium text-gray-700")}}
+                  {{form.klucz_odzyskiwania(class="mt-1 block w-full bg-white border border-gray-300 rounded-md
+                  shadow-sm
+                  py-2 px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                </div>
+                <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                  {{form.stan.label(class="block text-sm font-medium text-gray-700")}}
+                  {{form.stan(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                </div>
+              </div>
+              <div style="margin-top: 1rem;">
+                {{form.notatki.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.notatki(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
               </div>
 
-
-            </div>
-            <!-- <p class="mt-1 text-sm text-gray-500">Use a permanent address where you can recieve mail.</p> -->
-          </div>
-
-          {%if hardware_data == False%}
-          <div class="grid grid-cols-8 gap-8">
-            <div class="col-span-6">
-              {{form.hidden_tag()}}
-              <!-- <label for="barcode" class="block text-sm font-medium text-gray-700">Barcode</label>
-              <input type="text" name="barcode" id="barcode" autocomplete="barcode"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
-              {{form.barcode.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.barcode(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-            </div>
-            <div class="col-span-6 sm:col-span-6 lg:col-span-2">
-              {{form.stanowisko.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.stanowisko(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              <!-- <label for="stanowisko" class="block text-sm font-medium text-gray-700">Stanowisko</label>
-              <select id="type" name="type" autocomplete="type"
-                class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option></option>
-                {%for stanowisko in stanowiska%}
-                <option>{{stanowisko}}</option>
-                {%endfor%}
-              </select> -->
             </div>
 
-            <div class="col-span-6 sm:col-span-6 lg:col-span-2">
-              {{form.typ.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              <!-- <label for="type" class="block text-sm font-medium text-gray-700">Typ</label>
-              <select id="type" name="type" autocomplete="type"
-                class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option></option>
-                {%for type in type_list%}
-                <option>{{type}}</option>
-                {%endfor%}
-              </select> -->
-            </div>
-            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <!-- <label for="marka" class="block text-sm font-medium text-gray-700">Marka</label>
-              <select id="marka" name="marka" autocomplete="marka"
-                class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option></option>
-                {%for mark in mark_list%}
-                <option>{{mark}}</option>
-                {%endfor%}
-              </select> -->
-              {{form.marka.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.marka(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+            {%endif%}
+            {% include "rent_hardware.html"%}
 
+            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+              <button type="submit"
+                class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{header_text}}</button>
             </div>
-
-            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <!-- <label for="model" class="block text-sm font-medium text-gray-700">Model</label>
-              <select id="model" name="model" autocomplete="model"
-                class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option></option>
-
-                {%for model in model_list%}
-                <option>{{model}}</option>
-                {%endfor%}
-              </select> -->
-              {{form.model.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.model(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-            </div>
-            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <!-- <label for="status" class="block text-sm font-medium text-gray-700">Stan</label>
-              <select id="status" name="status" autocomplete="status"
-                class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                {%for status in status_list%}
-                <option>{{status}}</option>
-                {%endfor%}
-              </select> -->
-              {{form.stan.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.stan(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-            </div>
-            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <!-- <label for="bitlocker" class="block text-sm font-medium text-gray-700">Pin/hasło (bitlocker)</label>
-              <input type="text" name="bitlocker" id="bitlocker" autocomplete="bitlocker"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
-              {{form.bitlocker.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.bitlocker(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-            </div>
-
-            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <!-- <label for="serial" class="block text-sm font-medium text-gray-700">Nazwa/serial</label>
-              <input type="text" name="serial" id="serial" autocomplete="serial"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
-              {{form.serial.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.serial(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-            </div>
-            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <!-- <label for="identyfikator" class="block text-sm font-medium text-gray-700">Indentyfikator klucza
-                odzyskiwania
-              </label>
-              <input type="text" name="identyfikator" id="identyfikator" autocomplete="identyfikator"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
-              {{form.identyfikator.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.identyfikator(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
-              px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-            </div>
-            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              <!-- <label for="klucz-odzyskiwania" class="block text-sm font-medium text-gray-700">Klucz/dysk odzyskiwania
-              </label>
-              <input type="text" name="klucz-odzyskiwania" id="klucz-odzyskiwania" autocomplete="klucz-odzyskiwania"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
-              {{form.klucz_odzyskiwania.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.klucz_odzyskiwania(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm
-              py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-            </div>
-
 
           </div>
-          {%else%}
-          {%include "hardware_details.html"%}
-          {%endif%}
-          {%if hardware_data==False %}
-          <div class="grid grid-cols-6 gap-8" id="rent_hardware_container" style="display: none;">
-            {% else %}
-            <div class="grid grid-cols-6 gap-8" id="rent_hardware_container">
-              {%endif%}
-              {% include "rent_hardware.html"%}
-            </div>
-            <div>
-              <!-- <label for="notes" class="block text-sm font-medium text-gray-700">Notatki:</label>
-              <div class="mt-1">
-                <textarea rows="4" name="notes" id="notes"
-                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
-              </div> -->
-              {{form.notatki.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.notatki(class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm
-              border-gray-300 rounded-md")}}
-            </div>
-          </div>
-          <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-            <button type="submit"
-              class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{header_text}}</button>
-          </div>
-
-        </div>
-    </form>
+      </form>
 
 
+    </div>
   </div>
 </div>
 {%endblock%}

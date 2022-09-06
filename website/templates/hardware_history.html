@@ -17,12 +17,16 @@
     <table class="min-w-full divide-y divide-gray-300">
       <thead class="bg-gray-50">
         <tr>
-          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Udostępniony?</th>
-          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Mocarz ID osoby wypożyczającej
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Status
+            wypożyczenia</th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Mocarz
+            ID osoby wypożyczającej
           </th>
-          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Data udostępnienia
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Data
+            udostępnienia
           </th>
-          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Osoba udostępniająca
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Osoba
+            udostępniająca
           </th>
           <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Data zwrotu</th>
           <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Osoba przyjmująca zwrot</th>
@@ -43,7 +47,13 @@
         {%for item in history%}
         <tr>
           <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-            {{"Tak" if item['rented_status']== True else "Nie"}}
+            {% if item['rented_status']== True %}
+            Udostępniony 
+            {%elif item['returned'] == True %}
+            Zwrócony
+            {%else%}
+            Nieudostępniony
+            {%endif%}
             <dl class="font-normal lg:hidden">
               <dt class="sr-only">{{item['mocarz_id']}}</dt>
               <dd class="mt-1 truncate text-gray-700">{{item['rent_date']}}</dd>

@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, redirect, url_for, request
 from flask.json import jsonify
 from website.extensions import *
 from ..forms import AddPaperwork
+from flask_login import login_required
 
 
 paperwork = Blueprint('paperwork', __name__)
@@ -19,6 +20,7 @@ def list_to_str(list):
 
 
 @paperwork.route('/add', methods=['GET', 'POST'])
+@login_required
 def add():
     form = AddPaperwork()
     free_items = db_items.find({'kartoteka': {"$exists": False}})

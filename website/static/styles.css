@@ -2,6 +2,23 @@
   height: calc(100vh - 64px) !important;
 }
 
+#cancel-typ,
+#cancel-model,
+#cancel-marka,
+#cancel-projekt,
+#cancel-lokalizacja {
+  display: none;
+}
+
+
+
+.page-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 body {
   background: rgba(44, 62, 80, .8);
   font-family: 'Oswald', 'Futura', sans-serif;

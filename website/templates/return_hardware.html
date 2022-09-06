@@ -1,0 +1,78 @@
+{%extends "index.html"%}{%block title%}Zwróć sprzęt{%endblock%}{%block content%}
+<form method="POST" class="page-container">
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8" style="width: 80rem;">
+    <div class="p-8 bg-sky-800">
+      <div class="md:flex md:items-center md:justify-between">
+        <div class="flex-1 min-w-0">
+          <h2 class="text-2xl font-bold leading-7 text-white sm:text-3xl sm:truncate">{{hardware_data['barcode']}}
+            {%if hardware_data['rented_status']==True%}
+            (Udostępniony)
+            {%else%}
+            (Nieudostępniony)
+            {%endif%}
+          </h2>
+          <h3 class="text-xl font-bold leading-5 text-white sm:text-xl sm:truncate">Dodane
+            {{hardware_data['upload_date']}} przez {{hardware_data['adder']}}</h3>
+        </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4 gap-2">
+          <!-- <button type="button"
+          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">Edytuj</button> -->
+          <div method="POST" class="flex justify-between content-center">
+            <input id="zwrot-uwagi-btn" value="Zgłoś uwagi" type="button"
+              class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500 mr-2"
+              style="cursor: pointer;">
+            <input id="cancel-uwagi-btn" value="Anuluj" type="button" style="display: none;"
+              class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500 mr-2">
+
+
+            <button type="submit"
+              class="bg-indigo-500 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Zwróć</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+      <div class="shadow sm:rounded-md sm:overflow-hidden">
+        <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+          <div>
+            <div class="sm:hidden">
+              <label for="tabs" class="sr-only">Select a tab</label>
+              <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
+              <select id="tabs" name="tabs"
+                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                <option>Sprzęt</option>
+                <option>Dokumenty</option>
+              </select>
+            </div>
+            <div class="hidden sm:block">
+              <div class="border-b border-gray-200">
+                <div id="zwrot-uwagi" style="display: none;">
+                  {%include "return_uwagi.html"%}
+                </div>
+                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                  <button id="rental_container"
+                    class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    Szczegóły udostępnienia </button>
+                </nav>
+              </div>
+            </div>
+          </div>
+          {%if hardware_data['notatki']%}
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Uwagi dot. sprzętu</dt>
+            <dd class="mt-1 text-sm text-gray-900">{{hardware_data['notatki']}}</dd>
+          </div>
+          {%endif%}
+          <div id="rental_details">
+            {%include "user_details.html"%}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</form>
+{%endblock%}

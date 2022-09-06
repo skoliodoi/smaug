@@ -1,35 +1,100 @@
-<div class="col-span-6 sm:col-span-6 lg:col-span-2">
-  <!-- <label for="mocarz-id" class="block text-sm font-medium text-gray-700">Mocarz ID</label>
-  <input type="text" name="mocarz-id" id="mocarz-id" autocomplete="mocarz-id"
-    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
-  {{form.mocarz_id.label(class="block text-sm font-medium text-gray-700")}}
-  {{form.mocarz_id(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+<div id="rent_hardware_container" {%if not udostepnienie %} style="display: none;" {%endif%}>
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-6 sm:col-span-6 lg:col-span-3">
+      {{form.mocarz_id.label(class="block text-sm font-medium text-gray-700")}}
+      {{form.mocarz_id(
+      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
+      focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+      id="mocarz_id"
+      )}}
+    </div>
+
+    <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+      <div style="display: flex; justify-content: space-between">
+        {{form.projekt.label(class="block text-sm font-medium text-gray-700")}}
+        <button type="button" id="cancel-projekt"
+          class="ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-gray-700 focus:text-gray-500 focus:outline-none">
+          <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+            <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+          </svg>
+        </button>
+      </div>
+      {{form.projekt(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
+      focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+      {{form.nowy_projekt(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+      px-3
+      focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+    </div>
+
+    <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+      <div style="display: flex; justify-content: space-between">
+        {{form.lokalizacja.label(class="block text-sm font-medium text-gray-700")}}
+        <button type="button" id="cancel-lokalizacja"
+          class="ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-gray-700 focus:text-gray-500 focus:outline-none">
+          <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+            <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+          </svg>
+        </button>
+      </div>
+      {{form.lokalizacja(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+      focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+      {{form.nowa_lokalizacja(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+      px-3
+      focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+    </div>
+    <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+
+      {{form.karta_zblizeniowa.label(class="block text-sm font-medium text-gray-700")}}
+      {{form.karta_zblizeniowa(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+      focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="karta-zblizeniowa")}}
+    </div>
+    <div class="col-span-6 sm:col-span-6 lg:col-span-4">
+      {{form.sluchawki.label(class="block text-sm font-medium text-gray-700")}}
+      {{form.sluchawki(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
+      focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="sluchawki")}}
+    </div>
+
+    <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+
+      {{form.zlacze.label(class="block text-sm font-medium text-gray-700")}}
+      {{form.zlacze(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
+      focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="zlacze")}}
+    </div>
+
+    <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+
+      {{form.przejsciowka.label(class="block text-sm font-medium text-gray-700")}}
+      {{form.przejsciowka(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+      focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="przejsciowka")}}
+    </div>
+    <div class="col-span-6 sm:col-span-6 lg:col-span-4">
+      {{form.mysz.label(class="block text-sm font-medium text-gray-700")}}
+      {{form.mysz(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
+      focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="mysz")}}
+    </div>
+
+    <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+
+      {{form.torba.label(class="block text-sm font-medium text-gray-700")}}
+      {{form.torba(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
+      focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="torba")}}
+    </div>
+
+    <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+
+      {{form.modem.label(class="block text-sm font-medium text-gray-700")}}
+      {{form.modem(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
+      focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="modem")}}
+    </div>
+
+
+
+
+  </div>
+      <div style="margin-top: 1rem; width: 100% !important" id="notatki-wypozyczenie">
+      {{form.notatki_wypozyczenie.label(class="block text-sm font-medium text-gray-700")}}
+      {{form.notatki_wypozyczenie(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+      focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+    </div>
+
 </div>
-
-<div class="col-span-6 sm:col-span-3 lg:col-span-2">
-  <!-- <label for="projekt" class="block text-sm font-medium text-gray-700">Projekt/Stanowisko</label>
-  <select id="projekt" name="projekt" autocomplete="projekt"
-    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-    <option></option>
-    {%for p in projekt%}
-    <option>{{p}}</option>
-    {%endfor%}
-  </select> -->
-  {{form.projekt.label(class="block text-sm font-medium text-gray-700")}}
-  {{form.projekt(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-</div>
-
-<div class="col-span-6 sm:col-span-3 lg:col-span-2">
-  <!-- <label for="lokalizacja" class="block text-sm font-medium text-gray-700">Lokalizacja</label>
-  <select id="lokalizacja" name="lokalizacja" autocomplete="lokalizacja"
-    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-    <option></option>
-
-    {%for place in lokalizacja%}
-    <option>{{place}}</option>
-    {%endfor%}
-  </select> -->
-  {{form.lokalizacja.label(class="block text-sm font-medium text-gray-700")}}
-  {{form.lokalizacja(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-</div>
-

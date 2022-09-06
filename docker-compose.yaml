@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=test_user
+      - MONGO_INITDB_ROOT_PASSWORD=develop123
+    container_name: smaug_mongo
+  smaug:
+    build: .
+    volumes:
+      - ./website:/app/website
+    ports:
+      - '5000:5000'
+    # environment:
+    #   - MONGODB_USERNAME=test_user
+    #   - MONGODB_PASSWORD=develop123
+    env_file:
+      - ./env_files/flask.env
+      - ./env_files/mongo.env
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mongodb
+    container_name: smaug_flask
+    

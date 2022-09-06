@@ -1,24 +1,61 @@
-<div class="grid grid-cols-10 gap-8 ">
-  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-    <dt class="text-sm font-medium text-white">Mocarz ID użytkownika</dt>
-    <dd class="mt-1 text-sm text-white">{{hardware_data['mocarz_id']}}</dd>
+<div class="grid grid-cols-12 gap-4 ">
+  <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+    <dt class="text-sm font-medium text-gray-500">Mocarz ID użytkownika</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['mocarz_id']}}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+    <dt class="text-sm font-medium text-gray-500">Projekt</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['projekt']}}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+    <dt class="text-sm font-medium text-gray-500">Lokalizacja</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['lokalizacja']}}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+    <dt class="text-sm font-medium text-gray-500">Karta zbliżeniowa</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['karta_zblizeniowa']}}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-    <dt class="text-sm font-medium text-white">Projekt</dt>
-    <dd class="mt-1 text-sm text-white">{{hardware_data['projekt']}}</dd>
+    <dt class="text-sm font-medium text-gray-500">Słuchawki</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['sluchawki']}}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-    <dt class="text-sm font-medium text-white">Lokalizacja</dt>
-    <dd class="mt-1 text-sm text-white">{{hardware_data['lokalizacja']}}</dd>
+    <dt class="text-sm font-medium text-gray-500">Złącze</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['zlacze']}}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-    <dt class="text-sm font-medium text-white">
-      Data wypożyczenia</dt>
-    <dd class="mt-1 text-sm text-white">{{hardware_data['rent_date']}}</dd>
+    <dt class="text-sm font-medium text-gray-500">Przejściówka</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['przejsciowka']}}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-    <dt class="text-sm font-medium text-white">Osoba wypożyczająca</dt>
-    <dd class="mt-1 text-sm text-white">{{hardware_data['who_rented']}}</dd>
+    <dt class="text-sm font-medium text-gray-500">Mysz</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['mysz']}}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">Torba</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['torba']}}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+    <dt class="text-sm font-medium text-whigray-500te">Modem</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['modem']}}</dd>
   </div>
 
+
+
+</div>
+<div class="border-b mb-2 mt-5 border-gray-200"></div>
+<div class="grid grid-cols-12 gap-4 ">
+  <div class="col-span-6 sm:col-span-3 lg:col-span-6 flex justify-center content-center">
+    <div>
+      <dt class="text-sm font-medium text-gray-500">
+        Data wypożyczenia</dt>
+      <dd class="mt-1 text-sm text-gray-900">{{hardware_data['rent_date']}}</dd>
+    </div>
+  </div>
+  <div class="col-span-6 sm:col-span-3 lg:col-span-6 flex justify-center content-center">
+    <div>
+      <dt class="text-sm font-medium text-gray-500">Osoba wypożyczająca</dt>
+      <dd class="mt-1 text-sm text-gray-900">{{hardware_data['who_rented']}}</dd>
+    </div>
+  </div>
 </div>
