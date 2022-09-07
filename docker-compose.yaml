@@ -1,20 +1,40 @@
 version: '3.8'
 services:
+  npm:
+    image: node:16
+    entrypoint: [ "npm", "install" ]
+    working_dir: /app
+    volumes:
+      - .:/app
+  npx:
+    image: node:16
+    working_dir: /app
+    entrypoint:
+      [
+        "npx",
+        "tailwindcss",
+        "-i",
+        "/app/website/static/src/input.css",
+        "-o",
+        "/app/website/static/dist/output.css",
+        "--watch"
+      ]
+    volumes:
+      - .:/app
   mongodb:
     image: mongo
     environment:
       - MONGO_INITDB_ROOT_USERNAME=test_user
       - MONGO_INITDB_ROOT_PASSWORD=develop123
     container_name: smaug_mongo
+    volumes:
+      - ./website:/app/website
   smaug:
-    build: .
+    build: ./
     volumes:
       - ./website:/app/website
     ports:
       - '5000:5000'
-    # environment:
-    #   - MONGODB_USERNAME=test_user
-    #   - MONGODB_PASSWORD=develop123
     env_file:
       - ./env_files/flask.env
       - ./env_files/mongo.env
@@ -22,5 +42,5 @@ services:
     tty: true
     depends_on:
       - mongodb
+      - npx
     container_name: smaug_flask
-    

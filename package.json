@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "flowbite": "^1.5.2",
-    "jquery": "^3.6.0"
+    "jquery": "^3.6.0",
+    "npx": "^10.2.2"
   }
 }
