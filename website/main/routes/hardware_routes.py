@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from website.extensions import *
 from ..forms import AddHardware, AddHardwareFromField, FilterHardware, ReturnHardware
 from website.dane import *
@@ -164,7 +164,13 @@ def add():
 
             return (redirect(url_for('hardware.add')))
         else:
-            return (redirect(url_for('main.index')))
+            flash('Taki sprzęt już istnieje', category='error')
+            return render_template('add_items.html',
+                           header_text="Dodaj",
+                           form=hardware_form,
+                           edit=False,
+                           hardware_data=False,
+                           show_rent_hardware=False)
     else:
         collection = db_collection.find_one({})
         hardware_form.typ.choices = collection['type']

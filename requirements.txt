@@ -8,3 +8,4 @@ flask_login==0.6.2
 yagmail==0.15.285
 Jinja2==3.0.3
 Werkzeug==2.0.2
+flask-bcrypt==1.0.1

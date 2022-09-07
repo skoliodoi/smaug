@@ -1,42 +1,52 @@
 {%extends 'index.html'%}{%block content%}
 <div class="page-container" style="height: 100%;">
-  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-    <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-      <form method="POST">
-        <div class="shadow sm:rounded-md sm:overflow-hidden">
-          <div class="py-6 px-4 space-y-6 sm:p-6" style="background-color: black;">
-            <div class="flex justify-center">
-              <div style="display: flex; align-items:center">
-                <h3 class="text-lg leading-6 font-medium text-white">Zaloguj się</h3>
-              </div>
+  <div id="login-container">
+    <div class="py-6 px-4 space-y-6 sm:p-6">
+      <img style="height: auto; width: 15rem;" src="{{url_for('static', filename='images/logo_big.png')}}"
+        alt="SMAUG logo">
+    </div>
+    <form method="POST">
+      <div class="shadow sm:rounded-md sm:overflow-hidden">
+        <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+          <div class="grid grid-cols-6 gap-8">
+            {{form.hidden_tag()}}
+
+            <div class="col-span-6 sm:col-span-3 lg:col-span-6">
+              {{form.email.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.email(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
             </div>
-          </div>
-          <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-            <div class="grid grid-cols-6 gap-8">
-              {{form.hidden_tag()}}
+            <div class="col-span-6 sm:col-span-3 lg:col-span-6">
+              {{form.password.label(class="block text-sm font-medium text-gray-700")}}
+              {{form.password(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
 
-              <div class="col-span-6 sm:col-span-3 lg:col-span-6">
-                {{form.email.label(class="block text-sm font-medium text-gray-700")}}
-                {{form.email(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              </div>
-              <div class="col-span-6 sm:col-span-3 lg:col-span-6">
-                {{form.password.label(class="block text-sm font-medium text-gray-700")}}
-                {{form.password(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-
-              </div>
             </div>
-          </div>
-
-          <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-            <button type="submit"
-              class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Zaloguj
-              się</button>
           </div>
         </div>
-      </form>
-    </div>
+        {%if err%}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <span class="block sm:inline">{{err}}</span>
+        </div>
+        {%endif%}
+
+
+        <div class="px-4 py-3 bg-gray-50 text-center sm:px-6">
+
+          <button type="submit" {%if not err%}
+            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            {%else%}
+            class="bg-red-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            {%endif%}>
+            {%if not err%} Zaloguj się
+            {%else%} Spróbuj ponownie
+            {%endif%}
+          </button>
+
+        </div>
+      </div>
+    </form>
   </div>
+
 </div>
 {%endblock%}
