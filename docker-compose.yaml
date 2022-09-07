@@ -21,14 +21,14 @@ services:
       ]
     volumes:
       - .:/app
-  mongodb:
-    image: mongo
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=test_user
-      - MONGO_INITDB_ROOT_PASSWORD=develop123
-    container_name: smaug_mongo
-    volumes:
-      - ./website:/app/website
+  # mongodb:
+  #   image: mongo
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=test_user
+  #     - MONGO_INITDB_ROOT_PASSWORD=develop123
+  #   container_name: smaug_mongo
+  #   volumes:
+  #     - ./website:/app/website
   smaug:
     build: ./
     volumes:
@@ -41,6 +41,5 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - mongodb
       - npx
     container_name: smaug_flask
