@@ -2,6 +2,50 @@
   height: calc(100vh - 64px) !important;
 }
 
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+#table-container {
+  display: flex;
+  height: 100px !important;
+  overflow: auto !important;
+}
+
+#all_items_table_wrapper {
+  background-color: whitesmoke !important;
+  position: sticky !important;
+  top: 40px !important;
+}
+
+#all_items_table_length, #all_items_table_filter {
+  position: sticky;
+  top: 64px;
+  background: whitesmoke;
+  width: 50%;
+  padding: 0.5em;
+}
+
+#all_items_table_info, #all_items_table_paginate {
+  position: sticky;
+  bottom: 0;
+  background: whitesmoke;
+  width: 50%;
+  padding: 0.3em;
+}
+
+#all_items_table thead {
+  position: sticky;
+  top: 110px;
+}
+
+.dataTables_length select {
+  width: 5rem !important;
+
+}
+
 #cancel-typ,
 #cancel-model,
 #cancel-marka,
@@ -67,4 +111,3 @@ footer {
     flex-direction: column;
   }
 }
-  

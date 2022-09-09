@@ -1,117 +1,84 @@
 {%extends "index.html"%}{%block title%}Zobacz wszystkie {%endblock%}{%block content%}
 
 <!-- This example requires Tailwind CSS v2.0+ -->
-<div class="px-4 sm:px-6 lg:px-8">
-  <div class="sm:flex sm:items-center">
-    <div class="sm:flex-auto bg-red-300">
-      <h1 class="text-xl font-semibold text-gray-900">Sprzęt</h1>
-      <p class="mt-2 text-sm text-gray-700">Jaki sprzęcior, wariacie?</p>
-    </div>
+<!-- <div class="px-4 sm:px-6 lg:px-8">
+    
+</div> -->
+<div class="table-container">
+<table id="all_items_table" class="display order-column">
+  <thead class="bg-gray-50">
+    <tr>
+      <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Barcode</th>
+      <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Typ
+      </th>
+      <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Marka
+      </th>
+      <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Model
+      </th>
+      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Serial</th>
+      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Udostępniony?</th>
+      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Moccarz ID</th>
+      <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+        <span class="sr-only">Edit</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody class="divide-y divide-gray-200 bg-white">
+    {%for item in items%}
+    <tr>
+      <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+        {{item['barcode']}}
+        <dl class="font-normal lg:hidden">
+          <dt class="sr-only">{{item['typ']}}</dt>
+          <dd class="mt-1 truncate text-gray-700">{{item['marka']}}</dd>
+          <dd class="mt-1 truncate text-gray-500 sm:hidden">{{item['model']}}</dd>
+        </dl>
+      </td>
+      <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">{{item['typ']}}</td>
+      <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{item['marka']}}</td>
+      <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{item['model']}}</td>
+      <td class="px-3 py-4 text-sm text-gray-500">{{item['serial']}}</td>
+      <td class="px-3 py-4 text-sm text-gray-500">
+        {%if item['rented_status']==True%}
+        Tak
+        {%else%}
+        Nie
+        {%endif%}
+      </td>
+      <td class="px-3 py-4 text-sm text-gray-500">
+        {%if item['rented_status']==True%}
+        {{item['mocarz_id']}}
+        {%endif%}
+      </td>
+      <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+        <form method="POST">
+          <a href="/hardware/show_info/{{item['_id']}}" class="text-indigo-600 hover:text-indigo-900">
+            <input type="button" name="{{item['_id']}}">Zobacz szczegóły</a>
+        </form>
+        {%if item['rented_status'] == True%}
+        <form method="POST">
+          <a href="/hardware/return/{{item['barcode']}}" class="text-indigo-600 hover:text-indigo-900">
+            <input type="button" name="{{item['barcode']}}"> Zwróć sprzęt</a>
+        </form>
+        {%else%}
+
+        <form method="POST">
+          <a href="/hardware/rent/{{item['barcode']}}" class="text-indigo-600 hover:text-indigo-900">
+            <input type="button" name="{{item['barcode']}}"> Udostępnij sprzęt</a>
+        </form>
+        {%endif%}
+
+
+      </td>
+    </tr>
+    {%endfor%}
+
+
+    <!-- More people... -->
+  </tbody>
   </div>
-  <form action="" method="POST">
-    <div class="grid grid-cols-12 gap-4">
-      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-        {{form.typ.label(class="block text-sm font-medium text-gray-700")}}
-        {{form.typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-      </div>
-      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-        {{form.marka.label(class="block text-sm font-medium text-gray-700")}}
-        {{form.marka(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-      </div>
-      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-        {{form.model.label(class="block text-sm font-medium text-gray-700")}}
-        {{form.model(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-      </div>
-      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-        {{form.stan.label(class="block text-sm font-medium text-gray-700")}}
-        {{form.stan(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-      </div>
-      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-        {{form.rented.label(class="block text-sm font-medium text-gray-700")}}
-        {{form.rented(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-      </div>
-      <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-        <br>
-        {{form.submit(class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600
-        px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2
-        focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto",style="cursor: pointer")}}
-      </div>
 
-    </div>
-  </form>
-  <div class="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
-    <table class="min-w-full divide-y divide-gray-300">
-      <thead class="bg-gray-50">
-        <tr>
-          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Barcode</th>
-          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Typ
-          </th>
-          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Marka
-          </th>
-          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Model
-          </th>
-          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Serial</th>
-          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Udostępniony?</th>
-          <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-            <span class="sr-only">Edit</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200 bg-white">
-        {%for item in items%}
-        <tr>
-          <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-            {{item['barcode']}}
-            <dl class="font-normal lg:hidden">
-              <dt class="sr-only">{{item['typ']}}</dt>
-              <dd class="mt-1 truncate text-gray-700">{{item['marka']}}</dd>
-              <dd class="mt-1 truncate text-gray-500 sm:hidden">{{item['model']}}</dd>
-            </dl>
-          </td>
-          <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">{{item['typ']}}</td>
-          <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{item['marka']}}</td>
-          <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{item['model']}}</td>
-          <td class="px-3 py-4 text-sm text-gray-500">{{item['serial']}}</td>
-          <td class="px-3 py-4 text-sm text-gray-500">
-            {%if item['rented_status']==True%}
-            Tak
-            {%else%}
-            Nie
-            {%endif%}
-          </td>
-          <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-            <form method="POST">
-              <a href="/hardware/show_info/{{item['barcode']}}" class="text-indigo-600 hover:text-indigo-900">
-                <input type="button" name="{{item['barcode']}}">Zobacz szczegóły</a>
-            </form>
-            {%if item['rented_status'] == True%}
-            <form method="POST">
-              <a href="/hardware/return/{{item['barcode']}}" class="text-indigo-600 hover:text-indigo-900">
-                <input type="button" name="{{item['barcode']}}"> Zwróć sprzęt</a>
-            </form>
-            {%else%}
-            <form method="POST">
-              <a href="/hardware/rent/{{item['barcode']}}" class="text-indigo-600 hover:text-indigo-900">
-                <input type="button" name="{{item['barcode']}}"> Udostępnij sprzęt</a>
-            </form>
-            {%endif%}
-
-          </td>
-        </tr>
-        {%endfor%}
-
-
-        <!-- More people... -->
-      </tbody>
-    </table>
-  </div>
-</div>
-
+</table>
 
 
 

@@ -10,7 +10,7 @@
                 dokumentację</h3>
             </div>
             <div class="grid grid-cols-12 gap-8" style="display: flex; align-items: center; justify-content: end">
-              <div>
+              <div class="flex justify-between">
                 <!-- <div class="col-span-6 sm:col-span-3 lg:col-span-5 form-check">
                   <input
                     class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
@@ -19,7 +19,12 @@
                     Przypisz sprzęt do tej faktury
                   </label>
                 </div> -->
-                <div class="col-span-6 sm:col-span-3 lg:col-span-6" id="add_paperwork_container">
+
+                <a href="/paperwork/add_file" id="dodaj-plik"
+                  class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 mr-10 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+
+                  Dodaj z pliku</a>
+                <div class="col-span-6 sm:col-span-3 ml-2 lg:col-span-6" id="add_paperwork_container">
                   {%include "barcode_select.html"%}
                 </div>
 
@@ -32,14 +37,16 @@
 
             <div class="col-span-6 sm:col-span-3 lg:col-span-3">
               {{form.kartoteka.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.kartoteka(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              {{form.kartoteka(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
               <!-- <label for="kartoteka_nr" class="block text-sm font-medium text-gray-700">Kartoteka NIW</label>
               <input type="text" name="kartoteka_nr" id="kartoteka_nr" autocomplete="kartoteka_nr"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
             </div>
             <div class="col-span-6 sm:col-span-3 lg:col-span-3">
               {{form.faktury.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.faktury(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              {{form.faktury(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
               <!-- <label for="faktury" class="block text-sm font-medium text-gray-700">Numery faktur</label>
               <input type="text" name="faktury" id="faktury" autocomplete="faktury"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
@@ -50,7 +57,8 @@
 
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
               {{form.kartoteka_typ.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.kartoteka_typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              {{form.kartoteka_typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+              px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
               <!-- <label for="kartoteka_typ" class="block text-sm font-medium text-gray-700">Kartoteka Typ</label> -->
               <!-- <select id="kartoteka_typ" name="kartoteka_typ" autocomplete="kartoteka_typ"
                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -62,7 +70,8 @@
             </div>
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
               {{form.mpk.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.mpk(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              {{form.mpk(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
               <!-- <label for="mpk" class="block text-sm font-medium text-gray-700">MPK</label>
               <select id="mpk" name="mpk" autocomplete="mpk"
                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -74,7 +83,8 @@
             </div>
             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
               {{form.data_przyjecia.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.data_przyjecia(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              {{form.data_przyjecia(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+              px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
               <!-- <label for="data" class="block text-sm font-medium text-gray-700">Data przyjęcia</label>
               <input type="date" name="data_faktury"
                 class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" /> -->
@@ -96,7 +106,8 @@
           {%if edit==True%}
           <div>
             {{form.barcodes_form.label(class="block text-sm font-medium text-gray-700")}}
-            {{form.barcodes_form(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+            {{form.barcodes_form(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+            focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
           </div>
           {%endif%}
         </div>

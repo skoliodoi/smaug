@@ -5,6 +5,7 @@ from ..forms import AddHardware, AddHardwareFromField, FilterHardware, ReturnHar
 from website.dane import *
 import openpyxl
 from flask_login import login_required, current_user
+from bson import ObjectId
 
 hardware = Blueprint('hardware', __name__)
 
@@ -20,51 +21,80 @@ def check_existing_records(barcode):
 
 def go_through_file(uploaded_file):
     wb = openpyxl.load_workbook(uploaded_file)
-    ws = wb.active
-    hardware_rented = False
+    ws = wb['Sprzęt']
     data_table = []
     db_barcodes = []
     for row in range(2, ws.max_row+1):
-
         if row:
             barcode = ws.cell(row, 1).value
             if check_existing_records(barcode):
-                rent_date = ws.cell(row, 14).value
-                who_rented = ws.cell(row, 15).value
-                if ws.cell(row, 11).value != None:
-                    hardware_rented = True
-                    if rent_date == None or rent_date == '':
-                        rent_date = datetime.now()
-                    if who_rented == None or who_rented == '':
-                        who_rented = 'Osoba udostępniająca'
+                barcode = ws.cell(row, 1).value
+                notatki = ws.cell(row, 11).value
+                notatki_wypozyczenie = ws.cell(row, 25).value
+                is_rented = ws.cell(row, 12).value
+                rent_date = ws.cell(row, 13).value
+                who_rented = ws.cell(row, 14).value
+                if type(rent_date) == str:
+                    rent_date = datetime.strptime(rent_date, '"%Y-%m-%d')
                 data = {
-                    'barcode': ws.cell(row, 1).value if ws.cell(row, 1).value != None else "N/A",
                     'stanowisko': ws.cell(row, 2).value if ws.cell(row, 2).value != None else "N/A",
                     'typ': ws.cell(row, 3).value if ws.cell(row, 3).value != None else "N/A",
                     'marka': ws.cell(row, 4).value if ws.cell(row, 4).value != None else "N/A",
                     'model': ws.cell(row, 5).value if ws.cell(row, 5).value != None else "N/A",
-                    'stan': ws.cell(row, 6).value if ws.cell(row, 6).value != None else "N/A",
+                    'stan': ws.cell(row, 6).value if ws.cell(row, 6).value != None else "Sprawny",
                     'bitlocker': ws.cell(row, 7).value if ws.cell(row, 7).value != None else "N/A",
                     'serial': ws.cell(row, 8).value if ws.cell(row, 8).value != None else "N/A",
                     'identyfikator': ws.cell(row, 9).value if ws.cell(row, 9).value != None else "N/A",
                     'klucz_odzyskiwania': ws.cell(row, 10).value if ws.cell(row, 10).value != None else "N/A",
-                    'mocarz_id': ws.cell(row, 11).value if ws.cell(row, 11).value != None else "N/A",
-                    'projekt': ws.cell(row, 12).value if ws.cell(row, 12).value != None else "N/A",
-                    'lokalizacja': ws.cell(row, 13).value if ws.cell(row, 13).value != None else "N/A",
-                    'notatki': ws.cell(row, 16).value,
-                    'rented_status': hardware_rented,
-                    'upload_date': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    'last_updated': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    'rent_date': rent_date.strftime("%Y-%m-%d %H:%M:%S") if rent_date != None else rent_date,
-                    'adder': 'Osoba dodająca',
-                    'who_rented': who_rented
+                    'notatki': f"Sprzęt dodany z pliku - {datetime.now().strftime('%Y-%m-%d')}",
+                    'rented_status': False,
+                    'adder': current_user.login,
+                    'upload_date': datetime.now().strftime(
+                        "%Y-%m-%d %H:%M:%S"),
+                    'last_updated': datetime.now().strftime(
+                        "%Y-%m-%d %H:%M:%S"),
                 }
+                if notatki:
+                  data['notatki'] = f"{data['notatki']}\n{notatki}"
+                if barcode:
+                  data['barcode'] = barcode
+                if is_rented and is_rented.upper() == 'TAK':
+                    data['mocarz_id'] = ws.cell(row, 15).value if ws.cell(
+                        row, 15).value != None else "N/A"
+                    data['projekt'] = ws.cell(row, 16).value if ws.cell(
+                        row, 16).value != None else "N/A"
+                    data['lokalizacja'] = ws.cell(row, 17).value if ws.cell(
+                        row, 17).value != None else "N/A"
+                    data['karta_zblizeniowa'] = ws.cell(row, 18).value if ws.cell(
+                        row, 18).value != None else "N/A"
+                    data['sluchawki'] = ws.cell(row, 19).value if ws.cell(
+                        row, 19).value != None else "N/A"
+                    data['zlacze'] = ws.cell(row, 20).value if ws.cell(
+                        row, 20).value != None else "N/A"
+                    data['przejsciowka'] = ws.cell(row, 21).value if ws.cell(
+                        row, 21).value != None else "N/A"
+                    data['mysz'] = ws.cell(row, 22).value if ws.cell(
+                        row, 22).value != None else "N/A"
+                    data['torba'] = ws.cell(row, 23).value if ws.cell(
+                        row, 23).value != None else "N/A"
+                    data['modem'] = ws.cell(row, 24).value if ws.cell(
+                        row, 24).value != None else "N/A"
+                    data['notatki_wypozyczenie'] = f"{notatki_wypozyczenie if notatki_wypozyczenie != None else ''}\n Sprzęt udostępniony z pliku - {datetime.now().strftime('%Y-%m-%d')}"
+                    data['rented_status'] = True
+                    data['rent_date'] = rent_date.strftime(
+                        "%Y-%m-%d") if rent_date != None else "N/A"
+                    data['last_updated'] = datetime.now().strftime(
+                        "%Y-%m-%d %H:%M:%S")
+                    data['who_rented'] = who_rented if who_rented != None else "N/A"
                 data_table.append(data)
             else:
                 db_barcodes.append(barcode)
+
     if data_table:
         db_items.insert_many(data_table)
         db_history.insert_many(data_table)
+        flash(
+            f'Pomyślnie dodano {len(data_table)} rekordów do bazy danych', 'success')
     return db_barcodes
 
 
@@ -166,11 +196,11 @@ def add():
         else:
             flash('Taki sprzęt już istnieje', category='error')
             return render_template('add_items.html',
-                           header_text="Dodaj",
-                           form=hardware_form,
-                           edit=False,
-                           hardware_data=False,
-                           show_rent_hardware=False)
+                                   header_text="Dodaj",
+                                   form=hardware_form,
+                                   edit=False,
+                                   hardware_data=False,
+                                   show_rent_hardware=False)
     else:
         collection = db_collection.find_one({})
         hardware_form.typ.choices = collection['type']
@@ -187,15 +217,15 @@ def add():
                            show_rent_hardware=False)
 
 
-@hardware.route('/edit/<barcode>', methods=['GET', 'POST'])
+@hardware.route('/edit/<id>', methods=['GET', 'POST'])
 @login_required
-def edit(barcode):
+def edit(id):
     form = AddHardware()
 
     # form.barcode.data = data['barcode']
 
     if request.method == 'POST':
-        db_items.update_one({'barcode': barcode}, {'$set': {
+        update_data = {
             'barcode': form.barcode.data,
             'stanowisko': form.stanowisko.data,
             'typ': form.typ.data,
@@ -207,21 +237,26 @@ def edit(barcode):
             'identyfikator': form.identyfikator.data,
             'klucz_odzyskiwania': form.klucz_odzyskiwania.data,
             'notatki': form.notatki.data
-        }}, upsert=True)
+        }
+        db_items.update_one({'_id': ObjectId(id)}, {
+                            '$set': update_data}, upsert=True)
+        db_history.update_one({'_id': ObjectId(id)}, {
+                              '$set': update_data}, upsert=True)
+
         return (redirect(url_for('main.index')))
     else:
-        data = db_items.find_one({'barcode': barcode}, {'_id': 0,
-                                                        'rented_status': 0,
-                                                        'upload_date': 0,
-                                                        'last_updated': 0,
-                                                        'rent_date': 0,
-                                                        'adder': 0,
-                                                        'who_rented': 0,
-                                                        'kartoteka': 0,
-                                                        'bitlocker1': 0,
-                                                        'bitlocker2': 0,
-                                                        'mpk': 0,
-                                                        'notes': 0})
+        data = db_items.find_one({'_id': ObjectId(id)}, {'_id': 0,
+                                                         'rented_status': 0,
+                                                         'upload_date': 0,
+                                                         'last_updated': 0,
+                                                         'rent_date': 0,
+                                                         'adder': 0,
+                                                         'who_rented': 0,
+                                                         'kartoteka': 0,
+                                                         'bitlocker1': 0,
+                                                         'bitlocker2': 0,
+                                                         'mpk': 0,
+                                                         'notes': 0})
         for key, value in data.items():
             form[key].data = value
         return render_template('add_items.html',
@@ -300,8 +335,8 @@ def rent(barcode):
 @login_required
 def see_history(barcode):
     hardware_data_history = db_history.find({'barcode': barcode})
-    creation_date = hardware_data_history[0]['upload_date']
-    creator = hardware_data_history[0]['adder']
+    creation_date = hardware_data_history[0]['upload_date'] if hardware_data_history[0]['upload_date'] else "N/A"
+    creator = hardware_data_history[0]['adder'] if hardware_data_history[0]['adder'] else "N/A"
     return render_template("hardware_history.html", creator=creator, barcode=barcode, date=creation_date, history=hardware_data_history)
 
 
@@ -357,12 +392,12 @@ def return_hardware(barcode):
         return render_template("return_hardware.html", hardware_data=hardware_data, paperwork_data=None, being_returned=True, form=form)
 
 
-@ hardware.route('/show_info/<barcode>')
+@ hardware.route('/show_info/<id>')
 @ login_required
-def show_info(barcode):
-    hardware_data = db_items.find_one({'barcode': barcode})
+def show_info(id):
+    hardware_data = db_items.find_one({'_id': ObjectId(id)})
     check_kartoteka = db_items.find_one(
-        {"$and": [{'barcode': barcode}, {'kartoteka': {"$exists": True}}]})
+        {"$and": [{'_id': ObjectId(id)}, {'kartoteka': {"$exists": True}}]})
     if check_kartoteka == None:
         paperwork_data = None
     else:

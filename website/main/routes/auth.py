@@ -1,4 +1,3 @@
-from distutils.log import error
 from website.models import User
 from ..forms import Login, Signup
 from flask import Blueprint, flash, render_template, redirect, url_for, request

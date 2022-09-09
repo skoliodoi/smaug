@@ -30,6 +30,16 @@ $("#select-typ").on('change', (e) => {
   }
 })
 
+$(document).ready(function () {
+  $('#all_items_table').DataTable({
+    // fixedHeader: true
+  });
+});
+
+
+
+
+
 $("#select-marka").on('change', (e) => {
   if (e.target.value == 'DODAJ') {
     $("#cancel-marka").show()
