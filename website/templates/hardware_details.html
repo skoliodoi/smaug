@@ -41,9 +41,15 @@
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['klucz_odzyskiwania']}}</dd>
   </div>
   {%if hardware_data['notatki']%}
-  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+  <div class="col-span-8 sm:col-span-3 lg:col-span-4">
     <dt class="text-sm font-medium text-gray-500">Uwagi</dt>
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['notatki']}}</dd>
+  </div>
+  {%endif%}
+  {%if hardware_data['opis_uszkodzenia']%}
+  <div class="col-span-8 sm:col-span-3 lg:col-span-4">
+    <dt class="text-sm font-medium text-gray-500">Szkody</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['opis_uszkodzenia']}}</dd>
   </div>
   {%endif%}
 

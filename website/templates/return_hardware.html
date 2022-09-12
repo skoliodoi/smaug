@@ -3,6 +3,7 @@
   <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8" style="width: 80rem;">
     <div class="p-8 bg-sky-800">
       <div class="md:flex md:items-center md:justify-between">
+        {%include "return_arrow.html"%}
         <div class="flex-1 min-w-0">
           <h2 class="text-2xl font-bold leading-7 text-white sm:text-3xl sm:truncate">{{hardware_data['barcode']}}
             {%if hardware_data['rented_status']==True%}

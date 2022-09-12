@@ -38,8 +38,8 @@ class AddHardware(FlaskForm):
     model = SelectField("Model", validators=[validators.DataRequired()], choices=[
                         mod for mod in collection['model']], coerce=str, render_kw={'id': 'select-model'})
     stan = SelectField("Stan", validators=[validators.DataRequired()], choices=[
-                       state for state in collection['status']], coerce=str)
-    opis_uszkodzenia = StringField("Opis uszkodzenia")
+                       state for state in collection['status']], coerce=str, render_kw={'id': 'select-stan'})
+    opis_uszkodzenia = StringField("Opis uszkodzenia", render_kw={'id': 'opis-uszkodzenia-input'})
     bitlocker = StringField("Pin/hasło")
     serial = StringField("Nazwa/serial")
     identyfikator = StringField("Indentyfikator klucza odzyskiwania")

@@ -30,15 +30,91 @@ $("#select-typ").on('change', (e) => {
   }
 })
 
-$(document).ready(function () {
-  $('#all_items_table').DataTable({
-    // fixedHeader: true
-  });
+$("#select-stan").on('change', (e) => {
+  if (e.target.value == 'Sprawny') {
+    $("#opis-uszkodzenia").hide()
+    $("#opis-uszkodzenia-input").val(null)
+  } else {
+    $("#opis-uszkodzenia").show()
+  }
+})
+
+// $(document).load(function () {
+//   alert($("#select-stan").val());
+// });
+
+$(function () {
+  initialStan = $("#select-stan").val();
+  if (initialStan == 'Sprawny') {
+    $("#opis-uszkodzenia").hide()
+  } else {
+    $("#opis-uszkodzenia").show()
+  }
 });
 
+const table = $('#all_items_table').DataTable(
+  {
+    dom: 'lfrt<"#table-bottom-container" <"#table-bottom-left" i B> p>',
+    buttons: {
+      buttons: ['csv', 'excel']
+    }
+  }
+);
 
 
 
+$("#items-filter").on('change', (e) => {
+  if (e.target.value == 'all') {
+    window.location.href = '/hardware/all'
+  } else {
+    window.location.href = `/hardware/get_data/${e.target.value}`
+  }
+})
+
+$("#paperwork-filter").on('change', (e) => {
+  if (e.target.value == 'all') {
+    window.location.href = '/paperwork/all'
+  } else {
+    window.location.href = `/paperwork/get_data/${e.target.value}`
+  }
+})
+
+// $("#zagrozenie_submit").on('click', (e) => {
+//   e.preventDefault()
+//   const miejscowosc = $("#zagrozenie_miejscowosc").val()
+//   const gmina = $("#zagrozenie_gmina").val()
+//   const ulica = $("#zagrozenie_ulica").val()
+//   const nrDomu = $("#zagrozenie_dom").val()
+//   const kodPocztowy = $("#zagrozenie_kod").val()
+//   const nazwiskoFirma = $("#zagrozenie_nazwisko_firma").val()
+//   const telefon = $("#zagrozenie_telefon").val()
+//   const opis = $("#zagrozenie_opis").val()
+//   const koronawirus = $("#zagrozenie_koronawirus").val()
+//   const stanNapiecia = $("input[name='napiecie']:checked", "#zagrozenie_form").val()
+//   $.post("/erz-zagrozenie", {
+//     "miejscowosc": miejscowosc,
+//     'gmina': gmina,
+//     'ulica': ulica,
+//     'nr_budynku': nrDomu,
+//     'kod_pocztowy': kodPocztowy,
+//     'nazwisko_firma': nazwiskoFirma,
+//     'telefon': telefon,
+//     'opis': opis,
+//     'koronawirus': koronawirus,
+//     'napiecie': stanNapiecia
+//   }).done(data => {
+//     window.location.href = `/success/${data}`
+//   })
+
+// })
+
+// const options = ['Test', 'Test2', 'Test3']
+
+// $("div.toolbar").html(`<select id="table-select"></select>`);
+
+// $('#table-select').on('click', () => {
+//   alert('clicked')
+// })
 
 $("#select-marka").on('change', (e) => {
   if (e.target.value == 'DODAJ') {

@@ -17,81 +17,98 @@
         </svg>
       </button>
     </div> -->
-    <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-      <div class="flex-shrink-0 flex items-center" style="margin-left: 10px;">
-        <a href="/">
-          <img class="hidden lg:block h-8 w-auto" src="{{url_for('static', filename='images/logo2.png')}}"
-            alt="SMAUG logo">
-        </a>
+    <div class="flex-1 flex items-center justify-between sm:items-stretch sm:justify-start">
+      <div>
+        <div class="flex-shrink-0 flex items-center" style="margin-left: 10px;">
+          <a href="/">
+            <img class="hidden lg:block h-8 w-auto" src="{{url_for('static', filename='images/logo2.png')}}"
+              alt="SMAUG logo">
+          </a>
+        </div>
       </div>
-      <div class="hidden sm:block sm:ml-6">
-        <div class="flex space-x-4">
-          {%if current_user.dostep == 'Admin' or current_user.dostep == 'IT' %}
-          <button id="dropdownDefault" data-dropdown-toggle="dropdown"
-            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-            type="button">Dodaj</button>
-          {%endif%}
-          <!-- Dropdown menu -->
-          <div id="dropdown" class="z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 hidden"
-            style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(319px, 70px);"
-            data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="bottom">
+      <div>
+        <div class="hidden sm:block sm:ml-6">
+          <div class="flex space-x-4">
+            {%if current_user.dostep == 'Admin' or current_user.dostep == 'IT' %}
+            <button id="dropdownDefault" data-dropdown-toggle="dropdown"
+              class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              type="button">Dodaj</button>
+            {%endif%}
+            <!-- Dropdown menu -->
+            <div id="dropdown"
+              class="z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 hidden"
+              style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(319px, 70px);"
+              data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="bottom">
 
-            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
+              <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
 
-              <li>
-                <a href="/hardware/add"
-                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęt</a>
-              </li>
+                <li>
+                  <a href="/hardware/add"
+                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęt</a>
+                </li>
 
-              <li>
-                <a href="/paperwork/add"
-                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dokumenty</a>
-              </li>
-              <li>
-                <a href="#"
-                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęty
-                  administracyjne</a>
-              </li>
-              {%if current_user.dostep == 'Admin' %}
-              <li>
-                <a href="/signup"
-                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Użytkownika</a>
-              </li>
-              {%endif%}
-            </ul>
+                <li>
+                  <a href="/paperwork/add"
+                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dokumenty</a>
+                </li>
+                <!-- <li>
+                  <a href="#"
+                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęty
+                    administracyjne</a>
+                </li> -->
+                {%if current_user.dostep == 'Admin' %}
+                <li>
+                  <a href="/signup"
+                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Użytkownika</a>
+                </li>
+                {%endif%}
+              </ul>
 
-          </div>
-          <button id="show_all" data-dropdown-toggle="dropdown_show_all"
-            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-            type="button">Pokaż wszystkie</button>
-          <!-- Dropdown menu -->
-          <div id="dropdown_show_all"
-            class="z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 hidden"
-            style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(319px, 70px);"
-            data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="bottom">
-            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="show_all">
-              <li>
-                <a href="/hardware/all"
-                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęty</a>
-              </li>
-              <li>
-                <a href="/paperwork/all"
-                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dokumenty</a>
-              </li>
-              <li>
-                <a href="#"
-                  class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęty
-                  administracyjne</a>
-              </li>
-            </ul>
+            </div>
+            <button id="show_all" data-dropdown-toggle="dropdown_show_all"
+              class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              type="button">Pokaż wszystkie</button>
+            <!-- Dropdown menu -->
+            <div id="dropdown_show_all"
+              class="z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 hidden"
+              style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(319px, 70px);"
+              data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="bottom">
+              <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="show_all">
+                <li>
+                  <a href="/hardware/all"
+                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęty</a>
+                </li>
+                <li>
+                  <a href="/paperwork/all"
+                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dokumenty</a>
+                </li>
+                <!-- <li>
+                  <a href="#"
+                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sprzęty
+                    administracyjne</a>
+                </li> -->
+              </ul>
+            </div>
           </div>
         </div>
       </div>
+      {%if see_all %}
+      <div>
+        <select {%if see_hardware%} id="items-filter" {%else%} id="paperwork-filter" {%endif%}>
+          {%for each in data%}
+          <option value="{{each[0]}}">{{each[1]}}</option>
+          {%endfor%}  
+        </select>
+
+      </div>
+      {%endif%}
+    </div>
+
+    <div>
       <a href="/logout" style="flex: 4;">
         <button class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
           type="button">Wyloguj się</button>
       </a>
-
     </div>
   </div>
   </div>

@@ -1,78 +1,88 @@
 {%extends "index.html"%} {%block title%} Dodaj dokumentację {%endblock%} {%block content%}
-<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-  <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-    <form method="POST">
-      <div class="shadow sm:rounded-md sm:overflow-hidden">
-        <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-          <div class="flex justify-between">
-            <div style="display: flex; align-items:center">
-              <h3 class="text-lg leading-6 font-medium text-gray-900">{{header_text}}
-                dokumentację</h3>
-            </div>
-            <div class="grid grid-cols-12 gap-8" style="display: flex; align-items: center; justify-content: end">
-              <div class="flex justify-between">
-                <!-- <div class="col-span-6 sm:col-span-3 lg:col-span-5 form-check">
-                  <input
-                    class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-                    type="checkbox" checked="true" value="" id="add_paperwork">
-                  <label class="form-check-label inline-block text-gray-800" for="add_paperwork" style="float:right">
-                    Przypisz sprzęt do tej faktury
-                  </label>
-                </div> -->
+<div class="page-container">
+  <div style="width: 75vw !important;">
+    <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+      <form method="POST">
+        <div class="shadow sm:rounded-md sm:overflow-hidden">
+          <div class="p-8 bg-sky-800">
+            <div class="md:flex md:items-center md:justify-between">
+              {%include "return_arrow.html"%}
+              <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-white sm:text-3xl sm:truncate">{{header_text}} dokumenty
+                </h2>
+              </div>
+              <div style="flex: 2;">
+                <div class="flex justify-end">
+                  {%if not edit%}
+                  <a href="/paperwork/add_file" id="dodaj-plik"
+                    class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 mr-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
 
-                <a href="/paperwork/add_file" id="dodaj-plik"
-                  class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 mr-10 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-
-                  Dodaj z pliku</a>
-                <div class="col-span-6 sm:col-span-3 ml-2 lg:col-span-6" id="add_paperwork_container">
-                  {%include "barcode_select.html"%}
+                    Dodaj z pliku</a>
+                  {%endif%}
+                  <div id="add_paperwork_container">
+                    {%include "barcode_select.html"%}
+                  </div>
                 </div>
-
-
               </div>
             </div>
           </div>
-          <div class="grid grid-cols-6 gap-8">
-            {{form.hidden_tag()}}
+          <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+            
+            {%with messages = get_flashed_messages(with_categories=true)%}
+            {%if messages%}
+            {% for category, message in messages %}
+            <div {%if category=='error' %}
+              class="bg-red-300 border border-red-400 text-red-700 px-4 py-3 rounded relative" {%elif
+              category=='warning' %}
+              class="bg-yellow-300 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" {%else%}
+              class="bg-green-300 border border-green-400 text-green-700 px-4 py-3 rounded relative" {%endif%}
+              role="alert">
+              <span class="block sm:inline">{{message}}</span>
+            </div>
+            {%endfor%}
+            {%endif%}
+            {%endwith%}
+            <div class="grid grid-cols-6 gap-8">
+              {{form.hidden_tag()}}
 
-            <div class="col-span-6 sm:col-span-3 lg:col-span-3">
-              {{form.kartoteka.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.kartoteka(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              <!-- <label for="kartoteka_nr" class="block text-sm font-medium text-gray-700">Kartoteka NIW</label>
+              <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+                {{form.kartoteka.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.kartoteka(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                <!-- <label for="kartoteka_nr" class="block text-sm font-medium text-gray-700">Kartoteka NIW</label>
               <input type="text" name="kartoteka_nr" id="kartoteka_nr" autocomplete="kartoteka_nr"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
-            </div>
-            <div class="col-span-6 sm:col-span-3 lg:col-span-3">
-              {{form.faktury.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.faktury(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              <!-- <label for="faktury" class="block text-sm font-medium text-gray-700">Numery faktur</label>
+              </div>
+              <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+                {{form.faktury.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.faktury(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                <!-- <label for="faktury" class="block text-sm font-medium text-gray-700">Numery faktur</label>
               <input type="text" name="faktury" id="faktury" autocomplete="faktury"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> -->
+              </div>
             </div>
-          </div>
 
-          <div class="grid grid-cols-6 gap-8">
+            <div class="grid grid-cols-6 gap-8">
 
-            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              {{form.kartoteka_typ.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.kartoteka_typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
-              px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              <!-- <label for="kartoteka_typ" class="block text-sm font-medium text-gray-700">Kartoteka Typ</label> -->
-              <!-- <select id="kartoteka_typ" name="kartoteka_typ" autocomplete="kartoteka_typ"
+              <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                {{form.kartoteka_typ.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.kartoteka_typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+                px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                <!-- <label for="kartoteka_typ" class="block text-sm font-medium text-gray-700">Kartoteka Typ</label> -->
+                <!-- <select id="kartoteka_typ" name="kartoteka_typ" autocomplete="kartoteka_typ"
                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 <option></option>
                 {%for typ in kartoteka%}
                 <option>{{typ}}</option>
                 {%endfor%}
               </select> -->
-            </div>
-            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              {{form.mpk.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.mpk(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              <!-- <label for="mpk" class="block text-sm font-medium text-gray-700">MPK</label>
+              </div>
+              <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                {{form.mpk.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.mpk(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                <!-- <label for="mpk" class="block text-sm font-medium text-gray-700">MPK</label>
               <select id="mpk" name="mpk" autocomplete="mpk"
                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 <option></option>
@@ -80,45 +90,38 @@
                 <option>{{each}}</option>
                 {%endfor%}
               </select> -->
-            </div>
-            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-              {{form.data_przyjecia.label(class="block text-sm font-medium text-gray-700")}}
-              {{form.data_przyjecia(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
-              px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              <!-- <label for="data" class="block text-sm font-medium text-gray-700">Data przyjęcia</label>
+              </div>
+              <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                {{form.data_przyjecia.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.data_przyjecia(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+                px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                <!-- <label for="data" class="block text-sm font-medium text-gray-700">Data przyjęcia</label>
               <input type="date" name="data_faktury"
                 class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" /> -->
-            </div>
+              </div>
 
-          </div>
-          <div>
-            <!-- <label for="notes" class="block text-sm font-medium text-gray-700">Notatki:</label>
+            </div>
+            <div>
+              <!-- <label for="notes" class="block text-sm font-medium text-gray-700">Notatki:</label>
             <div class="mt-1">
               <textarea rows="4" name="notes" id="notes"
                 class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
             </div> -->
-            {{form.notatki.label(class="block text-sm font-medium text-gray-700")}}
-            <div class="mt-1">
-              {{form.notatki(class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm
-              border-gray-300 rounded-md")}}
+              {{form.notatki.label(class="block text-sm font-medium text-gray-700")}}
+              <div class="mt-1">
+                {{form.notatki(class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm
+                border-gray-300 rounded-md")}}
+              </div>
             </div>
           </div>
-          {%if edit==True%}
-          <div>
-            {{form.barcodes_form.label(class="block text-sm font-medium text-gray-700")}}
-            {{form.barcodes_form(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-            focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-          </div>
-          {%endif%}
-        </div>
 
-        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-          <button type="submit"
-            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{header_text}}</button>
+          <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+            <button type="submit"
+              class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{header_text}}</button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>
-
 {%endblock%}

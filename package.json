@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "datatables.net": "^1.12.1",
+    "datatables.net-dt": "^1.12.1",
     "flowbite": "^1.5.2",
     "jquery": "^3.6.0",
     "npx": "^10.2.2"

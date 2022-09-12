@@ -1,6 +1,6 @@
 from datetime import datetime
-from flask import Blueprint, render_template, redirect, url_for, request
-from flask.json import jsonify
+import pytz
+from flask import Blueprint, flash, render_template, redirect, url_for, request
 from website.extensions import *
 from ..forms import AddPaperwork, AddHardwareFromField
 from flask_login import login_required
@@ -8,6 +8,12 @@ import openpyxl
 from bson import ObjectId
 
 paperwork = Blueprint('paperwork', __name__)
+
+navbar_select_data = [('', ''), ('all', 'Wszystkie'), ('no-faktura', 'Brak faktury'), (
+    'faktura', 'Z fakturą'), ('no-barcode', 'Brak barcode\'u'), ('barcode', 'Z barcodem')]
+
+local_tz = pytz.timezone('Europe/Warsaw')
+local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
 
 
 def check_existing_records(kartoteka):
@@ -52,8 +58,9 @@ def go_through_file(uploaded_file):
                     barcodes_to_strip = barcode_row.split(',')
                     for each in barcodes_to_strip:
                         barcodes.append(each.strip())
-                    for barcode in barcodes: 
-                        db_items.update_one({'barcode': barcode}, {'$set': {'kartoteka': kartoteka}})
+                    for barcode in barcodes:
+                        db_items.update_one({'barcode': barcode}, {
+                                            '$set': {'kartoteka': kartoteka}})
                     data['przypisane_barcodes'] = barcodes
                 if faktury_row:
                     faktury = []
@@ -85,26 +92,36 @@ def add_file():
 @login_required
 def add():
     form = AddPaperwork()
-    free_items = db_items.find({'kartoteka': {"$exists": False}, 'barcode': {"$exists": True}})
+    free_items = db_items.find(
+        {'kartoteka': {"$exists": False}, 'barcode': {"$exists": True}})
     if request.method == 'POST':
-        faktury = form.faktury.data.split(',')
-        data = {
-            'przypisane_barcodes': request.form.getlist('barcodes'),
-            'kartoteka': form.kartoteka.data,
-            'przypisane_faktury': faktury,
-            'kartoteka_typ': form.kartoteka_typ.data,
-            'mpk': form.mpk.data,
-            'data_faktury': form.data_przyjecia.data.strftime("%Y-%m-%d"),
-            'notatki': form.notatki.data,
-        }
-        db_paperwork.insert_one(data)
-        for each in data['przypisane_barcodes']:
-            db_items.update_one({'barcode': each}, {"$set": {
-                'kartoteka': form.kartoteka.data
-            }})
-        return redirect(url_for('main.index'))
+        if check_existing_records(form.kartoteka.data):
+            faktury = form.faktury.data.split(',')
+            data = {
+                'przypisane_barcodes': request.form.getlist('barcodes'),
+                'kartoteka': form.kartoteka.data,
+                'przypisane_faktury': faktury,
+                'kartoteka_typ': form.kartoteka_typ.data,
+                'mpk': form.mpk.data,
+                'data_faktury': form.data_przyjecia.data.strftime("%Y-%m-%d"),
+                'notatki': form.notatki.data,
+            }
+            db_paperwork.insert_one(data)
+            for each in data['przypisane_barcodes']:
+                db_items.update_one({'barcode': each}, {"$set": {
+                    'kartoteka': form.kartoteka.data
+                }})
+            flash('Dodano kartotekę', 'success')
+            return redirect(url_for('paperwork.add'))
+        else:
+            flash('Kartoteka istnieje', 'error')
+            return redirect(url_for('paperwork.add'))
 
-    return render_template('add_paperwork.html', header_text="Dodaj", edit=False, form=form, available_barcodes=free_items)
+    return render_template('add_paperwork.html',
+                           header_text="Dodaj",
+                           edit=False, form=form,
+                           available_barcodes=free_items,
+                           return_to="/")
 
 
 @paperwork.route('/edit/<id>', methods=['GET', 'POST'])
@@ -115,31 +132,33 @@ def edit(id):
         barcodes_from_db = find_barcodes['przypisane_barcodes']
     else:
         barcodes_from_db = []
-    print(find_barcodes)
-    barcodes_from_db = []
     barcodes_to_delete = []
+    all_items = []
     form = AddPaperwork()
-    free_items = db_items.find({'kartoteka': {"$exists": False}})
-    # form.barcode.data = data['barcode']
+    free_items = db_items.find(
+        {'kartoteka': {"$exists": False}, 'barcode': {"$exists": True}})
+    for each in free_items:
+        all_items.append(each)
+    for each in barcodes_from_db:
+        item = db_items.find_one({'barcode': each}, {'_id': 0})
+        all_items.append(item)
+    sorted_items = sorted(all_items, key=lambda k: k['barcode'])
     if request.method == 'POST':
         faktury = form.faktury.data.split(',')
-        barcodes_from_select = request.form.getlist('barcodes')
-        if len(form.barcodes_form.data) > 0:
-            barcodes_from_form = form.barcodes_form.data.split(',')
+        barcodes_from_select = sorted(request.form.getlist('barcodes'))
+        if form.data_przyjecia.data:
+            data_faktury = form.data_przyjecia.data.strftime("%Y-%m-%d")
         else:
-            barcodes_from_form = None
-        if barcodes_from_form:
-            for barcode in barcodes_from_form:
-                barcodes_from_select.append(barcode.strip())
+            data_faktury = ""
         db_paperwork.update_one({'_id': ObjectId(id)}, {'$set': {
             'kartoteka': form.kartoteka.data,
             'kartoteka_typ': form.kartoteka_typ.data,
             'mpk': form.mpk.data,
-            'data_faktury': form.data_przyjecia.data.strftime("%Y-%m-%d"),
+            'data_faktury': data_faktury,
             'przypisane_barcodes': barcodes_from_select,
             'przypisane_faktury': faktury,
             'notatki': form.notatki.data,
-            'update_date': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            'update_date': local_time
         }}, upsert=True)
         for each in barcodes_from_select:
             db_items.update_one({'barcode': each}, {"$set": {
@@ -154,7 +173,8 @@ def edit(id):
                 db_items.update_one({'barcode': barcode}, {"$unset": {
                     'kartoteka': ""
                 }})
-        return (redirect(url_for('main.index')))
+        flash('Zaktualizowano kartotekę', 'success')
+        return (redirect(url_for('paperwork.see_all')))
     else:
         rest = {}
         data = db_paperwork.find_one({'_id': ObjectId(id)}, {
@@ -175,17 +195,48 @@ def edit(id):
                 rest[key] = value
         for key, value in rest.items():
             form[key].data = value
-        # return render_template('add_paperwork.html',
-        #                        header_text="Edytuj",
-        #                        data=data,
-        #                        hardware_data=False,
-        #                        edit=True,
-        #                        form=form)
-    return render_template('add_paperwork.html', header_text="Edytuj", form=form, available_barcodes=free_items, edit=True)
-    # return render_template('edit_paperwork.html', form=form, available_barcodes=free_items)
+    return render_template('add_paperwork.html', header_text="Edytuj", form=form,
+                           available_barcodes=free_items,
+                           all_barcodes=sorted_items,
+                           edit=True,
+                           return_to="/paperwork/all")
 
 
-@paperwork.route('/all')
+@ paperwork.route('/all')
 def see_all():
     all_items = db_paperwork.find({})
-    return render_template('all_papers.html', items=all_items)
+    return render_template('all_papers.html', items=all_items, data=navbar_select_data, see_all=True)
+
+
+@ paperwork.route('/delete/<id>')
+def delete(id):
+    all_items = db_paperwork.find({})
+    db_has_barcodes = db_paperwork.find_one(
+        {'_id': ObjectId(id), 'przypisane_barcodes': {"$exists": True}})
+    if db_has_barcodes:
+        barcodes = db_has_barcodes['przypisane_barcodes']
+        for barcode in barcodes:
+            db_items.update_one({'barcode': barcode}, {"$unset": {
+                'kartoteka': ""
+            }})
+    db_paperwork.delete_one({'_id': ObjectId(id)})
+    return render_template('all_papers.html', items=all_items, data=navbar_select_data, see_all=True)
+
+
+@ paperwork.route('/get_data/<parametr>')
+@ login_required
+def get_data(parametr):
+    all_items = db_paperwork.find({})
+    if parametr == "no-faktura":
+        all_items = db_paperwork.find(
+            {'przypisane_faktury': {"$exists": False}})
+    elif parametr == "faktura":
+        all_items = db_paperwork.find(
+            {'przypisane_faktury': {"$exists": True}})
+    elif parametr == "no-barcode":
+        all_items = db_paperwork.find(
+            {'przypisane_barcodes':  {"$exists": False}})
+    elif parametr == "barcode":
+        all_items = db_paperwork.find(
+            {'przypisane_barcodes':  {"$exists": False}})
+    return render_template('all_papers.html', items=all_items, data=navbar_select_data, see_all=True)
