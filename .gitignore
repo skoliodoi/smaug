@@ -2,6 +2,7 @@ node_modules
 env
 *.env
 *.xlsx
+*.png
 
 !flask.env
 
