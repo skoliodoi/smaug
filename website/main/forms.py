@@ -19,7 +19,7 @@ class Signup(FlaskForm):
     password = PasswordField("Hasło", [validators.DataRequired()])
     imie = StringField("Imię", [validators.DataRequired()])
     nazwisko = StringField("Nazwisko", [validators.DataRequired()])
-    email = EmailField("Email")
+    email = EmailField("Email", [validators.DataRequired()])
     access = SelectField("Typ użytkownika:", [validators.DataRequired()], choices=[
                          a for a in db_collection.find_one({})['user_type']], coerce=str)
     mpk = SelectField("MPK", choices=[val for val in collection['mpk']], validators=[

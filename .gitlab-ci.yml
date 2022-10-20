@@ -1,0 +1,49 @@
+variables:
+  IMAGE_NAME: smaug
+  IMAGE_TAG: ver1.0
+
+stages:          # List of stages for jobs, and their order of execution
+  - test
+  # - build
+  # - deploy
+
+
+test-job:
+  stage: test
+  image: python:3.8.3
+  before_script:
+    - apt-get update & pip install flake8
+  script:
+    - echo "Testing..."
+    - flake8 --ignore F401,E501,
+    - echo "Application successfully tested"
+
+
+# build-job:
+#   stage: build
+#   only:
+#     - main
+#   image: docker:20.10.16
+#   services:
+#     - docker:20.10.16-dind
+#   variables:
+#     DOCKER_TLS_CERTDIR: "/certs"
+#   before_script:
+#     - docker login $REGISTRY_URL -u $REGISTRY_USER -p $REGISTRY_PASS
+#   script:
+#     - echo $IMAGE_NAME
+#     - docker build -t $REGISTRY_URL/$IMAGE_NAME:IMAGE_TAG .
+#     - docker push $REGISTRY_URL/$IMAGE_NAME:IMAGE_TAG
+
+# deploy-job:
+#   stage: deploy
+#   only:
+#     - main
+#   before_script:
+#     - chmod 400 $SSH_KEY
+#   script:
+#     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $VPS_USER@$VPS_IP "
+#         sudo docker login $REGISTRY_URL -u $REGISTRY_USER -p $REGISTRY_PASS &&
+#         sudo docker pull $REGISTRY_URL/$IMAGE_NAME:IMAGE_TAG &&
+#         sudo docker compose -f $DOCKER_COMPOSE_FILE down &&
+#         sudo docker compose -f $DOCKER_COMPOSE_FILE up -d"

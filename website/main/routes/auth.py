@@ -12,6 +12,7 @@ yag = yagmail.SMTP(user={'njootek@gmail.com': 'SMAUG'},
 auth = Blueprint('auth', __name__)
 bcrypt = Bcrypt()
 
+
 @auth.route('/login', methods=["POST", "GET"])
 def login():
     form = Login()
@@ -20,19 +21,20 @@ def login():
         password = form.password.data
         find_user = db_users.find_one({'email': email})
         if find_user:
-          correct_pass = bcrypt.check_password_hash(find_user['password'], password)
+            correct_pass = bcrypt.check_password_hash(
+                find_user['password'], password)
         else:
-          correct_pass = False
+            correct_pass = False
         if correct_pass:
-          id = find_user['_id']
-          user = User(id) 
-          login_user(user)
-          return (redirect(url_for("main.index")))
+            id = find_user['_id']
+            user = User(id)
+            login_user(user)
+            return (redirect(url_for("main.index")))
         else:
-          error_msg = ("Niepoprawny email lub hasło")
-          return render_template('login.html', form=form, err=error_msg)
+            error_msg = ("Niepoprawny email lub hasło")
+            return render_template('login.html', form=form, err=error_msg)
     else:
-      return render_template('login.html', form=form)
+        return render_template('login.html', form=form)
 
 
 @auth.route('/signup', methods=["POST", "GET"])
@@ -41,6 +43,7 @@ def signup():
 
     form = Signup()
     if request.method == 'POST':
+        flash('Użytkownik dodany', category='success')
         pw_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         login = form.login.data
         email = form.email.data
@@ -57,7 +60,7 @@ def signup():
         """
         if form.email.data != "":
           yag.send(email, "Witamy w SMAUG-u", content)
-        return (redirect(url_for("main.index")))
+        return (redirect(url_for('auth.signup')))
     return render_template('signup.html', form=form)
 
 
