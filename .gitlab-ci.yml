@@ -30,6 +30,7 @@ build-job:
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   before_script:
+    - echo $IMAGE_NAME
     - echo $REGISTRY_URL $REGISTRY_USER $REGISTRY_PASS
     - docker login $REGISTRY_URL -u $REGISTRY_USER -p $REGISTRY_PASS
   script:
