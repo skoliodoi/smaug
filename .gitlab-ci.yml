@@ -30,23 +30,21 @@ build-job:
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   before_script:
-    - echo $IMAGE_NAME
-    - echo $REGISTRY_URL $REGISTRY_USER $REGISTRY_PASS
     - docker login $REGISTRY_URL -u $REGISTRY_USER -p $REGISTRY_PASS
   script:
     - echo $IMAGE_NAME
     - docker build -t $REGISTRY_URL/$IMAGE_NAME:IMAGE_TAG .
     - docker push $REGISTRY_URL/$IMAGE_NAME:IMAGE_TAG
 
-# deploy-job:
-#   stage: deploy
-#   only:
-#     - main
-#   before_script:
-#     - chmod 400 $SSH_KEY
-#   script:
-#     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $VPS_USER@$VPS_IP "
-#         sudo docker login $REGISTRY_URL -u $REGISTRY_USER -p $REGISTRY_PASS &&
-#         sudo docker pull $REGISTRY_URL/$IMAGE_NAME:IMAGE_TAG &&
-#         sudo docker compose -f $DOCKER_COMPOSE_FILE down &&
-#         sudo docker compose -f $DOCKER_COMPOSE_FILE up -d"
+deploy-job:
+  stage: deploy
+  only:
+    - main
+  before_script:
+    - chmod 400 $SSH_KEY
+  script:
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $VPS_USER@$VPS_IP "
+        sudo docker login $REGISTRY_URL -u $REGISTRY_USER -p $REGISTRY_PASS &&
+        sudo docker pull $REGISTRY_URL/$IMAGE_NAME:IMAGE_TAG &&
+        sudo docker compose -f $DOCKER_COMPOSE_FILE down &&
+        sudo docker compose -f $DOCKER_COMPOSE_FILE up -d"
