@@ -5,7 +5,7 @@ variables:
 stages:          # List of stages for jobs, and their order of execution
   - test
   - build
-  # - deploy
+  - deploy
 
 
 test-job:
