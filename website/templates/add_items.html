@@ -20,7 +20,6 @@
                 <div class="flex">
                   {%if hardware_data == False and edit == False %}
                   <div class="form-check" style="flex: 1">
-
                     <input
                       class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                       type="checkbox" value="" id="rent_hardware">
@@ -61,42 +60,55 @@
               <div class="grid grid-cols-10 gap-4">
                 <div class="col-span-6 lg:col-span-2">
                   {{form.hidden_tag()}}
+
                   {{form.barcode.label(class="block text-sm font-medium text-gray-700")}}
                   {{form.barcode(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
                   focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
                 </div>
                 <div class="col-span-6 sm:col-span-6 lg:col-span-2">
-                  {{form.stanowisko.label(class="block text-sm font-medium text-gray-700")}}
-                  {{form.stanowisko(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
-                  px-3
-                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-                </div>
-
-                <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                   <div style="display: flex; justify-content: space-between">
-                    {{form.typ.label(class="block text-sm font-medium text-gray-700")}}
-                    <button type="button" id="cancel-typ"
-                      class="ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-gray-700 focus:text-gray-500 focus:outline-none">
+                    {{form.stanowisko.label(class="block text-sm font-medium text-gray-700")}}
+                    <button type="button" id="add-stanowisko"
+                      class="add-button ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full focus:outline-none">
                       <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
                         <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
                       </svg>
                     </button>
                   </div>
 
-                  {{form.typ(id="select-typ", class="mt-1 block w-full bg-white border border-gray-300 rounded-md
+                  {{form.stanowisko(class="mt-1 block w-full bg-white border border-gray-300 rounded-md
                   shadow-sm py-2 px-3
                   focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-                  {{form.nowy_typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+                  {{form.nowy_stanowisko(placeholder="Wpisz nazwę stanowiska", class="mt-1 block w-full bg-white border
+                  border-gray-300 rounded-md shadow-sm py-2
                   px-3
                   focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                </div>
+                <div class="col-span-6 sm:col-span-6 lg:col-span-2">
+                  <div style="display: flex; justify-content: space-between">
+                    {{form.typ.label(class="block text-sm font-medium text-gray-700")}}
+                    <button type="button" id="add-typ"
+                      class="add-button ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full focus:outline-none">
+                      <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+                        <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+                      </svg>
+                    </button>
+                  </div>
 
+                  {{form.typ(class="mt-1 block w-full bg-white border border-gray-300 rounded-md
+                  shadow-sm py-2 px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+                  {{form.nowy_typ(placeholder="Wpisz nowy typ", class="mt-1 block w-full bg-white border border-gray-300
+                  rounded-md shadow-sm py-2
+                  px-3
+                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
                 </div>
 
                 <div class="col-span-6 sm:col-span-3 lg:col-span-2">
                   <div style="display: flex; justify-content: space-between">
                     {{form.marka.label(class="block text-sm font-medium text-gray-700")}}
-                    <button type="button" id="cancel-marka"
-                      class="ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-gray-700 focus:text-gray-500 focus:outline-none">
+                    <button type="button" id="add-marka"
+                      class="add-button ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full focus:outline-none">
                       <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
                         <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
                       </svg>
@@ -104,7 +116,8 @@
                   </div>
                   {{form.marka(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
                   focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-                  {{form.nowa_marka(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+                  {{form.nowa_marka(placeholder="Wpisz nową markę", class="mt-1 block w-full bg-white border
+                  border-gray-300 rounded-md shadow-sm py-2
                   px-3
                   focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
                 </div>
@@ -112,8 +125,8 @@
                 <div class="col-span-6 sm:col-span-3 lg:col-span-2">
                   <div style="display: flex; justify-content: space-between">
                     {{form.model.label(class="block text-sm font-medium text-gray-700")}}
-                    <button type="button" id="cancel-model"
-                      class="ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-gray-700 focus:text-gray-500 focus:outline-none">
+                    <button type="button" id="add-model"
+                      class="add-button ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full focus:outline-none">
                       <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
                         <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
                       </svg>
@@ -121,7 +134,8 @@
                   </div>
                   {{form.model(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
                   focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-                  {{form.nowy_model(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+                  {{form.nowy_model(placeholder="Wpisz nowy model", class="mt-1 block w-full bg-white border
+                  border-gray-300 rounded-md shadow-sm py-2
                   px-3
                   focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
                 </div>
@@ -165,26 +179,27 @@
               </div>
 
               <div style="margin-top: 1rem " id="opis-uszkodzenia">
-                  {{form.opis_uszkodzenia.label(class="block text-sm font-medium text-gray-700")}}
-                  {{form.opis_uszkodzenia(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-                  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-                </div>
-
-              </div>
-
-              {%endif%}
-              {% include "rent_hardware.html"%}
-
-              <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                <button type="submit"
-                  class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{header_text}}</button>
+                {{form.opis_uszkodzenia.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.opis_uszkodzenia(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
               </div>
 
             </div>
+
+            {%endif%}
+            {% include "rent_hardware.html"%}
+
+            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+              <button type="submit"
+                class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{header_text}}</button>
+            </div>
+
+          </div>
       </form>
 
 
     </div>
   </div>
 </div>
+<script src="{{url_for('static', filename='scripts/hardwareScripts.js')}}"></script>
 {%endblock%}

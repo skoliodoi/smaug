@@ -1,0 +1,29 @@
+{%extends "index.html"%}{%block title%}Zobacz wszystkie {%endblock%}{%block content%}
+<div class="page-container">
+  <div style="width: 25%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <div>
+      <h1 class="text-2xl font-bold leading-7 text-white sm:text-3xl sm:truncate">Na pewno?</h1>
+    </div>
+
+
+
+    <div style="display:flex; justify-content: space-between; width: 100%">
+      <div style="flex: 1; padding: 5px">
+        <form method="POST">
+          <button id="confirm-change-button" name="{{id}} type=" button"
+            class="items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Tak</button>
+        </form>
+
+      </div>
+
+      <div style="flex: 1; padding: 5px">
+        <a href="{{return_to}}">
+          <button type="button" id="cancel-change-button"
+            class="items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            Nie</button></a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{%endblock%}

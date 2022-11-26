@@ -20,8 +20,9 @@ class User():
             'imie': kwargs['imie'],
             'nazwisko': kwargs['nazwisko'],
             'dostep': kwargs['dostep'],
-            'mpk': kwargs['mpk']
         }
+        if len(kwargs['mpk']) > 0:
+            user['mpk'] = kwargs['mpk']
         return jsonify(user)
 
     def is_authenticated(self):

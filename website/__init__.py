@@ -7,6 +7,7 @@ from .models import User
 from .main.routes.routes import * 
 from .main.routes.hardware_routes import * 
 from .main.routes.paperwork_routes import * 
+from .main.routes.user_routes import *
 from .main.routes.auth import auth
 
 def create_app():
@@ -25,6 +26,7 @@ def create_app():
   app.register_blueprint(auth, url_prefix='/')
   app.register_blueprint(hardware, url_prefix='/hardware')
   app.register_blueprint(paperwork, url_prefix='/paperwork')
+  app.register_blueprint(users, url_prefix='/users')
 
 
   return app

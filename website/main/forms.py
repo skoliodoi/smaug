@@ -20,31 +20,35 @@ class Signup(FlaskForm):
     imie = StringField("Imię", [validators.DataRequired()])
     nazwisko = StringField("Nazwisko", [validators.DataRequired()])
     email = EmailField("Email", [validators.DataRequired()])
-    access = SelectField("Typ użytkownika:", [validators.DataRequired()], choices=[
+    dostep = SelectField("Typ użytkownika:", [validators.DataRequired()], choices=[
                          a for a in db_collection.find_one({})['user_type']], coerce=str)
-    mpk = SelectField("MPK", choices=[val for val in collection['mpk']], validators=[
-                      validators.DataRequired()], coerce=str)
+    new_mpk = StringField("Nowy MPK", render_kw={'style': 'display: none',
+                          "id": "signup-new-mpk", "placeholder": "Wpisz nowy MPK"})
+    # mpk = SelectField("MPK", choices=[val for val in collection['mpk']], validators=[
+    #                   validators.DataRequired()], coerce=str)
     submit = SubmitField("Zaloguj się")
 
 
 class AddHardware(FlaskForm):
     barcode = StringField("Barcode", validators=[validators.DataRequired()])
-    stanowisko = SelectField("Stanowisko", choices=[
-                             st['stanowisko'] for st in db_stanowiska.find({})], coerce=str)
-    typ = SelectField("Typ sprzętu", choices=[
-                      typ for typ in collection['type']], coerce=str)
-    marka = SelectField("Marka", validators=[validators.DataRequired()], choices=[
-                        m for m in collection['marka']], coerce=str, render_kw={'id': 'select-marka'})
-    model = SelectField("Model", validators=[validators.DataRequired()], choices=[
-                        mod for mod in collection['model']], coerce=str, render_kw={'id': 'select-model'})
+    stanowisko = SelectField("Stanowisko", coerce=str, render_kw={
+                             'id': 'select-stanowisko'})
+    typ = SelectField("Typ sprzętu", coerce=str,
+                      render_kw={'id': 'select-typ', 'required': True})
+    marka = SelectField("Marka", coerce=str, render_kw={
+                        'id': 'select-marka', 'required': True})
+    model = SelectField("Model", coerce=str, render_kw={
+                        'id': 'select-model', 'required': True})
     stan = SelectField("Stan", validators=[validators.DataRequired()], choices=[
                        state for state in collection['status']], coerce=str, render_kw={'id': 'select-stan'})
-    opis_uszkodzenia = StringField("Opis uszkodzenia", render_kw={'id': 'opis-uszkodzenia-input'})
+    opis_uszkodzenia = StringField("Opis uszkodzenia", render_kw={
+                                   'id': 'opis-uszkodzenia-input'})
     bitlocker = StringField("Pin/hasło")
     serial = StringField("Nazwa/serial")
     identyfikator = StringField("Indentyfikator klucza odzyskiwania")
     klucz_odzyskiwania = StringField("Klucz/dysk odzyskiwania")
     notatki = TextAreaField("Notatki dot. sprzętu", render_kw={'rows': 2})
+
     mocarz_id = StringField("Moccarz ID")
     projekt = SelectField("Projekt", choices=[
                           p for p in collection['projekt']], coerce=str, render_kw={'id': 'select-projekt'})
@@ -67,6 +71,8 @@ class AddHardware(FlaskForm):
     notatki_wypozyczenie = TextAreaField(
         "Notatki dot. wypożyczenia", render_kw={'rows': 2})
 
+    nowy_stanowisko = StringField(
+        render_kw={'style': 'display: none', 'id': 'nowy_stanowisko'})
     nowy_typ = StringField(
         render_kw={'style': 'display: none', 'id': 'nowy_typ'})
     nowa_marka = StringField(
@@ -86,8 +92,10 @@ class AddHardwareFromField(FlaskForm):
 class ReturnHardware(FlaskForm):
     stan = SelectField("Stan", validators=[validators.DataRequired()], choices=[
                        state for state in collection['status']], coerce=str, render_kw={'id': 'zwrot-stan'})
-    opis_uszkodzenia = TextAreaField("Opis uszkodzenia", render_kw={'rows': 1, 'id': 'opis-uszkodzenia'})
-    dodatkowe_uwagi = TextAreaField("Dodatkowe uwagi", render_kw={'rows': 1, 'id': 'zwrot-dodatkowe-uwagi'})
+    opis_uszkodzenia = TextAreaField("Opis uszkodzenia", render_kw={
+                                     'rows': 1, 'id': 'opis-uszkodzenia'})
+    dodatkowe_uwagi = TextAreaField("Dodatkowe uwagi", render_kw={
+                                    'rows': 1, 'id': 'zwrot-dodatkowe-uwagi'})
 
 
 class AddPaperwork(FlaskForm):
@@ -97,11 +105,12 @@ class AddPaperwork(FlaskForm):
     faktury = StringField("Numery faktur")
     kartoteka_typ = SelectField("Kartoteka Typ", choices=[
                                 "", "Środek trwały", "Leasing"], validators=[validators.DataRequired()], coerce=str)
-    mpk = SelectField("MPK", choices=[val for val in collection['mpk']], validators=[
-                      validators.DataRequired()], coerce=str)
+    mpk = SelectField("MPK", validators=[
+                      validators.DataRequired()], coerce=str,  render_kw={'placeholder': 'Wybierz MPK', 'rows': 1, 'id': 'select-mpk'})
     data_przyjecia = DateField("Data przyjęcia", format='%Y-%m-%d')
     notatki = TextAreaField("Notatki", render_kw={'rows': 4})
-
+    nowy_mpk = StringField(
+        render_kw={'style': 'display: none', 'id': 'nowy_mpk'})
 # class EditPaperwork(FlaskForm):
 #   kartoteka = StringField("Kartoteka NIW", validators=[validators.DataRequired()])
 #   faktury = StringField("Numery faktur")

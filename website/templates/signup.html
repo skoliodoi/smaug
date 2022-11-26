@@ -7,68 +7,91 @@
           <div class="py-6 px-4 space-y-6 sm:p-6" style="background-color: #1F2937;">
             <div class="flex justify-center">
               <div style="display: flex; align-items:center">
-                <h3 class="text-lg leading-6 font-medium text-white">Dodaj użytkownika</h3>
+                <h3 class="text-lg leading-6 font-medium text-white">{{display_text}} użytkownika</h3>
               </div>
             </div>
           </div>
           {%with messages = get_flashed_messages(with_categories=true)%}
           {%if messages%}
           {% for category, message in messages %}
-          <div class="bg-green-300 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+          <div {%if category=='error' %}
+            class="bg-red-300 border border-red-400 text-red-700 px-4 py-3 rounded relative" {%elif category=='warning'
+            %} class="bg-yellow-300 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" {%else%}
+            class="bg-green-300 border border-green-400 text-green-700 px-4 py-3 rounded relative" {%endif%}
+            role="alert">
             <span class="block sm:inline">{{message}}</span>
           </div>
           {%endfor%}
           {%endif%}
           {%endwith%}
           <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-            <div class="grid grid-cols-6 gap-8">
+            <div class="grid grid-cols-12 gap-8">
               {{form.hidden_tag()}}
-
-              <div class="col-span-6 sm:col-span-3 lg:col-span-3">
-                {{form.login.label(class="block text-sm font-medium text-gray-700")}}
-                {{form.login(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              </div>
-              <div class="col-span-6 sm:col-span-3 lg:col-span-3">
-                {{form.password.label(class="block text-sm font-medium text-gray-700")}}
-                {{form.password(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              </div>
-              <div class="col-span-6 sm:col-span-3 lg:col-span-3">
-                {{form.imie.label(class="block text-sm font-medium text-gray-700")}}
-                {{form.imie(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              </div>
-              <div class="col-span-6 sm:col-span-3 lg:col-span-3">
-                {{form.nazwisko.label(class="block text-sm font-medium text-gray-700")}}
-                {{form.nazwisko(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-              </div>
               <div class="col-span-6 sm:col-span-3 lg:col-span-6">
                 {{form.email.label(class="block text-sm font-medium text-gray-700")}}
                 {{form.email(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
                 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="email")}}
               </div>
-              <div class="col-span-6 sm:col-span-3 lg:col-span-6" id="access-box">
-                {{form.access.label(class="block text-sm font-medium text-gray-700")}}
-                {{form.access(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="access")}}
-              </div>
-              <div class="col-span-6 sm:col-span-3 lg:col-span-3" style="display:none" id="signup-mpk">
-                {{form.mpk.label(class="block text-sm font-medium text-gray-700")}}
-                {{form.mpk(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+              <!-- <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+                {{form.password.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.password(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              </div> -->
+              <div class="col-span-6 sm:col-span-3 lg:col-span-6">
+                {{form.login.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.login(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
                 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
               </div>
+              <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+                {{form.imie.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.imie(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              </div>
+              <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+                {{form.nazwisko.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.nazwisko(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+              </div>
+
+              <div class="col-span-6 sm:col-span-3 lg:col-span-4" id="access-box">
+                {{form.dostep.label(class="block text-sm font-medium text-gray-700")}}
+                {{form.dostep(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="access")}}
+              </div>
+
+            </div>
+            <div {%if not edit%} style="display: none;" {%endif%} id="signup-mpk-box">
+              <div style="display: flex; justify-content: space-between">
+                <label class="block text-sm font-medium text-gray-700">MPK</label>
+                <button type="button" id="add-mpk"
+                  class="add-button ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full focus:outline-none">
+                  <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+                    <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+                  </svg>
+                </button>
+              </div>
+              {%include 'mpk_select.html'%}
+            </div>
+            <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+              {{form.new_mpk(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+            </div>
+            <div id="mpk-alert" class="mt-1 bg-red-300 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+              role="alert">
+              <span class="block sm:inline">Wybierz lub wpisz przynajmniej jedno MPK</span>
             </div>
           </div>
-
-          <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-            <button type="submit"
-              class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dodaj</button>
-          </div>
         </div>
-      </form>
+
+        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+          <button type="submit" id="signup-button"
+            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{display_text}} użytkownika</button>
+        </div>
     </div>
+    </form>
   </div>
 </div>
+</div>
+<script src="{{url_for('static', filename='scripts/addUserScripts.js')}}"></script>
+
 {%endblock%}

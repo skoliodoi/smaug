@@ -1,0 +1,86 @@
+{%extends "index.html"%}{%block title%}Zobacz wszystkie {%endblock%}{%block content%}
+
+<!-- This example requires Tailwind CSS v2.0+ -->
+<!-- <div class="px-4 sm:px-6 lg:px-8">
+    
+</div> -->
+{%with messages = get_flashed_messages(with_categories=true)%}
+{%if messages%}
+{% for category, message in messages %}
+<div {%if category=='error' %} class="bg-red-300 border border-red-400 text-red-700 px-4 py-3 rounded relative" {%elif
+  category=='warning' %} class="bg-yellow-300 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative"
+  {%else%} class="bg-green-300 border border-green-400 text-green-700 px-4 py-3 rounded relative" {%endif%}
+  role="alert">
+  <span class="block sm:inline">{{message}}</span>
+
+</div>
+{%endfor%}
+{%endif%}
+{%endwith%}
+<div class="table-container">
+  <table id="all_items_table" class="display order-column">
+    <thead class="bg-gray-50">
+      <tr>
+        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Nazwisko</th>
+        <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Imię
+        </th>
+        <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Email
+        </th>
+        <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Dostęp
+        </th>
+        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style="text-align: center;">
+          MPK</th>
+        <th scope="col" class="px-3 py-3.5 text-sm font-semibold text-gray-900" id="akcje-label">Akcje</th>
+
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200 bg-white">
+      {%for user in users%}
+      <tr>
+        <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+          {{user['nazwisko']}}
+        </td>
+        <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">{{user['imie']}}</td>
+        <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{user['email']}}</td>
+        <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{user['dostep']}}</td>
+        <td class="px-3 py-4 text-sm text-gray-500" style="text-align: center;">
+          {%if user['mpk']%}
+          <ul>
+            {%for each in user['mpk']%}
+            <li>{{each}}</li>
+            {%endfor%}
+          </ul>
+          {%else%}
+          Brak
+          {%endif%}
+        </td>
+        <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+          <form method="POST">
+            <a href="/users/edit/{{user['_id']}}" class="text-indigo-600 hover:text-indigo-900">
+              <input type="button" name="{{user['_id']}}">Edytuj dane</a>
+          </form>
+          <form method="POST">
+            <a href="/users/reset_pass/{{user['_id']}}" class="text-indigo-600 hover:text-indigo-900">
+              <input type="button" name="{{user['_id']}}">Resetuj hasło</a>
+          </form>
+          <form method="POST">
+            <a href="/users/delete/{{user['_id']}}" class="text-indigo-600 hover:text-indigo-900">
+              <input type="button" name="{{user['_id']}}">Usuń użytkownika</a>
+          </form>
+        </td>
+      </tr>
+      {%endfor%}
+
+
+      <!-- More people... -->
+    </tbody>
+
+
+  </table>
+</div>
+<!-- <div style="height: 100%; width: 100%; background: red; z-index: 100; position: absolute; top: 0; display: flex; justify-content: center; align-items: center">
+  test
+</div> -->
+
+
+{%endblock%}

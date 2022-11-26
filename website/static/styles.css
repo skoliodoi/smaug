@@ -70,7 +70,8 @@ nav {
 #cancel-model,
 #cancel-marka,
 #cancel-projekt,
-#cancel-lokalizacja {
+#cancel-lokalizacja,
+#cancel-stanowisko {
   display: none;
 }
 
@@ -84,7 +85,7 @@ nav {
 
 body {
   background: rgba(44, 62, 80, .8);
-  font-family: 'Oswald', 'Futura', sans-serif;
+  font-family: 'Questrial', 'Oswald', 'Futura', sans-serif;
 }
 
 #wrapper {
@@ -123,37 +124,125 @@ nav select {
 .return-container {
   padding: 0.5em;
   margin-right: 0.3em;
-  
+
   border-radius: 0.1em;
   height: 3.2em;
   width: 3.2em;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
 }
 
-.return-container:hover {
-  box-shadow:rgba(149, 165, 166, .3) 0 0 10px;
-  border: 1.5px solid white;
-}
 
 .return-container .arrow {
-  height: 75% !important;
-  width: 75% !important;
+  height: 50% !important;
+  width: 50% !important;
   border-left: 5px solid white;
   border-bottom: 5px solid white;
-  transform: rotate(45deg)
+  transition: transform .2s;
+  transform: rotate(45deg);
+  /* Animation */
 }
 
+.return-container:hover .arrow {
+  transform: scale(1.5);
+  transform: rotate(135deg);
+}
+
+#confirm-change-button,
+#cancel-change-button {
+  width: 100%;
+}
+
+#confirm-change-button {
+  background: #16a34a;
+}
+#confirm-change-button:hover {
+  background: #15803d;
+}
+#confirm-change-button:focus {
+  background: #10b981;
+}
+
+#cancel-change-button {
+  background: #e11d48;
+}
+#cancel-change-button:hover {
+  background: #be123c;
+}
+#cancel-change-button:focus {
+  background: #f43f5e;
+}
 
 footer {
   margin-top: 20px;
   color: white;
 }
 
+#mpkSearchButton {
+  width: 100% !important;
+  margin-top: 0.25rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#mpk-alert {
+  display: none;
+}
+
+.add-button,
+.cancel-button {
+  background-color: rgb(7 89 133);
+  color: white;
+  padding: 2px;
+  height: 20px;
+  width: 20px;
+}
+
+@keyframes change-to-add {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(45deg);
+  }
+}
+
+.add-button {
+  animation: change-to-add 0.3s;
+  transform: rotate(45deg);
+}
+
+
+@keyframes change-to-cancel {
+  from {
+    transform: rotate(45deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.cancel-button {
+  animation: change-to-cancel 0.3s;
+}
+
+
 @media screen and (max-width: 768px) {
   #login-container {
     flex-direction: column;
   }
+}
+
+
+@media (min-width: 640px) {
+  .sm\:text-3xl {
+    font-size: 1.575rem !important;
+    line-height: 2.25rem;
+  }
+}
+
+#akcje-label {
+  text-align: right !important;
 }

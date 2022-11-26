@@ -1,6 +1,6 @@
 {%extends "index.html"%} {%block title%} Dodaj dokumentację {%endblock%} {%block content%}
 <div class="page-container">
-  <div style="width: 75vw !important;">
+  <div style="width: 50vw !important;">
     <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
       <form method="POST">
         <div class="shadow sm:rounded-md sm:overflow-hidden">
@@ -8,7 +8,8 @@
             <div class="md:flex md:items-center md:justify-between">
               {%include "return_arrow.html"%}
               <div class="flex-1 min-w-0">
-                <h2 class="text-2xl font-bold leading-7 text-white sm:text-3xl sm:truncate">{{header_text}} dokumenty
+                <h2 style="word-wrap: break-word;"
+                  class="text-xl font-bold leading-7 text-white sm:text-3xl sm:truncate">{{header_text}} dokumenty
                 </h2>
               </div>
               <div style="flex: 2;">
@@ -27,7 +28,7 @@
             </div>
           </div>
           <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-            
+
             {%with messages = get_flashed_messages(with_categories=true)%}
             {%if messages%}
             {% for category, message in messages %}
@@ -79,17 +80,23 @@
               </select> -->
               </div>
               <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                {{form.mpk.label(class="block text-sm font-medium text-gray-700")}}
-                {{form.mpk(class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3
+                <div style="display: flex; justify-content: space-between">
+                  {{form.mpk.label(class="block text-sm font-medium text-gray-700")}}
+                  <button type="button" id="add-mpk"
+                    class="add-button ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full focus:outline-none">
+                    <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+                      <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+                    </svg>
+                  </button>
+                </div>
+                {{form.mpk(class="mt-1 block w-full bg-white border
+                border-gray-300 rounded-md shadow-sm py-2
+                px-3
                 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-                <!-- <label for="mpk" class="block text-sm font-medium text-gray-700">MPK</label>
-              <select id="mpk" name="mpk" autocomplete="mpk"
-                class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option></option>
-                {%for each in mpk_list%}
-                <option>{{each}}</option>
-                {%endfor%}
-              </select> -->
+                {{form.nowy_mpk(placeholder="Wpisz MPK", class="mt-1 block w-full bg-white border
+                border-gray-300 rounded-md shadow-sm py-2
+                px-3
+                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
               </div>
               <div class="col-span-6 sm:col-span-3 lg:col-span-2">
                 {{form.data_przyjecia.label(class="block text-sm font-medium text-gray-700")}}
@@ -124,4 +131,5 @@
     </div>
   </div>
 </div>
+<script src="{{url_for('static', filename='scripts/paperworkScripts.js')}}"></script>
 {%endblock%}

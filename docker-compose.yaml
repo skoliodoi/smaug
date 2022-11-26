@@ -26,10 +26,10 @@ services:
     volumes:
       - ./website:/app/website
     ports:
-      - '5000:5000'
+      - '7150:7150'
     environment:
       - FLASK_ENV=development
-    command: ["flask", "run", "--host", "0.0.0.0"]
+    command: ["flask", "run", "--host", "0.0.0.0", "--port", "7150"]
     env_file:
       - ./.env
     stdin_open: true

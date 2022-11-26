@@ -2,15 +2,10 @@ from website.models import User
 from ..forms import Login, Signup
 from flask import Blueprint, flash, render_template, redirect, url_for, request
 from website.extensions import *
+from website.constants import *
 from flask_login import login_user, login_required, logout_user
-import yagmail
-from flask_bcrypt import Bcrypt
-
-yag = yagmail.SMTP(user={'njootek@gmail.com': 'SMAUG'},
-                   password="uzghjsotztwpbkhe")
 
 auth = Blueprint('auth', __name__)
-bcrypt = Bcrypt()
 
 
 @auth.route('/login', methods=["POST", "GET"])
@@ -37,31 +32,60 @@ def login():
         return render_template('login.html', form=form)
 
 
+def check_existing_users(login, email):
+    existing_user = db_users.find_one(
+        {"$or": [{'login': login}, {'email': email}]})
+    print(existing_user)
+    if existing_user == None:
+        return True
+    else:
+        return False
+
+
+
+
 @auth.route('/signup', methods=["POST", "GET"])
 @login_required
 def signup():
-
     form = Signup()
     if request.method == 'POST':
-        flash('Użytkownik dodany', category='success')
-        pw_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        login = form.login.data
-        email = form.email.data
-        password = form.password.data
-        imie = form.imie.data
-        nazwisko = form.nazwisko.data
-        access = form.access.data
-        mpk = form.mpk.data
-        user = User.signup(login=login, email=email, password=pw_hash,
-                           dostep=access, mpk=mpk, imie=imie, nazwisko=nazwisko)
-        db_users.insert_one(user.json)
-        content = f"""
-        Hasło do systemu SMAUG: {password}
+        if check_existing_users(form.login.data, form.email.data):
+
+            password = generate_pass()
+            mpk_data_from_list = request.form.getlist('mpk_list')
+            if form.new_mpk.data:
+                new_mpk = form.new_mpk.data.split(',')
+                for element in new_mpk:
+                    mpk_data_from_list.append(element)
+                    db_collection.update_one({"_id": "main"}, {"$addToSet": {
+                                             "mpk": element}})
+            # print(mpk_data_from_list)
+            flash('Użytkownik dodany', category='success')
+            # pw_hash = bcrypt.generate_password_hash(
+            #     form.password.data).decode('utf-8')
+            login = form.login.data
+            email = form.email.data
+            # password = form.password.data
+            imie = form.imie.data
+            nazwisko = form.nazwisko.data
+            access = form.dostep.data
+            mpk = mpk_data_from_list
+            user = User.signup(login=login, email=email, password=password[0],
+                               dostep=access, mpk=mpk, imie=imie, nazwisko=nazwisko)
+            db_users.insert_one(user.json)
+            content = f"""
+        Hasło do systemu SMAUG: {password[1]}
         """
-        if form.email.data != "":
-          yag.send(email, "Witamy w SMAUG-u", content)
-        return (redirect(url_for('auth.signup')))
-    return render_template('signup.html', form=form)
+            if form.email.data != "":
+                yag.send(email, "Witamy w SMAUG-u", content)
+            return redirect(url_for('auth.signup'))
+        else:
+            flash('Użytkownik o podanych danych już istnieje!', category='error')
+            return redirect(url_for('auth.signup'))
+    else:
+        collection = db_collection.find_one({})
+        mpk_data = collection['mpk']
+        return render_template('signup.html', form=form, mpk_data=mpk_data, display_text="Dodaj")
 
 
 @auth.route('/logout')

@@ -18,7 +18,8 @@
         <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Serial</th>
         <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Udostępniony?</th>
         <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Moccarz ID</th>
-        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Akcje</th>
+        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">MPK</th>
+        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" id="akcje-label">Akcje</th>
 
       </tr>
     </thead>
@@ -42,6 +43,13 @@
         <td class="px-3 py-4 text-sm text-gray-500">
           {%if item['rented_status']==True%}
           {{item['mocarz_id']}}
+          {%endif%}
+        </td>
+        <td class="px-3 py-4 text-sm text-gray-500">
+          {%if item['mpk']%}
+          {{item['mpk']}}
+          {%else%}
+          Brak
           {%endif%}
         </td>
         <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

@@ -8,5 +8,6 @@ main = Blueprint('main', __name__)
 @main.route('/')
 @login_required
 def index():
+  print(current_user)
   return render_template('main.html')
 

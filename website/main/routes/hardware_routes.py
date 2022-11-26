@@ -1,5 +1,4 @@
-from datetime import datetime, timezone, timedelta
-import pytz
+
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from website.extensions import *
 from ..forms import AddHardware, AddHardwareFromField, FilterHardware, ReturnHardware
@@ -7,25 +6,22 @@ from website.dane import *
 import openpyxl
 from flask_login import login_required, current_user
 from bson import ObjectId
+from website.constants import *
+from datetime import datetime
 
 hardware = Blueprint('hardware', __name__)
 
-navbar_select_data = [('', ''), ('all', 'Wszystkie'), ('rented', 'Wypożyczone'), (
-    'not-rented', 'Wolne'), ('no-barcode', 'Brak barcode\'u'), ('barcode', 'Z barcodem')]
+# navbar_select_data = [('', ''), ('all', 'Wszystkie'), ('rented', 'Wypożyczone'), (
+#     'not-rented', 'Wolne'), ('no-barcode', 'Brak barcode\'u'), ('barcode', 'Z barcodem')]
 
 return_route = "/hardware/all"
 
-local_tz = pytz.timezone('Europe/Warsaw')
-local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-
-
-def check_existing_records(barcode):
-
-    existing_record = db_items.find_one({'barcode': barcode})
-    if existing_record == None:
-        return True
-    else:
-        return False
+# def check_existing_records(barcode):
+#     existing_record = db_items.find_one({'barcode': barcode})
+#     if existing_record == None:
+#         return True
+#     else:
+#         return False
 
 
 def go_through_file(uploaded_file):
@@ -36,7 +32,7 @@ def go_through_file(uploaded_file):
     for row in range(2, ws.max_row+1):
         if row:
             barcode = ws.cell(row, 1).value
-            if check_existing_records(barcode):
+            if check_existing_data(barcode, 'barcode', db_items):
                 barcode = ws.cell(row, 1).value
                 notatki = ws.cell(row, 11).value
                 notatki_wypozyczenie = ws.cell(row, 25).value
@@ -132,118 +128,131 @@ def add_file():
 @hardware.route('/add', methods=['GET', 'POST'])
 @login_required
 def add():
-
     hardware_form = AddHardware()
+    hardware_form.stanowisko.choices = collection['stanowisko']
+    hardware_form.typ.choices = collection['type']
+    hardware_form.marka.choices = collection['marka']
+    hardware_form.model.choices = collection['model']
+    hardware_form.projekt.choices = collection['projekt']
+    hardware_form.lokalizacja.choices = collection['lokalizacja']
+    try:
+        if request.method == 'POST':
+            if check_existing_data(hardware_form.barcode.data, 'barcode', db_items):
+            # if check_existing_records(hardware_form.barcode.data):
+                stanowisko_data = hardware_form.stanowisko.data
+                typ_data = hardware_form.typ.data
+                marka_data = hardware_form.marka.data
+                model_data = hardware_form.model.data
+                projekt_data = hardware_form.projekt.data
+                lokalizacja_data = hardware_form.lokalizacja.data
+                opis_szkod = hardware_form.opis_uszkodzenia.data
 
-    if request.method == 'POST':
-        if check_existing_records(hardware_form.barcode.data):
-            typ_data = hardware_form.typ.data
-            marka_data = hardware_form.marka.data
-            model_data = hardware_form.model.data
-            projekt_data = hardware_form.projekt.data
-            lokalizacja_data = hardware_form.lokalizacja.data
-            opis_szkod = hardware_form.opis_uszkodzenia.data
+                if hardware_form.nowy_stanowisko.data:
+                    stanowisko_data = hardware_form.nowy_stanowisko.data
+                    db_collection.update_one(
+                        {"_id": "main"}, {"$addToSet": {"stanowisko": stanowisko_data}})
+                if hardware_form.nowy_typ.data:
+                    typ_data = hardware_form.nowy_typ.data
+                    db_collection.update_one(
+                        {"_id": "main"}, {"$addToSet": {"type": typ_data}})
+                if hardware_form.nowa_marka.data:
+                    marka_data = hardware_form.nowa_marka.data
+                    db_collection.update_one(
+                        {"_id": "main"}, {"$addToSet": {"marka": marka_data}})
+                if hardware_form.nowy_model.data:
+                    model_data = hardware_form.nowy_model.data
+                    db_collection.update_one(
+                        {"_id": "main"}, {"$addToSet": {"model": model_data}})
+                if hardware_form.nowy_projekt.data:
+                    projekt_data = hardware_form.nowy_projekt.data
+                    db_collection.update_one(
+                        {"_id": "main"}, {"$addToSet": {"projekt": projekt_data}})
+                if hardware_form.nowa_lokalizacja.data:
+                    lokalizacja_data = hardware_form.nowa_lokalizacja.data
+                    db_collection.update_one(
+                        {"_id": "main"}, {"$addToSet": {"lokalizacja": lokalizacja_data}})
 
-            if hardware_form.typ.data == "DODAJ":
-                typ_data = hardware_form.nowy_typ.data
-                db_collection.update_one(
-                    {"_id": "main"}, {"$addToSet": {"type": typ_data}})
-            if hardware_form.marka.data == "DODAJ":
-                marka_data = hardware_form.nowa_marka.data
-                db_collection.update_one(
-                    {"_id": "main"}, {"$addToSet": {"marka": marka_data}})
-            if hardware_form.model.data == "DODAJ":
-                model_data = hardware_form.nowy_model.data
-                db_collection.update_one(
-                    {"_id": "main"}, {"$addToSet": {"model": model_data}})
-            if hardware_form.projekt.data == "DODAJ":
-                projekt_data = hardware_form.nowy_projekt.data
-                db_collection.update_one(
-                    {"_id": "main"}, {"$addToSet": {"projekt": projekt_data}})
-            if hardware_form.lokalizacja.data == "DODAJ":
-                lokalizacja_data = hardware_form.nowa_lokalizacja.data
-                db_collection.update_one(
-                    {"_id": "main"}, {"$addToSet": {"lokalizacja": lokalizacja_data}})
+                data_to_send = {
+                    'barcode': hardware_form.barcode.data,
+                    'stanowisko': stanowisko_data,
+                    'typ': typ_data,
+                    'marka': marka_data,
+                    'model': model_data,
+                    'stan': hardware_form.stan.data,
+                    'bitlocker': hardware_form.bitlocker.data,
+                    'serial': hardware_form.serial.data,
+                    'identyfikator': hardware_form.identyfikator.data,
+                    'klucz_odzyskiwania': hardware_form.klucz_odzyskiwania.data,
+                    'notatki': hardware_form.notatki.data,
 
-            data_to_send = {
-                'barcode': hardware_form.barcode.data,
-                'stanowisko': hardware_form.stanowisko.data,
-                'typ': typ_data,
-                'marka': marka_data,
-                'model': model_data,
-                'stan': hardware_form.stan.data,
-                'bitlocker': hardware_form.bitlocker.data,
-                'serial': hardware_form.serial.data,
-                'identyfikator': hardware_form.identyfikator.data,
-                'klucz_odzyskiwania': hardware_form.klucz_odzyskiwania.data,
-                'notatki': hardware_form.notatki.data,
+                    'rented_status': False,
+                    'upload_date': local_time,
+                    'last_updated': local_time,
+                    # 'rent_date': rent_date,
+                    'adder': current_user.login,
+                    # 'who_rented': who_rented
+                }
+                if hardware_form.mocarz_id.data != None and hardware_form.mocarz_id.data != "":
+                    try:
+                        data_to_send['rented_status'] = True
+                        data_to_send['mocarz_id'] = hardware_form.mocarz_id.data
+                        data_to_send['projekt'] = projekt_data
+                        data_to_send['lokalizacja'] = lokalizacja_data
+                        data_to_send['karta_zblizeniowa'] = hardware_form.karta_zblizeniowa.data
+                        data_to_send['sluchawki'] = hardware_form.sluchawki.data
+                        data_to_send['zlacze'] = hardware_form.zlacze.data
+                        data_to_send['przejsciowka'] = hardware_form.przejsciowka.data
+                        data_to_send['mysz'] = hardware_form.mysz.data
+                        data_to_send['torba'] = hardware_form.torba.data
+                        data_to_send['modem'] = hardware_form.modem.data
+                        data_to_send['notatki_wypozyczenie'] = hardware_form.notatki_wypozyczenie.data
+                        data_to_send['who_rented'] = current_user.login
+                        data_to_send['rent_date'] = local_time
 
-                'rented_status': False,
-                'upload_date': local_time,
-                'last_updated': local_time,
-                # 'rent_date': rent_date,
-                'adder': current_user.login,
-                # 'who_rented': who_rented
-            }
-            if hardware_form.mocarz_id.data != None and hardware_form.mocarz_id.data != "":
-                try:
-                    data_to_send['rented_status'] = True
-                    data_to_send['mocarz_id'] = hardware_form.mocarz_id.data
-                    data_to_send['projekt'] = projekt_data
-                    data_to_send['lokalizacja'] = lokalizacja_data
-                    data_to_send['karta_zblizeniowa'] = hardware_form.karta_zblizeniowa.data
-                    data_to_send['sluchawki'] = hardware_form.sluchawki.data
-                    data_to_send['zlacze'] = hardware_form.zlacze.data
-                    data_to_send['przejsciowka'] = hardware_form.przejsciowka.data
-                    data_to_send['mysz'] = hardware_form.mysz.data
-                    data_to_send['torba'] = hardware_form.torba.data
-                    data_to_send['modem'] = hardware_form.modem.data
-                    data_to_send['notatki_wypozyczenie'] = hardware_form.notatki_wypozyczenie.data
-                    data_to_send['who_rented'] = current_user.login
-                    data_to_send['rent_date'] = local_time
-
-                except Exception as e:
-                    print(e)
-            if opis_szkod:
-                data_to_send['opis_uszkodzenia'] = opis_szkod
-            db_history.insert_one(data_to_send)
-            db_items.insert_one(data_to_send)
-            if hardware_form.stanowisko.data != '':
-                db_stanowiska.update_one({'stanowisko': hardware_form.stanowisko.data}, {"$push": {
-                    'assigned_barcodes': hardware_form.barcode.data,
-                },
-                }, upsert=True)
-            flash('Sprzęt dodany pomyślnie', category='success')
-            return (redirect(url_for('hardware.add')))
+                    except Exception as e:
+                        print(e)
+                if opis_szkod:
+                    data_to_send['opis_uszkodzenia'] = opis_szkod
+                db_history.insert_one(data_to_send)
+                db_items.insert_one(data_to_send)
+                if hardware_form.stanowisko.data != '':
+                    db_stanowiska.update_one({'stanowisko': hardware_form.stanowisko.data}, {"$push": {
+                        'assigned_barcodes': hardware_form.barcode.data,
+                    },
+                    }, upsert=True)
+                flash('Sprzęt dodany pomyślnie', category='success')
+                return (redirect(url_for('hardware.add')))
+            else:
+                flash('Taki barcode już istnieje', category='error')
+                return render_template('add_items.html',
+                                       header_text="Dodaj",
+                                       form=hardware_form,
+                                       edit=False,
+                                       hardware_data=False,
+                                       show_rent_hardware=False)
         else:
-            flash('Taki barcode już istnieje', category='error')
             return render_template('add_items.html',
                                    header_text="Dodaj",
                                    form=hardware_form,
                                    edit=False,
                                    hardware_data=False,
-                                   show_rent_hardware=False)
-    else:
-        collection = db_collection.find_one({})
-        hardware_form.typ.choices = collection['type']
-        hardware_form.marka.choices = collection['marka']
-        hardware_form.model.choices = collection['model']
-        hardware_form.projekt.choices = collection['projekt']
-        hardware_form.lokalizacja.choices = collection['lokalizacja']
-
-    return render_template('add_items.html',
-                           header_text="Dodaj",
-                           form=hardware_form,
-                           edit=False,
-                           hardware_data=False,
-                           show_rent_hardware=False,
-                           return_to="/")
+                                   show_rent_hardware=False,
+                                   return_to="/")
+    except Exception as e:
+        print(str(e))
 
 
 @hardware.route('/edit/<id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
+
     form = AddHardware()
+    form.stanowisko.choices = collection['stanowisko']
+    form.typ.choices = collection['type']
+    form.marka.choices = collection['marka']
+    form.model.choices = collection['model']
+    form.projekt.choices = collection['projekt']
+    form.lokalizacja.choices = collection['lokalizacja']
     # form.barcode.data = data['barcode']
     data = db_items.find_one({'_id': ObjectId(id)}, {'_id': 0,
                                                      'rented_status': 0,
@@ -318,7 +327,6 @@ def edit(id):
             existing_id = db_items.find_one({'barcode': new_barcode})
             if not existing_id:
                 update_db()
-
                 return (redirect(url_for('hardware.show_info', id=id)))
             else:
                 flash('Taki barcode już istnieje', category='error')
@@ -396,7 +404,6 @@ def rent(barcode):
 @ login_required
 def see_history(id, barcode):
     hardware_data_history = db_history.find({'barcode': barcode})
-    print(hardware_data_history)
     creation_date = hardware_data_history[0]['upload_date'] if hardware_data_history[0]['upload_date'] else "N/A"
     creator = hardware_data_history[0]['adder'] if hardware_data_history[0]['adder'] else "N/A"
     return render_template("hardware_history.html",
@@ -489,22 +496,61 @@ def see_all():
     if request.method == 'POST':
         return redirect(url_for('main.index'))
     else:
-        all_items = db_items.find({})
+        if current_user.dostep == "User":
+            all_items = db_items.find({'mpk': {"$in": current_user.mpk}})
+        else:
+            all_items = db_items.find({})
+            print(all_items)
         return render_template('all_items.html', items=all_items, data=navbar_select_data, see_hardware=True, see_all=True)
+
+
+def get_hardware_data_by_status(search_val, search_bool):
+    if search_val == 'barcode':
+        if current_user.dostep == "User":
+            free_items = db_items.find(
+                {search_val: {"$exists": search_bool}, 'mpk': {"$in": current_user.mpk}})
+        else:
+            free_items = db_items.find({search_val: {"$exists": search_bool}})
+    else:
+        if current_user.dostep == "User":
+            free_items = db_items.find(
+                {search_val: search_bool, 'mpk': {"$in": current_user.mpk}})
+        else:
+            free_items = db_items.find({search_val: search_bool})
+    return free_items
 
 
 @ hardware.route('/get_data/<parametr>')
 @ login_required
 def get_data(parametr):
-    print(parametr)
     if parametr == "no-barcode":
-        free_items = db_items.find({'barcode': {"$exists": False}})
+        # if current_user.dostep == "User":
+        #     free_items = db_items.find(
+        #         {'barcode': {"$exists": False}, 'mpk': {"$in": current_user.mpk}})
+        # else:
+        #     free_items = db_items.find({'barcode': {"$exists": False}})
+        free_items = get_hardware_data_by_status('barcode', False)
     elif parametr == "barcode":
-        free_items = db_items.find({'barcode': {"$exists": True}})
+        # if current_user.dostep == "User":
+        #     free_items = db_items.find(
+        #         {'barcode': {"$exists": True}, 'mpk': {"$in": current_user.mpk}})
+        # else:
+        #     free_items = db_items.find({'barcode': {"$exists": True}})
+        free_items = get_hardware_data_by_status('barcode', True)
     elif parametr == "not-rented":
-        free_items = db_items.find({'rented_status': False})
+        # if current_user.dostep == "User":
+        #     free_items = db_items.find(
+        #         {'rented_status': False, 'mpk': {"$in": current_user.mpk}})
+        # else:
+        #     free_items = db_items.find({'rented_status': False})
+        free_items = get_hardware_data_by_status('rented_status', False)
     elif parametr == "rented":
-        free_items = db_items.find({'rented_status': True})
+        # if current_user.dostep == "User":
+        #     free_items = db_items.find(
+        #         {'rented_status': True, 'mpk': {"$in": current_user.mpk}})
+        # else:
+        #     free_items = db_items.find({'rented_status': True})
+        free_items = get_hardware_data_by_status('rented_status', True)
     return render_template('all_items.html', items=free_items, data=navbar_select_data, see_hardware=True, see_all=True)
 
 
