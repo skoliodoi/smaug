@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@headlessui/vue": "^1.7.5",
     "datatables.net": "^1.12.1",
     "datatables.net-dt": "^1.12.1",
     "flowbite": "^1.5.2",

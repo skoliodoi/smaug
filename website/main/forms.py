@@ -33,12 +33,16 @@ class AddHardware(FlaskForm):
     barcode = StringField("Barcode", validators=[validators.DataRequired()])
     stanowisko = SelectField("Stanowisko", coerce=str, render_kw={
                              'id': 'select-stanowisko'})
+    mpk = SelectField("MPK sprzętu", coerce=str,
+                      render_kw={'id': 'select-mpk', 'required': True})
     typ = SelectField("Typ sprzętu", coerce=str,
                       render_kw={'id': 'select-typ', 'required': True})
     marka = SelectField("Marka", coerce=str, render_kw={
                         'id': 'select-marka', 'required': True})
     model = SelectField("Model", coerce=str, render_kw={
                         'id': 'select-model', 'required': True})
+    system = SelectField("System", coerce=str, render_kw={
+                        'id': 'select-system'})
     stan = SelectField("Stan", validators=[validators.DataRequired()], choices=[
                        state for state in collection['status']], coerce=str, render_kw={'id': 'select-stan'})
     opis_uszkodzenia = StringField("Opis uszkodzenia", render_kw={
@@ -50,10 +54,8 @@ class AddHardware(FlaskForm):
     notatki = TextAreaField("Notatki dot. sprzętu", render_kw={'rows': 2})
 
     mocarz_id = StringField("Moccarz ID")
-    projekt = SelectField("Projekt", choices=[
-                          p for p in collection['projekt']], coerce=str, render_kw={'id': 'select-projekt'})
-    lokalizacja = SelectField("Lokalizacja", choices=[
-                              l for l in collection['lokalizacja']], coerce=str, render_kw={'id': 'select-lokalizacja'})
+    projekt = SelectField("Projekt", coerce=str, render_kw={'id': 'select-projekt'})
+    lokalizacja = SelectField("Lokalizacja", coerce=str, render_kw={'id': 'select-lokalizacja'})
     sluchawki = SelectField("Słuchawki", choices=[
                             "Nie dotyczy", "Axtel", "Sennheiser"], coerce=str)
     przejsciowka = SelectField("Przejściówka", choices=[
@@ -71,6 +73,8 @@ class AddHardware(FlaskForm):
     notatki_wypozyczenie = TextAreaField(
         "Notatki dot. wypożyczenia", render_kw={'rows': 2})
 
+    nowy_mpk = StringField(
+        render_kw={'style': 'display: none', 'id': 'nowy_mpk'})
     nowy_stanowisko = StringField(
         render_kw={'style': 'display: none', 'id': 'nowy_stanowisko'})
     nowy_typ = StringField(
@@ -79,6 +83,8 @@ class AddHardware(FlaskForm):
         render_kw={'style': 'display: none', 'id': 'nowa_marka'})
     nowy_model = StringField(
         render_kw={'style': 'display: none', 'id': 'nowy_model'})
+    nowy_system = StringField(
+        render_kw={'style': 'display: none', 'id': 'nowy_system'})
     nowy_projekt = StringField(
         render_kw={'style': 'display: none', 'id': 'nowy_projekt'})
     nowa_lokalizacja = StringField(

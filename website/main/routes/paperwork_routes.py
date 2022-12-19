@@ -104,7 +104,7 @@ def add_file():
 def add():
     form = AddPaperwork()
     free_items = db_items.find(
-        {'kartoteka': {"$exists": False}, 'barcode': {"$exists": True}})
+        {'kartoteka': {"$exists": False}, 'barcode': {"$exists": True}}).sort('barcode', 1)
     if request.method == 'POST':
         if check_existing_records(form.kartoteka.data):
             mpk_data = data_handler(form.mpk.data, form.nowy_mpk.data, "mpk")
@@ -235,19 +235,24 @@ def see_all():
     return render_template('all_papers.html', items=all_items, data=navbar_select_data, see_all=True)
 
 
-@ paperwork.route('/delete/<id>')
+@ paperwork.route('/delete/<id>', methods=["GET", "POST"])
 def delete(id):
-    all_items = db_paperwork.find({})
-    db_has_barcodes = db_paperwork.find_one(
-        {'_id': ObjectId(id), 'przypisane_barcodes': {"$exists": True}})
-    if db_has_barcodes:
-        barcodes = db_has_barcodes['przypisane_barcodes']
-        for barcode in barcodes:
-            db_items.update_one({'barcode': barcode}, {"$unset": {
-                'kartoteka': ""
-            }})
-    db_paperwork.delete_one({'_id': ObjectId(id)})
-    return render_template('all_papers.html', items=all_items, data=navbar_select_data, see_all=True)
+    if request.method == "POST":
+      print('boof')
+      all_items = db_paperwork.find({})
+      db_has_barcodes = db_paperwork.find_one(
+          {'_id': ObjectId(id), 'przypisane_barcodes': {"$exists": True}})
+      if db_has_barcodes:
+          barcodes = db_has_barcodes['przypisane_barcodes']
+          for barcode in barcodes:
+              db_items.update_one({'barcode': barcode}, {"$unset": {
+                  'kartoteka': ""
+              }})
+      db_paperwork.delete_one({'_id': ObjectId(id)})
+      return redirect(url_for('paperwork.see_all'))
+      # return render_template('all_papers.html', items=all_items, data=navbar_select_data, see_all=True)
+    else:
+      return render_template("confirmation.html", id=id, return_to="/paperwork/all")
 
 
 @ paperwork.route('/get_data/<parametr>')

@@ -32,7 +32,7 @@ $('#rent_hardware').on("change", () => {
     $("#select-projekt").attr('required', true)
     $("#select-lokalizacja").attr('required', true)
   }
-  }
+}
 );
 
 $(function () {
@@ -140,6 +140,42 @@ $("#add-projekt").on('click', (e) => {
     $("#nowy_projekt").val(null)
     $("#select-projekt").show()
     $("#select-projekt").attr('required', true)
+  }
+})
+$("#add-system").on('click', (e) => {
+  const classes = e.currentTarget.classList;
+  if (Array.from(classes).includes("add-button")) {
+    $("#add-system").removeClass('add-button')
+    $("#add-system").addClass('cancel-button')
+    $("#nowy_system").show()
+    $("#select-system").hide()
+    $("#select-system").removeAttr('required')
+    $("#select-system").val(null)
+  } else {
+    $("#add-system").removeClass('cancel-button')
+    $("#add-system").addClass('add-button')
+    $("#nowy_system").hide()
+    $("#nowy_system").val(null)
+    $("#select-system").show()
+    $("#select-system").attr('required', true)
+  }
+})
+$("#add-mpk").on('click', (e) => {
+  const classes = e.currentTarget.classList;
+  if (Array.from(classes).includes("add-button")) {
+    $("#add-mpk").removeClass('add-button')
+    $("#add-mpk").addClass('cancel-button')
+    $("#nowy_mpk").show()
+    $("#select-mpk").hide()
+    $("#select-mpk").removeAttr('required')
+    $("#select-mpk").val(null)
+  } else {
+    $("#add-mpk").removeClass('cancel-button')
+    $("#add-mpk").addClass('add-button')
+    $("#nowy_mpk").hide()
+    $("#nowy_mpk").val(null)
+    $("#select-mpk").show()
+    $("#select-mpk").attr('required', true)
   }
 })
 $("#add-lokalizacja").on('click', (e) => {

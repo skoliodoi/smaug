@@ -10,9 +10,9 @@ import os
 
 yag = yagmail.SMTP(user={f"{os.environ['MAIL_ADDRESS']}": 'SMAUG'},
                    password=f"{os.environ['MAIL_PASS']}")
-collection = db_collection.find_one({})
+
 local_tz = pytz.timezone('Europe/Warsaw')
-local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
+
 
 
 user_types = ["User", "IT", "Admin"]
