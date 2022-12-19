@@ -53,6 +53,7 @@ class AddHardware(FlaskForm):
     klucz_odzyskiwania = StringField("Klucz/dysk odzyskiwania")
     notatki = TextAreaField("Notatki dot. sprzętu", render_kw={'rows': 2})
 
+    login = StringField("Login")
     mocarz_id = StringField("Moccarz ID")
     projekt = SelectField("Projekt", coerce=str, render_kw={'id': 'select-projekt'})
     lokalizacja = SelectField("Lokalizacja", coerce=str, render_kw={'id': 'select-lokalizacja'})

@@ -20,7 +20,8 @@
       <div class="mt-4 flex md:mt-0 md:ml-4 gap-2">
         <!-- <button type="button"
           class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">Edytuj</button> -->
-        {%if not being_returned%}
+        {%if not being_returned and not hide_buttons%}
+        {{hide_buttons}}
         <form method="get">
           <a href="/hardware/edit/{{hardware_data['_id']}}"
             class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
@@ -32,14 +33,13 @@
             <input type="button" name="{{hardware_data['_id']}}"> Usuń sprzęt </a>
         </form>
         {%endif%}
+        {%if not hide_buttons%}
         {%if hardware_data['barcode'] and hardware_data['barcode'] != "N/A" %}
-        {%if show_history%}
         <form method="GET">
           <a href="/hardware/see_history/{{hardware_data['_id']}}/{{hardware_data['barcode']}}"
             class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
             <input type="button" name="{{hardware_data['barcode']}}"> Zobacz historię </a>
         </form>
-        {%endif%}
         {%if hardware_data['rented_status']==True%}
         <form method="POST" class="flex justify-between content-center">
           <a href="/hardware/return/{{hardware_data['barcode']}}"
@@ -52,6 +52,7 @@
             class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
             <input type="button" name="{{hardware_data['barcode']}}"> Udostępnij </a>
         </form>
+        {%endif%}
         {%endif%}
         {%endif%}
       </div>

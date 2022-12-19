@@ -75,7 +75,7 @@
         </td>
         <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
           <form method="POST">
-            <a href="/hardware/show_info/{{item['_id']}}" class="text-indigo-600 hover:text-indigo-900">
+            <a href="/hardware/show_info/present/{{item['_id']}}" class="text-indigo-600 hover:text-indigo-900">
               <input type="button" name="{{item['_id']}}">Zobacz szczegóły</a>
           </form>
           {%if item['barcode']%}

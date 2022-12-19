@@ -5,8 +5,9 @@ $('#rent_hardware').on("change", () => {
   $("#dodaj-plik").toggle()
   let isChecked = $('#rent_hardware').is(":checked")
   if (!isChecked) {
+    $("#login").val(null)
+    $("#login").removeAttr('required')
     $("#mocarz_id").val(null)
-    $("#mocarz_id").removeAttr('required')
     $("#nowy_projekt").val(null)
     $("#nowy_projekt").hide()
     $("#cancel-projekt").hide()
@@ -28,7 +29,7 @@ $('#rent_hardware').on("change", () => {
     $("#karta-zblizeniowa option:selected").prop('selected', false)
     $("#notatki-wypozyczenie").val(null)
   } else {
-    $("#mocarz_id").attr('required', true)
+    $("#login").attr('required', true)
     $("#select-projekt").attr('required', true)
     $("#select-lokalizacja").attr('required', true)
   }

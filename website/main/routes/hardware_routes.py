@@ -265,10 +265,17 @@ def add():
                     data_to_send['klucz_odzyskiwania'] = hardware_form.klucz_odzyskiwania.data
                 if hardware_form.notatki.data:
                     data_to_send['notatki'] = hardware_form.notatki.data
-
-                if hardware_form.mocarz_id.data != None and hardware_form.mocarz_id.data != "":
+                if opis_szkod:
+                    data_to_send['opis_uszkodzenia'] = opis_szkod
+                data_for_history = data_to_send.copy()
+                data_for_history['modyfikacja'] = 'Stworzony'
+                data_for_history['who_modified'] = data_to_send['adder']
+                db_history.insert_one(data_for_history)
+                data_for_history = None
+                if hardware_form.login.data != None and hardware_form.login.data != "":
                     try:
                         data_to_send['rented_status'] = True
+                        data_to_send['login'] = hardware_form.login.data
                         data_to_send['mocarz_id'] = hardware_form.mocarz_id.data
                         data_to_send['projekt'] = projekt_data['data']
                         data_to_send['lokalizacja'] = lokalizacja_data['data']
@@ -285,8 +292,7 @@ def add():
 
                     except Exception as e:
                         print('Rent error: ', e)
-                if opis_szkod:
-                    data_to_send['opis_uszkodzenia'] = opis_szkod
+
                 for each in [typ_data, marka_data, model_data, system_data, mpk_data, projekt_data, lokalizacja_data]:
                     # update_time(each['nazwa'], each['data'])
                     if check_if_exists(each['nazwa']):
@@ -297,8 +303,13 @@ def add():
                 # update_time("marka", marka_data)
                 # update_time("model", model_data)
                 # update_time("system", system_data)
-                db_history.insert_one(data_to_send)
+
                 db_items.insert_one(data_to_send)
+                if data_to_send['rented_status'] == True:
+                    data_for_history = data_to_send.copy()
+                    data_for_history['modyfikacja'] = 'Wypożyczony'
+                    data_for_history['who_modified'] = data_to_send['who_rented']
+                    db_history.insert_one(data_for_history)
                 if hardware_form.stanowisko.data != '':
                     db_stanowiska.update_one({'stanowisko': hardware_form.stanowisko.data}, {"$push": {
                         'assigned_barcodes': hardware_form.barcode.data,
@@ -308,12 +319,7 @@ def add():
                 return (redirect(url_for('hardware.add')))
             else:
                 flash('Taki barcode już istnieje', category='error')
-                return render_template('add_items.html',
-                                       header_text="Dodaj",
-                                       form=hardware_form,
-                                       edit=False,
-                                       hardware_data=False,
-                                       show_rent_hardware=False)
+                return (redirect(url_for('hardware.add')))
         else:
 
             collection = db_collection.find_one({"_id": "main"})
@@ -623,17 +629,32 @@ def return_hardware(barcode):
                 'notatki': full_notatki}})
         return (redirect(url_for('hardware.see_all')))
     else:
-        return render_template("return_hardware.html", hardware_data=hardware_data, paperwork_data=None, being_returned=True, form=form, return_to=return_route)
+        return render_template("return_hardware.html",
+                               hardware_data=hardware_data,
+                               paperwork_data=None,
+                               being_returned=True,
+                               form=form,
+                               return_to=return_route)
 
 
-@ hardware.route('/show_info/<id>')
+@ hardware.route('/show_info/<data>/<id>')
 @ login_required
-def show_info(id):
-    show_history = True
-    hardware_data = db_items.find_one({'_id': ObjectId(id)})
-    history_data = db_history.find({'barcode': hardware_data['barcode']})
-    if len(list(history_data)) == 0:
-        show_history = False
+def show_info(data, id):
+    print(data)
+    if data == 'present':
+        hardware_data = db_items.find_one({'_id': ObjectId(id)})
+        hide_buttons = False
+        return_route = "/hardware/all"
+    else:
+        hardware_data = db_history.find_one({'_id': ObjectId(id)})
+        return_data = db_items.find_one({'barcode': hardware_data['barcode']})
+        return_barcode = str(hardware_data['barcode'])
+        return_id = str(return_data['_id'])
+        hide_buttons = True
+        return_route = f"/hardware/see_history/{return_id}/{return_barcode}"
+    # history_data = db_history.find({'barcode': hardware_data['barcode']})
+    # if len(list(history_data)) == 0:
+    #     show_history = False
     check_kartoteka = db_items.find_one(
         {"$and": [{'_id': ObjectId(id)}, {'kartoteka': {"$exists": True}}]})
     if check_kartoteka == None:
@@ -646,7 +667,8 @@ def show_info(id):
                            hardware_data=hardware_data,
                            paperwork_data=paperwork_data,
                            return_to=return_route,
-                           show_history=show_history)
+                           hide_buttons=hide_buttons
+                           )
 
 
 @ hardware.route('/details')

@@ -1,6 +1,14 @@
 <div id="rent_hardware_container" {%if not udostepnienie %} style="display: none;" {%endif%}>
   <div class="grid grid-cols-12 gap-4">
     <div class="col-span-6 sm:col-span-6 lg:col-span-3">
+      {{form.login.label(class="block text-sm font-medium text-gray-700")}}
+      {{form.login(
+      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
+      focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+      id="login"
+      )}}
+    </div>
+    <div class="col-span-6 sm:col-span-6 lg:col-span-3">
       {{form.mocarz_id.label(class="block text-sm font-medium text-gray-700")}}
       {{form.mocarz_id(
       class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
@@ -48,20 +56,20 @@
       {{form.karta_zblizeniowa(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
       focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="karta-zblizeniowa")}}
     </div>
-    <div class="col-span-6 sm:col-span-6 lg:col-span-4">
+    <div class="col-span-6 sm:col-span-3 lg:col-span-3">
       {{form.sluchawki.label(class="block text-sm font-medium text-gray-700")}}
       {{form.sluchawki(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
       focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="sluchawki")}}
     </div>
 
-    <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+    <div class="col-span-6 sm:col-span-3 lg:col-span-3">
 
       {{form.zlacze.label(class="block text-sm font-medium text-gray-700")}}
       {{form.zlacze(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
       focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="zlacze")}}
     </div>
 
-    <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+    <div class="col-span-6 sm:col-span-3 lg:col-span-3">
 
       {{form.przejsciowka.label(class="block text-sm font-medium text-gray-700")}}
       {{form.przejsciowka(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
