@@ -233,18 +233,17 @@ def add():
 
                 data_to_send = {
                     'barcode': barcode_number,
-                    'stanowisko': stanowisko_data['data'],
+                    # 'stanowisko': stanowisko_data['data'],
                     'typ': typ_data['data'],
                     'marka': marka_data['data'],
                     'model': model_data['data'],
-                    'system': system_data['data'],
                     'mpk': mpk_data['data'],
                     'stan': hardware_form.stan.data,
-                    'bitlocker': hardware_form.bitlocker.data,
-                    'serial': hardware_form.serial.data,
-                    'identyfikator': hardware_form.identyfikator.data,
-                    'klucz_odzyskiwania': hardware_form.klucz_odzyskiwania.data,
-                    'notatki': hardware_form.notatki.data,
+                    # 'bitlocker': hardware_form.bitlocker.data,
+                    # 'serial': hardware_form.serial.data,
+                    # 'identyfikator': hardware_form.identyfikator.data,
+                    # 'klucz_odzyskiwania': hardware_form.klucz_odzyskiwania.data,
+                    # 'notatki': hardware_form.notatki.data,
                     'rented_status': False,
                     'upload_date': local_time,
                     'last_updated': local_time,
@@ -252,6 +251,21 @@ def add():
                     'adder': current_user.login,
                     # 'who_rented': who_rented
                 }
+                if stanowisko_data['data']:
+                    data_to_send['stanowisko'] = stanowisko_data['data']
+                if system_data['data']:
+                    data_to_send['system'] = system_data['data']
+                if hardware_form.bitlocker.data:
+                    data_to_send['bitlocker'] = hardware_form.bitlocker.data
+                if hardware_form.serial.data:
+                    data_to_send['serial'] = hardware_form.serial.data
+                if hardware_form.identyfikator.data:
+                    data_to_send['identyfikator'] = hardware_form.identyfikator.data
+                if hardware_form.klucz_odzyskiwania.data:
+                    data_to_send['klucz_odzyskiwania'] = hardware_form.klucz_odzyskiwania.data
+                if hardware_form.notatki.data:
+                    data_to_send['notatki'] = hardware_form.notatki.data
+
                 if hardware_form.mocarz_id.data != None and hardware_form.mocarz_id.data != "":
                     try:
                         data_to_send['rented_status'] = True

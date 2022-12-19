@@ -1,44 +1,91 @@
 <div class="grid grid-cols-8 gap-8">
-  <div class="col-span-6 sm:col-span-6 lg:col-span-6">
+  <div class="col-span-6 sm:col-span-4 lg:col-span-4">
     <dt class="text-sm font-medium text-gray-500">Barcode</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['barcode']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['barcode']
+      if hardware_data['barcode']
+      else "Brak"
+    }}</dd>
+  </div>
+  <div class="col-span-6 sm:col-span-6 lg:col-span-2">
+    <dt class="text-sm font-medium text-gray-500">MPK</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['mpk']
+      if hardware_data['mpk']
+      else "Brak"
+    }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-6 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Stanowisko</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['stanowisko']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['stanowisko']
+      if hardware_data['stanowisko']
+      else "Brak"
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Typ</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['typ']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['typ']
+      if hardware_data['typ']
+      else "Brak"
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Marka</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['marka']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['marka']
+      if hardware_data['marka']
+      else "Brak"
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Model</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['model']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['model']
+      if hardware_data['model']
+      else "Brak"
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Stan</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['stan']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['stan']
+      if hardware_data['stan']
+      else "N/A"
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">PIN/Hasło</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['bitlocker']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['bitlocker']
+      if hardware_data['bitlocker']
+      else "Brak"
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Nazwa/serial</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['serial']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['serial']
+      if hardware_data['serial']
+      else "Brak"
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">
       Indentyfikator klucza odzyskiwania</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['identyfikator']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['identyfikator']
+      if hardware_data['identyfikator']
+      else "Brak"
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Klucz/dysk odzyskiwania</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{hardware_data['klucz_odzyskiwania']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['klucz_odzyskiwania'] 
+      if hardware_data['klucz_odzyskiwania']
+      else "Brak" }}</dd>
   </div>
   {%if hardware_data['notatki']%}
   <div class="col-span-8 sm:col-span-3 lg:col-span-4">
