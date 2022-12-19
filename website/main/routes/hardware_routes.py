@@ -486,11 +486,26 @@ def rent(barcode):
     local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
     hardware_form = AddHardware()
     hardware_data = db_items.find_one({'barcode': barcode})
+
     if request.method == 'POST':
+        projekt_data = {
+            'nazwa': 'projekt',
+            'data': hardware_form.projekt.data}
+        lokalizacja_data = {
+            'nazwa': 'lokalizacja',
+            'data': hardware_form.lokalizacja.data}
+        if hardware_form.nowy_projekt.data:
+            projekt_data['data'] = hardware_form.nowy_projekt.data
+            db_collection.update_one(
+                {"_id": "main"}, {"$addToSet": {"projekt": {"nazwa": projekt_data['data'], "last_update": local_time}}})
+        if hardware_form.nowa_lokalizacja.data:
+            lokalizacja_data['data'] = hardware_form.nowa_lokalizacja.data
+            db_collection.update_one(
+                {"_id": "main"}, {"$addToSet": {"lokalizacja": {"nazwa": lokalizacja_data['data'], "last_update": local_time}}})
         db_items.update_one({'barcode': barcode}, {"$set": {
             'mocarz_id': hardware_form.mocarz_id.data,
-            'projekt': hardware_form.projekt.data,
-            'lokalizacja': hardware_form.lokalizacja.data,
+            'projekt': projekt_data['data'],
+            'lokalizacja': lokalizacja_data['data'],
             'karta_zblizeniowa': hardware_form.karta_zblizeniowa.data,
             'sluchawki': hardware_form.sluchawki.data,
             'zlacze': hardware_form.zlacze.data,
@@ -525,14 +540,21 @@ def rent(barcode):
         }
         }, upsert=True
         )
-        return (redirect(url_for('hardware.see_all')))
-    hardware_form.notatki.data = hardware_data['notatki']
 
-    return render_template('add_items.html',
-                           udostepnienie=True,
-                           header_text="Udostępnij",
-                           hardware_data=hardware_data,
-                           form=hardware_form, return_to=return_route)
+        return (redirect(url_for('hardware.see_all')))
+
+    else:
+        hardware_form.projekt.choices = sort_and_assign(
+            collection['projekt']) if check_if_exists('projekt') else []
+        hardware_form.lokalizacja.choices = sort_and_assign(
+            collection['lokalizacja']) if check_if_exists('lokalizacja') else []
+        return render_template('add_items.html',
+                               udostepnienie=True,
+                               header_text="Udostępnij",
+                               hardware_data=hardware_data,
+                               form=hardware_form,
+                               return_to=return_route
+                               )
 
 
 @ hardware.route('/see_history/<id>/<barcode>')
@@ -587,7 +609,7 @@ def return_hardware(barcode):
                 'torba': "",
                 'modem': "",
             }
-        }
+        }, upsert=True
         )
 
         if opis_szkod:
@@ -607,7 +629,11 @@ def return_hardware(barcode):
 @ hardware.route('/show_info/<id>')
 @ login_required
 def show_info(id):
+    show_history = True
     hardware_data = db_items.find_one({'_id': ObjectId(id)})
+    history_data = db_history.find({'barcode': hardware_data['barcode']})
+    if len(list(history_data)) == 0:
+        show_history = False
     check_kartoteka = db_items.find_one(
         {"$and": [{'_id': ObjectId(id)}, {'kartoteka': {"$exists": True}}]})
     if check_kartoteka == None:
@@ -616,7 +642,11 @@ def show_info(id):
         paperwork_data = db_paperwork.find_one(
             {'kartoteka': check_kartoteka['kartoteka']})
         print(paperwork_data)
-    return render_template("information_page.html", hardware_data=hardware_data, paperwork_data=paperwork_data, return_to=return_route)
+    return render_template("information_page.html",
+                           hardware_data=hardware_data,
+                           paperwork_data=paperwork_data,
+                           return_to=return_route,
+                           show_history=show_history)
 
 
 @ hardware.route('/details')

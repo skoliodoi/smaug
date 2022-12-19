@@ -30,7 +30,9 @@
           </th>
           <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Data zwrotu</th>
           <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Osoba przyjmująca zwrot</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Stan</th>
           <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Uwagi</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Akcje</th>
 
           <!-- <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Marka
           </th>
@@ -47,9 +49,9 @@
         {%for item in history%}
         <tr>
           <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-            {% if item['rented_status']== True %}
+            {% if item['rented_status']%}
             Udostępniony
-            {%elif item['returned'] == True %}
+            {%elif item['returned']%}
             Zwrócony
             {%else%}
             Nieudostępniony
@@ -65,7 +67,14 @@
           <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{item['who_rented']}}</td>
           <td class="px-3 py-4 text-sm text-gray-500">{{item['return_date']}}</td>
           <td class="px-3 py-4 text-sm text-gray-500">{{item['who_accepted_return'] }}</td>
+          <td class="px-3 py-4 text-sm text-gray-500">{{item['stan'] }}</td>
           <td class="px-3 py-4 text-sm text-gray-500">{{item['notes'] }}</td>
+          <td class="px-3 py-4 text-sm text-gray-500">
+            <form method="POST">
+              <a href="/hardware/show_info/{{item['_id']}}" class="text-indigo-600 hover:text-indigo-900">
+                <input type="button" name="{{item['_id']}}">Zobacz szczegóły</a>
+            </form>
+          </td>
 
         </tr>
         {%endfor%}
