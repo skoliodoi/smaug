@@ -127,16 +127,16 @@ class AddPaperwork(FlaskForm):
 #   notatki = TextAreaField("Notatki", render_kw={'rows': 4})
 
 
-class FilterHardware(FlaskForm):
-    choices_list = [state for state in collection['status']]
-    choices_list.insert(0, " ")
-    typ = SelectField(
-        "Typ", choices=[typ for typ in collection['type']], coerce=str)
-    marka = SelectField(
-        "Marka", choices=[m for m in collection['marka']], coerce=str)
-    model = SelectField(
-        "Model", choices=[mod for mod in collection['model']], coerce=str)
-    stan = SelectField("Stan", choices=choices_list, coerce=str)
-    rented = SelectField("Wypożyczony?", choices=[
-                         "", "Tak", "Nie"], coerce=str)
-    submit = SubmitField("Filtruj")
+# class FilterHardware(FlaskForm):
+#     choices_list = [state for state in collection['status']]
+#     choices_list.insert(0, " ")
+#     typ = SelectField(
+#         "Typ", choices=[typ for typ in collection['type']], coerce=str)
+#     marka = SelectField(
+#         "Marka", choices=[m for m in collection['marka']], coerce=str)
+#     model = SelectField(
+#         "Model", choices=[mod for mod in collection['model']], coerce=str)
+#     stan = SelectField("Stan", choices=choices_list, coerce=str)
+#     rented = SelectField("Wypożyczony?", choices=[
+#                          "", "Tak", "Nie"], coerce=str)
+#     submit = SubmitField("Filtruj")

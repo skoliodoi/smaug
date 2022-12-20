@@ -1,7 +1,7 @@
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from website.extensions import *
-from ..forms import AddHardware, AddHardwareFromField, FilterHardware, ReturnHardware
+from ..forms import AddHardware, AddHardwareFromField, ReturnHardware
 from website.dane import *
 import openpyxl
 from flask_login import login_required, current_user
@@ -34,29 +34,44 @@ def go_through_file(uploaded_file):
     ws = wb['Sprzęt']
     data_table = []
     db_barcodes = []
+    col_names = {}
+    current_col = 0
+    for col in ws.iter_cols(1, ws.max_column):
+        col_names[col[0].value] = current_col
+        current_col += 1
+    
+    for row_cell in ws.iter_rows(min_row=2, max_row=ws.max_row):
+      print(row_cell[col_names['Marka']].value)
     local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    for row in range(2, ws.max_row+1):
+    for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
         if row:
             barcode = ws.cell(row, 1).value.strip()
             if check_existing_data(barcode, 'barcode', db_items):
                 barcode = ws.cell(row, 1).value.strip()
-                notatki = ws.cell(row, 11).value
-                notatki_wypozyczenie = ws.cell(row, 25).value
-                is_rented = ws.cell(row, 12).value
-                rent_date = ws.cell(row, 13).value
-                who_rented = ws.cell(row, 14).value
+                stanowisko_data = (ws.cell(row, 2).value) if ws.cell(row, 2).value != None else ""
+                typ_data = ws.cell(row, 3).value if ws.cell(row, 3).value != None else ""
+                marka_data = ws.cell(row, 4).value if ws.cell(row, 4).value != None else ""
+                model_data = ws.cell(row, 5).value if ws.cell(row, 5).value != None else ""
+                system_data = ws.cell(row, 6).value if ws.cell(row, 6).value != None else ""
+                mpk_data = ws.cell(row, 7).value if ws.cell(row, 7).value != None else ""
+                notatki = ws.cell(row, 13).value
+                is_rented = ws.cell(row, 14).value
+                rent_date = ws.cell(row, 15).value
+                who_rented = ws.cell(row, 16).value
                 if type(rent_date) == str:
                     rent_date = datetime.strptime(rent_date, '"%Y-%m-%d')
                 data = {
-                    'stanowisko': ws.cell(row, 2).value if ws.cell(row, 2).value != None else "N/A",
-                    'typ': ws.cell(row, 3).value if ws.cell(row, 3).value != None else "N/A",
-                    'marka': ws.cell(row, 4).value if ws.cell(row, 4).value != None else "N/A",
-                    'model': ws.cell(row, 5).value if ws.cell(row, 5).value != None else "N/A",
-                    'stan': ws.cell(row, 6).value if ws.cell(row, 6).value != None else "Sprawny",
-                    'bitlocker': ws.cell(row, 7).value if ws.cell(row, 7).value != None else "N/A",
-                    'serial': ws.cell(row, 8).value if ws.cell(row, 8).value != None else "N/A",
-                    'identyfikator': ws.cell(row, 9).value if ws.cell(row, 9).value != None else "N/A",
-                    'klucz_odzyskiwania': ws.cell(row, 10).value if ws.cell(row, 10).value != None else "N/A",
+                    'stanowisko': data_handler(None, stanowisko_data, 'stanowisko'),
+                    'typ': data_handler(None, typ_data, 'type'),
+                    'marka': data_handler(None, marka_data, 'marka'),
+                    'model': data_handler(None, model_data, 'model'),
+                    'system': data_handler(None, system_data, 'system'),
+                    'mpk': data_handler(None, mpk_data, 'mpk'),
+                    'stan': ws.cell(row, 8).value if ws.cell(row, 8).value != None else "Sprawny",
+                    'bitlocker': ws.cell(row, 9).value if ws.cell(row, 9).value != None else "",
+                    'serial': ws.cell(row, 10).value if ws.cell(row, 10).value != None else "",
+                    'identyfikator': ws.cell(row, 11).value if ws.cell(row, 11).value != None else "",
+                    'klucz_odzyskiwania': ws.cell(row, 12).value if ws.cell(row, 12).value != None else "",
                     'notatki': f"Sprzęt dodany z pliku - {datetime.now().strftime('%Y-%m-%d')}",
                     'rented_status': False,
                     'adder': current_user.login,
@@ -67,47 +82,63 @@ def go_through_file(uploaded_file):
                     data['notatki'] = f"{data['notatki']}\n{notatki}"
                 if barcode:
                     data['barcode'] = barcode
-                if is_rented and is_rented.upper() == 'TAK':
+                data_for_history = data.copy()
+                data_for_history['modyfikacja'] = 'Stworzony'
+                data_for_history['who_modified'] = current_user.login
+                db_history.insert_one(data_for_history)
+                data_for_history = None
+                if is_rented:
+                    projekt_data = ws.cell(row, 16).value if ws.cell(
+                        row, 16).value != None else ""
+                    data['login'] = ws.cell(row, 15).value if ws.cell(
+                        row, 15).value != None else ""
                     data['mocarz_id'] = ws.cell(row, 15).value if ws.cell(
-                        row, 15).value != None else "N/A"
-                    data['projekt'] = ws.cell(row, 16).value if ws.cell(
-                        row, 16).value != None else "N/A"
+                        row, 18).value != None else ""
+                    data['projekt'] = data_handler(None, projekt_data, 'projekt')
                     data['lokalizacja'] = ws.cell(row, 17).value if ws.cell(
-                        row, 17).value != None else "N/A"
+                        row, 20).value != None else ""
                     data['karta_zblizeniowa'] = ws.cell(row, 18).value if ws.cell(
-                        row, 18).value != None else "N/A"
+                        row, 21).value != None else ""
                     data['sluchawki'] = ws.cell(row, 19).value if ws.cell(
-                        row, 19).value != None else "N/A"
+                        row, 22).value != None else ""
                     data['zlacze'] = ws.cell(row, 20).value if ws.cell(
-                        row, 20).value != None else "N/A"
+                        row, 23).value != None else ""
                     data['przejsciowka'] = ws.cell(row, 21).value if ws.cell(
-                        row, 21).value != None else "N/A"
+                        row, 24).value != None else ""
                     data['mysz'] = ws.cell(row, 22).value if ws.cell(
-                        row, 22).value != None else "N/A"
+                        row, 25).value != None else ""
                     data['torba'] = ws.cell(row, 23).value if ws.cell(
-                        row, 23).value != None else "N/A"
+                        row, 26).value != None else "N/A"
                     data['modem'] = ws.cell(row, 24).value if ws.cell(
-                        row, 24).value != None else "N/A"
-                    data['notatki_wypozyczenie'] = f"{notatki_wypozyczenie if notatki_wypozyczenie != None else ''}\n Sprzęt udostępniony z pliku - {datetime.now().strftime('%Y-%m-%d')}"
+                        row, 27).value != None else "N/A"
+                    notatki_wypozyczenie = ws.cell(row, 28).value
+                    data['notatki_wypozyczenie'] = f"{notatki_wypozyczenie if notatki_wypozyczenie != None else ''} Sprzęt udostępniony z pliku - {datetime.now().strftime('%Y-%m-%d')}"
                     data['rented_status'] = True
                     data['rent_date'] = rent_date.strftime(
                         "%Y-%m-%d") if rent_date != None else "N/A"
                     data['last_updated'] = local_time
                     data['who_rented'] = who_rented if who_rented != None else "N/A"
+                db_items.insert_one(data)
+                if data['rented_status']:
+                    data_for_history = data.copy()
+                    data_for_history['modyfikacja'] = 'Wypożyczony'
+                    data_for_history['who_modified'] = current_user.login
+                    db_history.insert_one(data_for_history)
                 data_table.append(data)
             else:
                 if barcode != None:
                     db_barcodes.append(barcode)
 
     if data_table and db_barcodes:
-        db_items.insert_many(data_table)
-        db_history.insert_many(data_table)
+        # db_items.insert_many(data_table)
+        # db_history.insert_many(data_table)
+
         flash(
             f"""Pomyślnie dodano {len(data_table)} rekordów do bazy danych.\n
             Barcode\'y już istniejące w bazie danych: {db_barcodes}'""", 'success')
     elif data_table:
-        db_items.insert_many(data_table)
-        db_history.insert_many(data_table)
+        # db_items.insert_many(data_table)
+        # db_history.insert_many(data_table)
         flash(
             f'Pomyślnie dodano {len(data_table)} rekordów do bazy danych', 'success')
     elif db_barcodes:
@@ -126,8 +157,9 @@ def add_file():
     form = AddHardwareFromField()
     if request.method == 'POST':
         file = form.plik.data
-        get_barcodes = go_through_file(file)
-        return redirect(url_for("hardware.add"))
+        go_through_file(file)
+        # return redirect(url_for("hardware.add"))
+        return redirect(url_for("hardware.add_file"))
     return render_template('add_file.html', form=form)
 
 
@@ -137,27 +169,25 @@ def sort_and_assign(collection, mandatory=True):
             collection, key=lambda d:d['last_update'], reverse=True)]
         if not mandatory:
             sorted_table.insert(0, "")
-            print(sorted_table)
         return sorted_table
     else:
-        print('boof')
         return []
 
 
-def update_time(array, name):
-    local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    db_collection.update_one({f"{array}.nazwa": name}, {
-        "$set": {f"{array}.$.last_update": local_time}})
+# def update_time(array, name):
+#     local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
+#     db_collection.update_one({f"{array}.nazwa": name}, {
+#         "$set": {f"{array}.$.last_update": local_time}})
 
 
-def check_if_exists(value):
-    existing_value = db_collection.find_one(
-        {"_id": "main", value: {"$exists": True}})
-    if existing_value:
-        # sorted_value = sort_and_assign(collection[value], bool)
-        return True
-    else:
-        return False
+# def check_if_exists(value):
+#     existing_value = db_collection.find_one(
+#         {"_id": "main", value: {"$exists": True}})
+#     if existing_value:
+#         # sorted_value = sort_and_assign(collection[value], bool)
+#         return True
+#     else:
+#         return False
 
 
 @hardware.route('/add', methods=['GET', 'POST'])
@@ -176,64 +206,104 @@ def add():
                 local_time = datetime.now(
                     local_tz).strftime("%Y-%m-%d %H:%M:%S")
                 # if check_existing_records(barcode_number):
-                stanowisko_data = {
-                    'nazwa': 'stanowisko',
-                    'data': hardware_form.stanowisko.data}
-                typ_data = {
-                    'nazwa': 'type',
-                    'data': hardware_form.typ.data}
-                marka_data = {
-                    'nazwa': 'marka',
-                    'data': hardware_form.marka.data}
-                model_data = {
-                    'nazwa': 'model',
-                    'data': hardware_form.model.data}
-                system_data = {
-                    'nazwa': 'system',
-                    'data': hardware_form.system.data}
-                mpk_data = {
-                    'nazwa': 'mpk',
-                    'data': hardware_form.mpk.data}
-                projekt_data = {
-                    'nazwa': 'projekt',
-                    'data': hardware_form.projekt.data}
-                lokalizacja_data = {
-                    'nazwa': 'lokalizacja',
-                    'data': hardware_form.lokalizacja.data}
+                stanowisko_data = data_handler(
+                    hardware_form.stanowisko.data,
+                    hardware_form.nowy_stanowisko.data,
+                    'stanowisko'
+                )
+                typ_data = data_handler(
+                    hardware_form.typ.data,
+                    hardware_form.nowy_typ.data,
+                    'type'
+                )
+                marka_data = data_handler(
+                    hardware_form.marka.data,
+                    hardware_form.nowa_marka.data,
+                    'marka'
+                )
+                model_data = data_handler(
+                    hardware_form.model.data,
+                    hardware_form.nowy_model.data,
+                    'model'
+                )
+                system_data = data_handler(
+                    hardware_form.system.data,
+                    hardware_form.nowy_system.data,
+                    'system'
+                )
+                mpk_data = data_handler(
+                    hardware_form.mpk.data,
+                    hardware_form.nowy_mpk.data,
+                    'mpk'
+                )
+                projekt_data = data_handler(
+                    hardware_form.projekt.data,
+                    hardware_form.nowy_projekt.data,
+                    'projekt'
+                )
+                lokalizacja_data = data_handler(
+                    hardware_form.lokalizacja.data,
+                    hardware_form.nowa_lokalizacja.data,
+                    'lokalizacja'
+                )
+                # stanowisko_data = {
+                #     'nazwa': 'stanowisko',
+                #     'data': hardware_form.stanowisko.data}
+                # typ_data = {
+                #     'nazwa': 'type',
+                #     'data': hardware_form.typ.data}
+                # marka_data = {
+                #     'nazwa': 'marka',
+                #     'data': hardware_form.marka.data}
+                # model_data = {
+                #     'nazwa': 'model',
+                #     'data': hardware_form.model.data}
+                # system_data = {
+                #     'nazwa': 'system',
+                #     'data': hardware_form.system.data}
+                # mpk_data = {
+                #     'nazwa': 'mpk',
+                #     'data': hardware_form.mpk.data}
+                # projekt_data = {
+                #     'nazwa': 'projekt',
+                #     'data': hardware_form.projekt.data}
+                # lokalizacja_data = {
+                #     'nazwa': 'lokalizacja',
+                #     'data': hardware_form.lokalizacja.data}
                 opis_szkod = hardware_form.opis_uszkodzenia.data
 
-                if hardware_form.nowy_stanowisko.data:
-                    stanowisko_data['data'] = hardware_form.nowy_stanowisko.data
-                    db_collection.update_one(
-                        {"_id": "main"}, {"$addToSet": {"stanowisko": {"nazwa": stanowisko_data['data'], "last_update": local_time}}})
-                if hardware_form.nowy_typ.data:
-                    typ_data['data'] = hardware_form.nowy_typ.data
-                    db_collection.update_one(
-                        {"_id": "main"}, {"$addToSet": {"type": {"nazwa": typ_data['data'], "last_update": local_time}}})
-                if hardware_form.nowa_marka.data:
-                    marka_data['data'] = hardware_form.nowa_marka.data
-                    db_collection.update_one(
-                        {"_id": "main"}, {"$addToSet": {"marka": {"nazwa": marka_data['data'], "last_update": local_time}}})
-                if hardware_form.nowy_model.data:
-                    model_data['data'] = hardware_form.nowy_model.data
-                    db_collection.update_one(
-                        {"_id": "main"}, {"$addToSet": {"model": {"nazwa": model_data['data'], "last_update": local_time}}})
-                if hardware_form.nowy_system.data:
-                    system_data['data'] = hardware_form.nowy_system.data
-                    db_collection.update_one(
-                        {"_id": "main"}, {"$addToSet": {"system": {"nazwa": system_data['data'], "last_update": local_time}}})
-                if hardware_form.nowy_mpk.data:
-                    mpk_data['data'] = hardware_form.nowy_mpk.data
-                    db_collection.update_one(
-                        {"_id": "main"}, {"$addToSet": {"mpk": {"nazwa": mpk_data['data'], "last_update": local_time}}})
-                if hardware_form.nowy_projekt.data:
-                    projekt_data['data'] = hardware_form.nowy_projekt.data
-                    db_collection.update_one(
-                        {"_id": "main"}, {"$addToSet": {"projekt": {"nazwa": projekt_data['data'], "last_update": local_time}}})
-                if hardware_form.nowa_lokalizacja.data:
-                    lokalizacja_data['data'] = hardware_form.nowa_lokalizacja.data
-                    db_collection.update_one(
-                        {"_id": "main"}, {"$addToSet": {"lokalizacja": {"nazwa": lokalizacja_data['data'], "last_update": local_time}}})
+                # if hardware_form.nowy_stanowisko.data:
+                #     stanowisko_data['data'] = hardware_form.nowy_stanowisko.data
+                #     db_collection.update_one(
+                #         {"_id": "main"}, {"$addToSet": {"stanowisko": {"nazwa": stanowisko_data['data'], "last_update": local_time}}})
+                # if hardware_form.nowy_typ.data:
+                #     typ_data['data'] = hardware_form.nowy_typ.data
+                #     db_collection.update_one(
+                #         {"_id": "main"}, {"$addToSet": {"type": {"nazwa": typ_data['data'], "last_update": local_time}}})
+                # if hardware_form.nowa_marka.data:
+                #     marka_data['data'] = hardware_form.nowa_marka.data
+                #     db_collection.update_one(
+                #         {"_id": "main"}, {"$addToSet": {"marka": {"nazwa": marka_data['data'], "last_update": local_time}}})
+                # if hardware_form.nowy_model.data:
+                #     model_data['data'] = hardware_form.nowy_model.data
+                #     db_collection.update_one(
+                #         {"_id": "main"}, {"$addToSet": {"model": {"nazwa": model_data['data'], "last_update": local_time}}})
+                # if hardware_form.nowy_system.data:
+                #     system_data['data'] = hardware_form.nowy_system.data
+                #     db_collection.update_one(
+                #         {"_id": "main"}, {"$addToSet": {"system": {"nazwa": system_data['data'], "last_update": local_time}}})
+                # if hardware_form.nowy_mpk.data:
+                #     mpk_data['data'] = hardware_form.nowy_mpk.data
+                #     db_collection.update_one(
+                #         {"_id": "main"}, {"$addToSet": {"mpk": {"nazwa": mpk_data['data'], "last_update": local_time}}})
+                # if hardware_form.nowy_projekt.data:
+                #     projekt_data['data'] = hardware_form.nowy_projekt.data
+                #     db_collection.update_one(
+                #         {"_id": "main"}, {"$addToSet": {"projekt": {"nazwa": projekt_data['data'], "last_update": local_time}}})
+                # if hardware_form.nowa_lokalizacja.data:
+                #     lokalizacja_data['data'] = hardware_form.nowa_lokalizacja.data
+                #     db_collection.update_one(
+                #         {"_id": "main"}, {"$addToSet": {"lokalizacja": {"nazwa": lokalizacja_data['data'], "last_update": local_time}}})
 
                 data_to_send = {
                     'barcode': barcode_number,
@@ -297,11 +367,11 @@ def add():
                     except Exception as e:
                         print('Rent error: ', e)
 
-                for each in [typ_data, marka_data, model_data, system_data, mpk_data, projekt_data, lokalizacja_data]:
-                    # update_time(each['nazwa'], each['data'])
-                    if check_if_exists(each['nazwa']):
-                        update_time(each['nazwa'], each['data'])
-                    # else:
+                # for each in [typ_data, marka_data, model_data, system_data, mpk_data, projekt_data, lokalizacja_data]:
+                #     # update_time(each['nazwa'], each['data'])
+                #     if check_if_exists(each['nazwa']):
+                #         update_time(each['nazwa'], each['data'])
+                #     # else:
                     #     create_db_entry(each['nazwa'], each['data'])
                 # update_time("type", typ_data)
                 # update_time("marka", marka_data)
@@ -393,9 +463,6 @@ def edit(id):
         old_barcode = None
 
     if request.method == 'POST':
-        local_time = datetime.now(
-            local_tz).strftime("%Y-%m-%d %H:%M:%S")
-
         def update_db():
             kartoteka_exists = db_items.find_one(
                 {'_id': ObjectId(id), 'kartoteka': {"$exists": True}})

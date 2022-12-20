@@ -84,7 +84,8 @@ def signup():
             return redirect(url_for('auth.signup'))
     else:
         collection = db_collection.find_one({})
-        mpk_data = collection['mpk']
+        mpk_data = sort_and_assign(
+                collection['mpk']) if check_if_exists('mpk') else []
         return render_template('signup.html', form=form, mpk_data=mpk_data, display_text="Dodaj")
 
 
