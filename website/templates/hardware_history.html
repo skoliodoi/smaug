@@ -17,12 +17,19 @@
     <table class="min-w-full divide-y divide-gray-300">
       <thead class="bg-gray-50">
         <tr>
-          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Dokonana zmiana</th>
-          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Czas dokonania zmiany
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Dokonana zmiana
           </th>
-          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Osoba dokonująca zmiany
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Czas
+            dokonania zmiany
           </th>
-          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Stan sprzętu
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Osoba
+            dokonująca zmiany
+          </th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Stan
+            sprzętu
+          </th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Opis
+            uszkodzenia (jeśli dotyczy)
           </th>
           <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Uwagi</th>
           <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Akcje</th>
@@ -42,13 +49,14 @@
         {%for item in history%}
         <tr>
           <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-            {% if item['rented_status']%}
+            <!-- {% if item['rented_status']%}
             Udostępniony
             {%elif item['returned']%}
             Zwrócony
             {%else%}
             Nieudostępniony
-            {%endif%}
+            {%endif%} -->
+            {{item['modyfikacja']}}
             <dl class="font-normal lg:hidden">
               <dt class="sr-only">{{item['last_updated']}}</dt>
               <dd class="mt-1 truncate text-gray-700">{{item['who_modified']}}</dd>
@@ -58,7 +66,16 @@
           <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">{{item['last_updated']}}</td>
           <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{item['who_modified']}}</td>
           <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{item['stan']}}</td>
-          <td class="px-3 py-4 text-sm text-gray-500">{{item['notes'] }}</td>
+          <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{
+            item['opis_uszkodzenia']
+            if item['opis_uszkodzenia']
+            else "Brak"
+          }}</td>
+          <td class="px-3 py-4 text-sm text-gray-500">{{
+            item['notatki'] 
+            if item['notatki']
+            else "Brak" 
+          }}</td>
           <td class="px-3 py-4 text-sm text-gray-500">
             <form method="POST">
               <a href="/hardware/show_info/history/{{item['_id']}}" class="text-indigo-600 hover:text-indigo-900">

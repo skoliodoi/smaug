@@ -17,12 +17,16 @@ collection = db_collection.find_one({"_id": "main"})
 
 return_route = "/hardware/all"
 
-# def check_existing_records(barcode):
-#     existing_record = db_items.find_one({'barcode': barcode})
-#     if existing_record == None:
-#         return True
-#     else:
-#         return False
+
+def update_history(db_key, db_value, modify_msg):
+    data_for_history = db_items.find_one({db_key: db_value}, {
+        '_id': 0
+    })
+    data_for_history['modyfikacja'] = modify_msg
+    data_for_history['last_updated'] = datetime.now(
+        local_tz).strftime("%Y-%m-%d %H:%M:%S")
+    data_for_history['who_modified'] = current_user.login
+    db_history.insert_one(data_for_history)
 
 
 def go_through_file(uploaded_file):
@@ -368,15 +372,6 @@ def add():
 def edit(id):
 
     form = AddHardware()
-    # collection = db_collection.find_one({"_id": "main"})
-    # form.stanowisko.choices = collection['stanowisko']
-    # form.typ.choices = sort_and_assign(collection['type'])
-    # form.marka.choices = sort_and_assign(collection['marka'])
-    # form.model.choices = sort_and_assign(collection['model'])
-    # form.system.choices = sort_and_assign(collection['system'])
-    # form.projekt.choices = collection['projekt']
-    # form.lokalizacja.choices = collection['lokalizacja']
-    # form.barcode.data = data['barcode']
     data = db_items.find_one({'_id': ObjectId(id)}, {'_id': 0,
                                                      'rented_status': 0,
                                                      'upload_date': 0,
@@ -398,6 +393,9 @@ def edit(id):
         old_barcode = None
 
     if request.method == 'POST':
+        local_time = datetime.now(
+            local_tz).strftime("%Y-%m-%d %H:%M:%S")
+
         def update_db():
             kartoteka_exists = db_items.find_one(
                 {'_id': ObjectId(id), 'kartoteka': {"$exists": True}})
@@ -431,8 +429,17 @@ def edit(id):
 
             db_items.update_one({'_id': ObjectId(id)}, {
                                 '$set': update_data}, upsert=True)
-            db_history.update_one({'_id': ObjectId(id)}, {
-                                  '$set': update_data}, upsert=True)
+            # data_for_history = db_items.find_one({'_id': ObjectId(id)}, {
+            #     '_id': 0
+            # })
+            # data_for_history['modyfikacja'] = 'Edytowany'
+            # data_for_history['last_updated'] = local_time
+            # data_for_history['who_modified'] = current_user.login
+            # print(data_for_history)
+            # db_history.insert_one(data_for_history)
+            update_history('_id', ObjectId(id), 'Edytowany')
+            # db_history.update_one({'_id': ObjectId(id)}, {
+            #                       '$set': update_data}, upsert=True)
             if existing_kartoteka:
                 for barcode in existing_kartoteka['przypisane_barcodes']:
                     if barcode == old_barcode:
@@ -456,7 +463,7 @@ def edit(id):
                 return (redirect(url_for('hardware.edit', id=id)))
         else:
             update_db()
-            return (redirect(url_for('hardware.show_info', id=id)))
+            return (redirect(url_for('hardware.show_info', data='present', id=id)))
     else:
         for key, value in data.items():
             form[key].data = value
@@ -483,7 +490,7 @@ def edit(id):
                                hardware_data=False,
                                edit=True,
                                form=form,
-                               return_to=f"/hardware/show_info/{id}")
+                               return_to=f"/hardware/show_info/present/{id}")
 
 
 @ hardware.route('/rent/<barcode>', methods=['GET', 'POST'])
@@ -527,25 +534,26 @@ def rent(barcode):
         }
         }
         )
-        db_history.update_one({'barcode': barcode, 'returned': {"$exists": False}}, {"$set": {
-            'mocarz_id': hardware_form.mocarz_id.data,
-            'projekt': hardware_form.projekt.data,
-            'lokalizacja': hardware_form.lokalizacja.data,
-            'karta_zblizeniowa': hardware_form.karta_zblizeniowa.data,
-            'sluchawki': hardware_form.sluchawki.data,
-            'zlacze': hardware_form.zlacze.data,
-            'przejsciowka': hardware_form.przejsciowka.data,
-            'mysz': hardware_form.mysz.data,
-            'torba': hardware_form.torba.data,
-            'modem': hardware_form.modem.data,
-            'notatki_wypozyczenie': hardware_form.notatki_wypozyczenie.data,
-            'rented_status': True,
-            'rent_date': local_time,
-            'last_updated': local_time,
-            'who_rented': current_user.login
-        }
-        }, upsert=True
-        )
+        update_history('barcode', barcode, 'Wypożyczony')
+        # db_history.update_one({'barcode': barcode, 'returned': {"$exists": False}}, {"$set": {
+        #     'mocarz_id': hardware_form.mocarz_id.data,
+        #     'projekt': hardware_form.projekt.data,
+        #     'lokalizacja': hardware_form.lokalizacja.data,
+        #     'karta_zblizeniowa': hardware_form.karta_zblizeniowa.data,
+        #     'sluchawki': hardware_form.sluchawki.data,
+        #     'zlacze': hardware_form.zlacze.data,
+        #     'przejsciowka': hardware_form.przejsciowka.data,
+        #     'mysz': hardware_form.mysz.data,
+        #     'torba': hardware_form.torba.data,
+        #     'modem': hardware_form.modem.data,
+        #     'notatki_wypozyczenie': hardware_form.notatki_wypozyczenie.data,
+        #     'rented_status': True,
+        #     'rent_date': local_time,
+        #     'last_updated': local_time,
+        #     'who_rented': current_user.login
+        # }
+        # }, upsert=True
+        # )
 
         return (redirect(url_for('hardware.see_all')))
 
@@ -574,7 +582,7 @@ def see_history(id, barcode):
                            barcode=barcode,
                            date=creation_date,
                            history=hardware_data_history,
-                           return_to=f"/hardware/show_info/{id}")
+                           return_to=f"/hardware/show_info/present/{id}")
 
 
 @ hardware.route('/return/<barcode>', methods=['GET', 'POST'])
@@ -586,13 +594,13 @@ def return_hardware(barcode):
         stan = form.stan.data
         opis_szkod = form.opis_uszkodzenia.data
         dodatkowe_uwagi = form.dodatkowe_uwagi.data
-        db_history.update_one({'barcode': barcode, 'rent_date': hardware_data['rent_date']}, {"$set": {
-            'rented_status': False,
-            'returned': True,
-            'return_date': datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S"),
-            'last_updated': datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S"),
-            'who_accepted_return': current_user.login
-        }})
+        # db_history.update_one({'barcode': barcode, 'rent_date': hardware_data['rent_date']}, {"$set": {
+        #     'rented_status': False,
+        #     'returned': True,
+        #     'return_date': datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S"),
+        #     'last_updated': datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S"),
+        #     'who_accepted_return': current_user.login
+        # }})
 
         db_items.update_one({'barcode': barcode}, {
             "$set": {
@@ -627,6 +635,13 @@ def return_hardware(barcode):
             full_notatki = f"{hardware_data['notatki']}, {dodatkowe_uwagi}"
             db_items.update_one({'barcode': barcode}, {"$set": {
                 'notatki': full_notatki}})
+        # data_for_history = db_items.find_one({'barcode': barcode}, {'_id': 0})
+        # data_for_history['modyfikacja'] = 'Zwrócony'
+        # data_for_history['who_modified'] = current_user.login
+        # data_for_history['last_updated'] = datetime.now(
+        #     local_tz).strftime("%Y-%m-%d %H:%M:%S")
+        # db_history.insert_one(data_for_history)
+        update_history('barcode', barcode, "Zwrócony")
         return (redirect(url_for('hardware.see_all')))
     else:
         return render_template("return_hardware.html",
@@ -640,7 +655,6 @@ def return_hardware(barcode):
 @ hardware.route('/show_info/<data>/<id>')
 @ login_required
 def show_info(data, id):
-    print(data)
     if data == 'present':
         hardware_data = db_items.find_one({'_id': ObjectId(id)})
         hide_buttons = False
@@ -732,7 +746,7 @@ def delete(id):
                 if kartoteka_attached['barcode'] == barcode:
                     db_paperwork.update_one({'kartoteka': kartoteka_attached['kartoteka']}, {
                                             "$pull": {'przypisane_barcodes': barcode}})
-
+        update_history('_id', ObjectId(id), "Usunięty")
         db_items.delete_one({'_id': ObjectId(id)})
 
         return (redirect(url_for('hardware.see_all')))
