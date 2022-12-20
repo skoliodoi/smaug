@@ -18,6 +18,16 @@ collection = db_collection.find_one({"_id": "main"})
 return_route = "/hardware/all"
 
 
+def adjust_return_route(route, barcode):
+    if route == 'details':
+        return_route_id = db_items.find_one(
+            {'barcode': barcode}, {'_id': 1})['_id']
+        return_route = f"/hardware/show_info/present/{return_route_id}"
+    else:
+        return_route = "/hardware/all"
+    return return_route
+
+
 def update_history(db_key, db_value, modify_msg):
     data_for_history = db_items.find_one({db_key: db_value}, {
         '_id': 0
@@ -39,25 +49,27 @@ def go_through_file(uploaded_file):
     for col in ws.iter_cols(1, ws.max_column):
         col_names[col[0].value] = current_col
         current_col += 1
-    
-    for row_cell in ws.iter_rows(min_row=2, max_row=ws.max_row):
-      print(row_cell[col_names['Marka']].value)
+
+    # for row_cell in ws.iter_rows(min_row=2, max_row=ws.max_row):
+    #   print(row_cell[col_names['Marka']].value)
     local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
     for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
         if row:
-            barcode = ws.cell(row, 1).value.strip()
+            def cell_data(cell):
+                return cell if cell else ""
+            barcode = row[col_names['Barcode']].value.strip()
             if check_existing_data(barcode, 'barcode', db_items):
-                barcode = ws.cell(row, 1).value.strip()
-                stanowisko_data = (ws.cell(row, 2).value) if ws.cell(row, 2).value != None else ""
-                typ_data = ws.cell(row, 3).value if ws.cell(row, 3).value != None else ""
-                marka_data = ws.cell(row, 4).value if ws.cell(row, 4).value != None else ""
-                model_data = ws.cell(row, 5).value if ws.cell(row, 5).value != None else ""
-                system_data = ws.cell(row, 6).value if ws.cell(row, 6).value != None else ""
-                mpk_data = ws.cell(row, 7).value if ws.cell(row, 7).value != None else ""
-                notatki = ws.cell(row, 13).value
-                is_rented = ws.cell(row, 14).value
-                rent_date = ws.cell(row, 15).value
-                who_rented = ws.cell(row, 16).value
+                barcode = row[col_names['Barcode']].value.strip()
+                stanowisko_data = cell_data(row[col_names['Stanowisko']].value)
+                typ_data = cell_data(row[col_names['Typ']].value)
+                marka_data = cell_data(row[col_names['Marka']].value)
+                model_data = cell_data(row[col_names['Model']].value)
+                system_data = cell_data(row[col_names['System']].value)
+                mpk_data = cell_data(row[col_names['MPK']].value)
+                notatki = row[col_names['Uwagi']].value
+                is_rented = row[col_names['Udostępniony']].value
+                rent_date = row[col_names['Data udostępnienia']].value
+                who_rented = row[col_names['Osoba udostępniająca']].value
                 if type(rent_date) == str:
                     rent_date = datetime.strptime(rent_date, '"%Y-%m-%d')
                 data = {
@@ -67,11 +79,11 @@ def go_through_file(uploaded_file):
                     'model': data_handler(None, model_data, 'model'),
                     'system': data_handler(None, system_data, 'system'),
                     'mpk': data_handler(None, mpk_data, 'mpk'),
-                    'stan': ws.cell(row, 8).value if ws.cell(row, 8).value != None else "Sprawny",
-                    'bitlocker': ws.cell(row, 9).value if ws.cell(row, 9).value != None else "",
-                    'serial': ws.cell(row, 10).value if ws.cell(row, 10).value != None else "",
-                    'identyfikator': ws.cell(row, 11).value if ws.cell(row, 11).value != None else "",
-                    'klucz_odzyskiwania': ws.cell(row, 12).value if ws.cell(row, 12).value != None else "",
+                    'stan': row[col_names['Stan']].value if row[col_names['Stan']].value else "Sprawny",
+                    'bitlocker': cell_data(row[col_names['hasło/bitlocker']].value),
+                    'serial': cell_data(row[col_names['Nazwa / serial']].value),
+                    'identyfikator': cell_data(row[col_names['Indentyfikator klucza odzyskiwania']].value),
+                    'klucz_odzyskiwania': cell_data(row[col_names['Klucz/dysk odzyskiwania']].value),
                     'notatki': f"Sprzęt dodany z pliku - {datetime.now().strftime('%Y-%m-%d')}",
                     'rented_status': False,
                     'adder': current_user.login,
@@ -79,7 +91,7 @@ def go_through_file(uploaded_file):
                     'last_updated': local_time,
                 }
                 if notatki:
-                    data['notatki'] = f"{data['notatki']}\n{notatki}"
+                    data['notatki'] = f"{notatki} ({data['notatki']})"
                 if barcode:
                     data['barcode'] = barcode
                 data_for_history = data.copy()
@@ -88,36 +100,38 @@ def go_through_file(uploaded_file):
                 db_history.insert_one(data_for_history)
                 data_for_history = None
                 if is_rented:
-                    projekt_data = ws.cell(row, 16).value if ws.cell(
-                        row, 16).value != None else ""
-                    data['login'] = ws.cell(row, 15).value if ws.cell(
-                        row, 15).value != None else ""
-                    data['mocarz_id'] = ws.cell(row, 15).value if ws.cell(
-                        row, 18).value != None else ""
-                    data['projekt'] = data_handler(None, projekt_data, 'projekt')
-                    data['lokalizacja'] = ws.cell(row, 17).value if ws.cell(
-                        row, 20).value != None else ""
-                    data['karta_zblizeniowa'] = ws.cell(row, 18).value if ws.cell(
-                        row, 21).value != None else ""
-                    data['sluchawki'] = ws.cell(row, 19).value if ws.cell(
-                        row, 22).value != None else ""
-                    data['zlacze'] = ws.cell(row, 20).value if ws.cell(
-                        row, 23).value != None else ""
-                    data['przejsciowka'] = ws.cell(row, 21).value if ws.cell(
-                        row, 24).value != None else ""
-                    data['mysz'] = ws.cell(row, 22).value if ws.cell(
-                        row, 25).value != None else ""
-                    data['torba'] = ws.cell(row, 23).value if ws.cell(
-                        row, 26).value != None else "N/A"
-                    data['modem'] = ws.cell(row, 24).value if ws.cell(
-                        row, 27).value != None else "N/A"
-                    notatki_wypozyczenie = ws.cell(row, 28).value
-                    data['notatki_wypozyczenie'] = f"{notatki_wypozyczenie if notatki_wypozyczenie != None else ''} Sprzęt udostępniony z pliku - {datetime.now().strftime('%Y-%m-%d')}"
+                    projekt_data = cell_data(row[col_names['PROJEKT']].value)
+                    lokalizacja_data = cell_data(
+                        row[col_names['Lokalizacja']].value)
+                    data['login'] = cell_data(row[col_names['Login']].value)
+                    data['mocarz_id'] = cell_data(
+                        row[col_names['Mocarz ID']].value)
+                    data['projekt'] = data_handler(
+                        None, projekt_data, 'projekt')
+                    data['lokalizacja'] = data_handler(
+                        None, lokalizacja_data, 'lokalizacja')
+                    data['karta_zblizeniowa'] = cell_data(
+                        row[col_names['Karta']].value)
+                    data['sluchawki'] = cell_data(
+                        row[col_names['Karta']].value)
+                    data['zlacze'] = cell_data(row[col_names['Karta']].value)
+                    data['przejsciowka'] = cell_data(
+                        row[col_names['Karta']].value)
+                    data['mysz'] = cell_data(row[col_names['Karta']].value)
+                    data['torba'] = cell_data(row[col_names['Karta']].value)
+                    data['modem'] = cell_data(row[col_names['Karta']].value)
+                    notatki_wypozyczenie = row[col_names['Karta']].value
+                    if notatki_wypozyczenie:
+                        data['notatki_wypozyczenie'] = f"""{notatki_wypozyczenie} 
+                      (Sprzęt udostępniony z pliku - {datetime.now().strftime('%Y-%m-%d')})
+                      """
+                    else:
+                        data['notatki_wypozyczenie'] = f"Sprzęt udostępniony z pliku - {datetime.now().strftime('%Y-%m-%d')}"
                     data['rented_status'] = True
                     data['rent_date'] = rent_date.strftime(
-                        "%Y-%m-%d") if rent_date != None else "N/A"
+                        "%Y-%m-%d") if rent_date else ""
                     data['last_updated'] = local_time
-                    data['who_rented'] = who_rented if who_rented != None else "N/A"
+                    data['who_rented'] = who_rented if who_rented else ""
                 db_items.insert_one(data)
                 if data['rented_status']:
                     data_for_history = data.copy()
@@ -158,8 +172,7 @@ def add_file():
     if request.method == 'POST':
         file = form.plik.data
         go_through_file(file)
-        # return redirect(url_for("hardware.add"))
-        return redirect(url_for("hardware.add_file"))
+        return redirect(url_for("hardware.add"))
     return render_template('add_file.html', form=form)
 
 
@@ -308,10 +321,10 @@ def add():
                 data_to_send = {
                     'barcode': barcode_number,
                     # 'stanowisko': stanowisko_data['data'],
-                    'typ': typ_data['data'],
-                    'marka': marka_data['data'],
-                    'model': model_data['data'],
-                    'mpk': mpk_data['data'],
+                    'typ': typ_data,
+                    'marka': marka_data,
+                    'model': model_data,
+                    'mpk': mpk_data,
                     'stan': hardware_form.stan.data,
                     # 'bitlocker': hardware_form.bitlocker.data,
                     # 'serial': hardware_form.serial.data,
@@ -325,10 +338,10 @@ def add():
                     'adder': current_user.login,
                     # 'who_rented': who_rented
                 }
-                if stanowisko_data['data']:
-                    data_to_send['stanowisko'] = stanowisko_data['data']
-                if system_data['data']:
-                    data_to_send['system'] = system_data['data']
+                if stanowisko_data:
+                    data_to_send['stanowisko'] = stanowisko_data
+                if system_data:
+                    data_to_send['system'] = system_data
                 if hardware_form.bitlocker.data:
                     data_to_send['bitlocker'] = hardware_form.bitlocker.data
                 if hardware_form.serial.data:
@@ -351,8 +364,8 @@ def add():
                         data_to_send['rented_status'] = True
                         data_to_send['login'] = hardware_form.login.data
                         data_to_send['mocarz_id'] = hardware_form.mocarz_id.data
-                        data_to_send['projekt'] = projekt_data['data']
-                        data_to_send['lokalizacja'] = lokalizacja_data['data']
+                        data_to_send['projekt'] = projekt_data
+                        data_to_send['lokalizacja'] = lokalizacja_data
                         data_to_send['karta_zblizeniowa'] = hardware_form.karta_zblizeniowa.data
                         data_to_send['sluchawki'] = hardware_form.sluchawki.data
                         data_to_send['zlacze'] = hardware_form.zlacze.data
@@ -442,18 +455,19 @@ def add():
 def edit(id):
 
     form = AddHardware()
-    data = db_items.find_one({'_id': ObjectId(id)}, {'_id': 0,
-                                                     'rented_status': 0,
-                                                     'upload_date': 0,
-                                                     'last_updated': 0,
-                                                     'rent_date': 0,
-                                                     'adder': 0,
-                                                     'who_rented': 0,
-                                                     'kartoteka': 0,
-                                                     'bitlocker1': 0,
-                                                     'bitlocker2': 0,
-                                                     'mpk': 0,
-                                                     'notes': 0})
+    item_data = db_items.find_one({'_id': ObjectId(id)}, {'_id': 0,
+                                                          'rented_status': 0,
+                                                          'upload_date': 0,
+                                                          'last_updated': 0,
+                                                          'rent_date': 0,
+                                                          'adder': 0,
+                                                          'who_rented': 0,
+                                                          'kartoteka': 0,
+                                                          'bitlocker1': 0,
+                                                          'bitlocker2': 0,
+                                                          'mpk': 0,
+                                                          'notes': 0})
+
     barcode_exists = db_items.find_one(
         {'_id': ObjectId(id), 'barcode': {"$exists": True}})
 
@@ -473,10 +487,12 @@ def edit(id):
                 existing_kartoteka = None
             update_data = {
                 'barcode': form.barcode.data,
-                'stanowisko': form.stanowisko.data,
-                'typ': form.typ.data,
-                'marka': form.marka.data,
-                'model': form.model.data,
+                'stanowisko': data_handler(form.stanowisko.data, form.nowy_stanowisko.data, "stanowisko"),
+                'typ': data_handler(form.typ.data, form.nowy_typ.data, "type"),
+                'marka': data_handler(form.marka.data, form.nowa_marka.data, "marka"),
+                'model': data_handler(form.model.data, form.nowy_model.data, "model"),
+                'system': data_handler(form.system.data, form.nowy_system.data, "system"),
+                'mpk': data_handler(form.mpk.data, form.nowy_mpk.data, "mpk"),
                 'stan': form.stan.data,
                 'bitlocker': form.bitlocker.data,
                 'serial': form.serial.data,
@@ -532,7 +548,7 @@ def edit(id):
             update_db()
             return (redirect(url_for('hardware.show_info', data='present', id=id)))
     else:
-        for key, value in data.items():
+        for key, value in item_data.items():
             form[key].data = value
         collection = db_collection.find_one({"_id": "main"})
         form.stanowisko.choices = sort_and_assign(
@@ -553,39 +569,50 @@ def edit(id):
             collection['lokalizacja']) if check_if_exists('lokalizacja') else []
         return render_template('add_items.html',
                                header_text="Edytuj",
-                               data=data,
+                               data=item_data,
                                hardware_data=False,
                                edit=True,
                                form=form,
                                return_to=f"/hardware/show_info/present/{id}")
 
 
-@ hardware.route('/rent/<barcode>', methods=['GET', 'POST'])
+@ hardware.route('/rent/<route>/<barcode>', methods=['GET', 'POST'])
 @ login_required
-def rent(barcode):
+def rent(route, barcode):
     local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
     hardware_form = AddHardware()
     hardware_data = db_items.find_one({'barcode': barcode})
-
+    # if route == 'details':
+    #     return_route_id = db_items.find_one(
+    #         {'barcode': barcode}, {'_id': 1})['_id']
+    #     return_route = f"/hardware/show_info/present/{return_route_id}"
+    # else:
+    #     return_route = "/hardware/all"
+    return_route = adjust_return_route(route, barcode)
     if request.method == 'POST':
-        projekt_data = {
-            'nazwa': 'projekt',
-            'data': hardware_form.projekt.data}
-        lokalizacja_data = {
-            'nazwa': 'lokalizacja',
-            'data': hardware_form.lokalizacja.data}
-        if hardware_form.nowy_projekt.data:
-            projekt_data['data'] = hardware_form.nowy_projekt.data
-            db_collection.update_one(
-                {"_id": "main"}, {"$addToSet": {"projekt": {"nazwa": projekt_data['data'], "last_update": local_time}}})
-        if hardware_form.nowa_lokalizacja.data:
-            lokalizacja_data['data'] = hardware_form.nowa_lokalizacja.data
-            db_collection.update_one(
-                {"_id": "main"}, {"$addToSet": {"lokalizacja": {"nazwa": lokalizacja_data['data'], "last_update": local_time}}})
+        projekt_data = data_handler(
+            hardware_form.lokalizacja.data,
+            hardware_form.nowa_lokalizacja.data,
+            'projekt'
+        )
+        lokalizacja_data = data_handler(
+            hardware_form.projekt.data,
+            hardware_form.nowy_projekt.data,
+            'lokalizacja'
+        )
+        # if hardware_form.nowy_projekt.data:
+        #     projekt_data['data'] = hardware_form.nowy_projekt.data
+        #     db_collection.update_one(
+        #         {"_id": "main"}, {"$addToSet": {"projekt": {"nazwa": projekt_data['data'], "last_update": local_time}}})
+        # if hardware_form.nowa_lokalizacja.data:
+        #     lokalizacja_data['data'] = hardware_form.nowa_lokalizacja.data
+        #     db_collection.update_one(
+        #         {"_id": "main"}, {"$addToSet": {"lokalizacja": {"nazwa": lokalizacja_data['data'], "last_update": local_time}}})
         db_items.update_one({'barcode': barcode}, {"$set": {
+            'login': hardware_form.login.data,
             'mocarz_id': hardware_form.mocarz_id.data,
-            'projekt': projekt_data['data'],
-            'lokalizacja': lokalizacja_data['data'],
+            'projekt': projekt_data,
+            'lokalizacja': lokalizacja_data,
             'karta_zblizeniowa': hardware_form.karta_zblizeniowa.data,
             'sluchawki': hardware_form.sluchawki.data,
             'zlacze': hardware_form.zlacze.data,
@@ -621,14 +648,17 @@ def rent(barcode):
         # }
         # }, upsert=True
         # )
-
-        return (redirect(url_for('hardware.see_all')))
+        if route == 'all':
+            return (redirect(url_for('hardware.see_all')))
+        else:
+            return (redirect(return_route))
 
     else:
         hardware_form.projekt.choices = sort_and_assign(
             collection['projekt']) if check_if_exists('projekt') else []
         hardware_form.lokalizacja.choices = sort_and_assign(
             collection['lokalizacja']) if check_if_exists('lokalizacja') else []
+        # return(redirect("/hardware/all"))
         return render_template('add_items.html',
                                udostepnienie=True,
                                header_text="Udostępnij",
@@ -652,11 +682,12 @@ def see_history(id, barcode):
                            return_to=f"/hardware/show_info/present/{id}")
 
 
-@ hardware.route('/return/<barcode>', methods=['GET', 'POST'])
+@ hardware.route('/return/<route>/<barcode>', methods=['GET', 'POST'])
 @ login_required
-def return_hardware(barcode):
+def return_hardware(route, barcode):
     form = ReturnHardware()
     hardware_data = db_items.find_one({'barcode': barcode})
+    return_route = adjust_return_route(route, barcode)
     if request.method == "POST":
         stan = form.stan.data
         opis_szkod = form.opis_uszkodzenia.data
@@ -709,7 +740,10 @@ def return_hardware(barcode):
         #     local_tz).strftime("%Y-%m-%d %H:%M:%S")
         # db_history.insert_one(data_for_history)
         update_history('barcode', barcode, "Zwrócony")
-        return (redirect(url_for('hardware.see_all')))
+        if route == 'all':
+          return (redirect(url_for('hardware.see_all')))
+        else:
+          return (redirect(return_route))
     else:
         return render_template("return_hardware.html",
                                hardware_data=hardware_data,

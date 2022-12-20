@@ -44,12 +44,11 @@ def data_handler(form_data, new_data, data_name):
     if form_data or new_data:
       if new_data:
           returned_data['data'] = new_data
-          existing_mpk = db_collection.find_one(
+          existing_data = db_collection.find_one(
               {'_id': 'main', data_name: {"$elemMatch": {'nazwa': returned_data['data']}}}, {
                   data_name: 1
               })
-          print(f'{data_name}: ', existing_mpk)
-          if existing_mpk:
+          if existing_data:
               db_collection.update_one({f"{data_name}.nazwa": returned_data['data']}, {
                   "$set": {f"{data_name}.$.last_update": local_time}})
           else:
@@ -58,7 +57,7 @@ def data_handler(form_data, new_data, data_name):
       else:
           db_collection.update_one({f"{data_name}.nazwa": returned_data['data']}, {
               "$set": {f"{data_name}.$.last_update": local_time}})
-    return returned_data
+    return returned_data['data']
 # def data_handler(form_data, new_data, data_name):
 #     returned_data = form_data
 #     if new_data:
