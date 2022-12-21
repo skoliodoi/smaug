@@ -1,29 +1,19 @@
 <div class="grid grid-cols-8 gap-8">
-  <div class="col-span-6 sm:col-span-2 lg:col-span-3">
+  <div class="col-span-6 sm:col-span-2 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Nr kartoteki</dt>
     <dd class="mt-1 text-sm text-gray-900">{{paperwork_data['kartoteka']}}</dd>
   </div>
-  <div class="col-span-6 sm:col-span-6 lg:col-span-3">
+  <div class="col-span-6 sm:col-span-6 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Typ kartoteki</dt>
     <dd class="mt-1 text-sm text-gray-900">{{paperwork_data['kartoteka_typ']}}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">MPK</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{paperwork_data['mpk']}}</dd>
+    <dd class="mt-1 text-sm text-gray-900">{{paperwork_data['kartoteka_mpk']}}</dd>
   </div>
-  <div class="col-span-6 sm:col-span-3 lg:col-span-4">
-    <dt class="text-sm font-medium text-gray-500">Przypisane barcode'y</dt>
-    <dd class="mt-1 text-sm text-gray-900">            {%for each in paperwork_data['przypisane_barcodes']%}
-      {%if loop.index != paperwork_data['przypisane_barcodes']|length %}
-      {{each}},
-      {%else%}
-      {{each}}
-      {%endif%}
-      {%endfor%}</dd>
-  </div>
-  <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Przypisane faktury</dt>
-    <dd class="mt-1 text-sm text-gray-900">            {%for each in paperwork_data['przypisane_faktury']%}
+    <dd class="mt-1 text-sm text-gray-900"> {%for each in paperwork_data['przypisane_faktury']%}
       {%if loop.index != paperwork_data['przypisane_faktury']|length %}
       {{each}},
       {%else%}
@@ -31,12 +21,7 @@
       {%endif%}
       {%endfor%}</dd>
   </div>
-  {%if paperwork_data['notatki']%}
-  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-    <dt class="text-sm font-medium text-gray-500">Uwagi</dt>
-    <dd class="mt-1 text-sm text-gray-900">{{paperwork_data['notatki']}}</dd>
-  </div>
-  {%endif%}
+
   <!-- <div class="col-span-6 sm:col-span-3 lg:col-span-2">
     <dt class="text-sm font-medium text-gray-500">Kartoteka typ</dt>
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['kartoteka']}}</dd>
@@ -45,4 +30,30 @@
     <dt class="text-sm font-medium text-gray-500">Status</dt>
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['rented_status']}}</dd>
   </div> -->
+</div>
+<div class="border-b mb-2 mt-5 border-gray-200"></div>
+<div class="col-span-6 sm:col-span-3 lg:col-span-8">
+  <dt class="text-sm font-medium text-gray-500">Przypisane barcode'y</dt>
+  <dd class="mt-1 text-sm text-gray-900"> {%for each in paperwork_data['przypisane_barcodes']%}
+    {%if loop.index != paperwork_data['przypisane_barcodes']|length %}
+    {{each}},
+    {%else%}
+    {{each}}
+    {%endif%}
+    {%endfor%}</dd>
+</div>
+
+{%if paperwork_data['kartoteka_notatki']%}
+<div class="border-b mb-2 mt-5 border-gray-200"></div>
+<div class="col-span-6 sm:col-span-3 lg:col-span-2">
+  <dt class="text-sm font-medium text-gray-500">Uwagi</dt>
+  <dd class="mt-1 text-sm text-gray-900">{{paperwork_data['kartoteka_notatki']}}</dd>
+</div>
+{%endif%}
+<div class="mt-5">
+  <form method="get">
+    <a href="/hardware/edit/{{hardware_data['_id']}}"
+      class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
+      <input type="button" name="{{hardware_data['_id']}}"> Edytuj</a>
+  </form>
 </div>

@@ -591,13 +591,13 @@ def rent(route, barcode):
     return_route = adjust_return_route(route, barcode)
     if request.method == 'POST':
         projekt_data = data_handler(
-            hardware_form.lokalizacja.data,
-            hardware_form.nowa_lokalizacja.data,
+            hardware_form.projekt.data,
+            hardware_form.nowy_projekt.data,
             'projekt'
         )
         lokalizacja_data = data_handler(
-            hardware_form.projekt.data,
-            hardware_form.nowy_projekt.data,
+            hardware_form.lokalizacja.data,
+            hardware_form.nowa_lokalizacja.data,
             'lokalizacja'
         )
         # if hardware_form.nowy_projekt.data:
@@ -760,6 +760,13 @@ def show_info(data, id):
         hardware_data = db_items.find_one({'_id': ObjectId(id)})
         hide_buttons = False
         return_route = "/hardware/all"
+        check_kartoteka = db_items.find_one(
+        {"$and": [{'_id': ObjectId(id)}, {'kartoteka': {"$exists": True}}]})
+        if check_kartoteka == None:
+            paperwork_data = None
+        else:
+            paperwork_data = db_paperwork.find_one(
+                {'kartoteka': check_kartoteka['kartoteka']})
     else:
         hardware_data = db_history.find_one({'_id': ObjectId(id)})
         return_data = db_items.find_one({'barcode': hardware_data['barcode']})
@@ -767,17 +774,17 @@ def show_info(data, id):
         return_id = str(return_data['_id'])
         hide_buttons = True
         return_route = f"/hardware/see_history/{return_id}/{return_barcode}"
+        check_kartoteka = db_history.find_one(
+        {"$and": [{'_id': ObjectId(id)}, {'kartoteka': {"$exists": True}}]})
+        if check_kartoteka == None:
+            paperwork_data = None
+        else:
+            paperwork_data = check_kartoteka
     # history_data = db_history.find({'barcode': hardware_data['barcode']})
     # if len(list(history_data)) == 0:
     #     show_history = False
-    check_kartoteka = db_items.find_one(
-        {"$and": [{'_id': ObjectId(id)}, {'kartoteka': {"$exists": True}}]})
-    if check_kartoteka == None:
-        paperwork_data = None
-    else:
-        paperwork_data = db_paperwork.find_one(
-            {'kartoteka': check_kartoteka['kartoteka']})
-        print(paperwork_data)
+
+
     return render_template("information_page.html",
                            hardware_data=hardware_data,
                            paperwork_data=paperwork_data,

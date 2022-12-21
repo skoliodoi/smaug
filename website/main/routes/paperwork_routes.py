@@ -1,10 +1,9 @@
 from datetime import datetime
-import pytz
 from flask import Blueprint, flash, render_template, redirect, url_for, request
 from website.extensions import *
 from website.constants import *
 from ..forms import AddPaperwork, AddHardwareFromField
-from flask_login import login_required
+from flask_login import login_required, current_user
 import openpyxl
 from bson import ObjectId
 
@@ -26,6 +25,22 @@ def check_existing_records(kartoteka):
     else:
         return False
 
+
+def copy_and_update_item(barcode, msg, faktury, kartoteka_typ,
+                         mpk, notatki, data_faktury):
+    updated_item = db_items.find_one(
+        {'barcode': barcode}, {'_id': 0})
+    data_for_history = updated_item.copy()
+    data_for_history['przypisane_faktury'] = faktury
+    data_for_history['kartoteka_typ'] = kartoteka_typ
+    data_for_history['kartoteka_mpk'] = mpk
+    data_for_history['kartoteka_notatki'] = notatki
+    data_for_history['data_faktury'] = data_faktury
+    data_for_history['modyfikacja'] = msg
+    data_for_history['who_modified'] = current_user.login
+    data_for_history['last_updated'] = datetime.now(
+        tz=local_tz).strftime("%Y-%m-%d %H:%M:%S")
+    db_history.insert_one(data_for_history)
 
 # def list_to_str(list):
 #     str = ""
@@ -51,9 +66,9 @@ def go_through_file(uploaded_file):
                 data = {
                     'kartoteka': ws_dokumentacja.cell(row, 2).value if ws_dokumentacja.cell(row, 2).value != None else "N/A",
                     'kartoteka_typ': ws_dokumentacja.cell(row, 4).value if ws_dokumentacja.cell(row, 4).value != None else "N/A",
-                    'mpk': ws_dokumentacja.cell(row, 5).value if ws_dokumentacja.cell(row, 5).value != None else "N/A",
+                    'kartoteka_mpk': ws_dokumentacja.cell(row, 5).value if ws_dokumentacja.cell(row, 5).value != None else "N/A",
                     'data_faktury': ws_dokumentacja.cell(row, 6).value if ws_dokumentacja.cell(row, 6).value != None else "",
-                    'notatki': f"{notatki_dokumentacja if notatki_dokumentacja != None else ''}\n Kartoteka dodana z pliku - {datetime.now().strftime('%Y-%m-%d')}"
+                    'kartoteka_notatki': f"{notatki_dokumentacja if notatki_dokumentacja != None else ''}\n Kartoteka dodana z pliku - {datetime.now().strftime('%Y-%m-%d')}"
                 }
                 if barcode_row:
                     barcodes = []
@@ -85,7 +100,7 @@ def add_file():
     form = AddHardwareFromField()
     if request.method == 'POST':
         file = form.plik.data
-        get_barcodes = go_through_file(file)
+        go_through_file(file)
         return redirect(url_for("paperwork.add"))
     return render_template('add_file.html', form=form)
 
@@ -116,19 +131,37 @@ def add():
                     'kartoteka': form.kartoteka.data,
                     'przypisane_faktury': faktury,
                     'kartoteka_typ': form.kartoteka_typ.data,
-                    'mpk': mpk_data,
-                    'notatki': form.notatki.data,
+                    'kartoteka_mpk': mpk_data,
+                    'kartoteka_notatki': form.notatki.data,
                 }
                 if form.data_przyjecia.data:
                     data['data_faktury'] = form.data_przyjecia.data.strftime(
                         "%Y-%m-%d")
+                else:
+                    data['data_faktury'] = ""
                 if len(barcodes) > 0:
                     data['przypisane_barcodes'] = barcodes
+                    print(barcodes)
                     for each in data['przypisane_barcodes']:
                         db_items.update_one({'barcode': each}, {"$set": {
                             'kartoteka': form.kartoteka.data,
-                            'mpk': form.mpk.data
                         }})
+                        # updated_item = db_items.find_one(
+                        #     {'barcode': each}, {'_id': 0})
+                        # data_for_history = updated_item.copy()
+                        # data_for_history['modyfikacja'] = 'Dodano kartotekę'
+                        # data_for_history['who_modified'] = current_user.login
+                        # data_for_history['last_updated'] = datetime.now(
+                        #     tz=local_tz).strftime("%Y-%m-%d %H:%M:%S")
+                        # db_history.insert(data_for_history)
+                        copy_and_update_item(
+                            each,
+                            'Dodano kartotekę',
+                            faktury,
+                            form.kartoteka_typ.data,
+                            mpk_data,
+                            form.notatki.data,
+                            data['data_faktury'])
                 db_paperwork.insert_one(data)
                 flash('Dodano kartotekę', 'success')
                 return redirect(url_for('paperwork.add'))
@@ -140,7 +173,7 @@ def add():
     else:
         collection = db_collection.find_one({})
         form.mpk.choices = sort_and_assign(
-            collection['mpk']) if check_if_exists('mpk') else []
+            collection['mpk'], False) if check_if_exists('mpk') else []
         return render_template('add_paperwork.html',
                                header_text="Dodaj",
                                edit=False, form=form,
@@ -179,18 +212,27 @@ def edit(id):
             db_paperwork.update_one({'_id': ObjectId(id)}, {'$set': {
                 'kartoteka': form.kartoteka.data,
                 'kartoteka_typ': form.kartoteka_typ.data,
-                'mpk': mpk_data,
+                'kartoteka_mpk': mpk_data,
                 'data_faktury': data_faktury,
                 'przypisane_barcodes': barcodes_from_select,
                 'przypisane_faktury': faktury,
-                'notatki': form.notatki.data,
+                'kartoteka_notatki': form.notatki.data,
                 'update_date': datetime.now(
                     local_tz).strftime("%Y-%m-%d %H:%M:%S")
             }}, upsert=True)
             for each in barcodes_from_select:
-                db_items.update_one({'barcode': each}, {"$set": {
-                    'kartoteka': form.kartoteka.data
-                }})
+                if not db_items.find_one({'barcode': each, 'kartoteka': form.kartoteka.data}):
+                    db_items.update_one({'barcode': each}, {"$set": {
+                        'kartoteka': form.kartoteka.data
+                    }})
+                    copy_and_update_item(
+                        each,
+                        'Dodano kartotekę',
+                        faktury,
+                        form.kartoteka_typ.data,
+                        mpk_data,
+                        form.notatki.data,
+                        data_faktury)
 
             for barcode in barcodes_from_db:
                 if barcode not in barcodes_from_select:
@@ -200,12 +242,22 @@ def edit(id):
                     db_items.update_one({'barcode': barcode}, {"$unset": {
                         'kartoteka': ""
                     }})
+                    updated_item = db_items.find_one(
+                        {'barcode': barcode}, {'_id': 0})
+                    data_for_history = updated_item.copy()
+                    data_for_history['modyfikacja'] = 'Usunięto kartotekę'
+                    data_for_history['who_modified'] = current_user.login
+                    data_for_history['last_updated'] = datetime.now(
+                        tz=local_tz).strftime("%Y-%m-%d %H:%M:%S")
+                    db_history.insert_one(data_for_history)
+
             flash('Zaktualizowano kartotekę', 'success')
             return (redirect(url_for('paperwork.see_all')))
         else:
             rest = {}
             collection = db_collection.find_one({})
-            form.mpk.choices = collection['mpk']
+            form.mpk.choices = sort_and_assign(
+                collection['mpk'], False) if check_if_exists('mpk') else []
             data = db_paperwork.find_one({'_id': ObjectId(id)}, {
                 '_id': 0, 'update_date': 0})
             for key, value in data.items():
@@ -220,6 +272,10 @@ def edit(id):
                     else:
                         form['data_przyjecia'].data = datetime.strptime(
                             value, '%Y-%m-%d')
+                elif key == 'kartoteka_mpk':
+                    form['mpk'].data = value
+                elif key == 'kartoteka_notatki':
+                    form['notatki'].data = value
                 else:
                     rest[key] = value
 

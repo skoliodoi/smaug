@@ -30,22 +30,22 @@ def all_users():
 @users.route('/reset_pass/<id>', methods=["POST", "GET"])
 @login_required
 def reset_pass(id):
-  if request.method == 'POST':
-    user = db_users.find_one({'_id': ObjectId(id)})
-    user_mail = user['email']
-    password = generate_pass()
-    content = f"""
+    if request.method == 'POST':
+        user = db_users.find_one({'_id': ObjectId(id)})
+        user_mail = user['email']
+        password = generate_pass()
+        content = f"""
     Dostaliśmy prośbę o zresetowanie hasła do konta <b>{user['email']}</b>.
     Nowe hasło do systemu SMAUG: <b>{password[1]}</b> <br>
     Jeśli ten mail nie dotyczy Ciebie, zignoruj go.
     """
-    yag.send(user_mail, "Nowe hasło do systemu SMAUG", content)
-    db_users.update_one({"_id": ObjectId(id)}, {
-                        "$set": {"password": password[0]}})
-    flash(f"Hasło dla {user_mail} zostało zresetowane", "success")
-    return redirect(url_for('users.all_users'))
-  else:
-    return render_template("confirmation.html", id=id, return_to="/users/all")
+        yag.send(user_mail, "Nowe hasło do systemu SMAUG", content)
+        db_users.update_one({"_id": ObjectId(id)}, {
+                            "$set": {"password": password[0]}})
+        flash(f"Hasło dla {user_mail} zostało zresetowane", "success")
+        return redirect(url_for('users.all_users'))
+    else:
+        return render_template("confirmation.html", id=id, return_to="/users/all")
 
 
 @users.route('/edit/<id>', methods=["POST", "GET"])
@@ -72,9 +72,10 @@ def edit_user(id):
                 if form.new_mpk.data:
                     new_mpk = form.new_mpk.data.split(',')
                     for element in new_mpk:
-                        mpk_data_from_list.append(element)
-                        db_collection.update_one({"_id": "main"}, {"$addToSet": {
-                            "mpk": element}}, upsert=True)
+                        fixed_element = data_handler(None, element, 'mpk')
+                        mpk_data_from_list.append(fixed_element)
+                        # db_collection.update_one({"_id": "main"}, {"$addToSet": {
+                        #     "mpk": element}}, upsert=True)
 
                 if not existing_mpk:
                     db_users.update_one({"_id": ObjectId(id)}, {
@@ -100,7 +101,8 @@ def edit_user(id):
             return redirect(url_for('users.all_users'))
     else:
         collection = db_collection.find_one({})
-        mpk_data = collection['mpk']
+        mpk_data = sort_and_assign(
+            collection['mpk']) if check_if_exists('mpk') else []
         form.login.data = user['login']
         form.email.data = user['email']
         form.imie.data = user['imie']
@@ -110,7 +112,6 @@ def edit_user(id):
         existing_mpk = db_users.find_one(
             {'mpk': {"$exists": True}, '_id': ObjectId(id)})
         if existing_mpk:
-            print('yeah')
             for each in mpk_data:
                 if each in user['mpk']:
                     assigned_mpk.append({'mpk': each, 'selected': True})
@@ -129,8 +130,8 @@ def edit_user(id):
 @login_required
 def delete_user(id):
     if request.method == 'POST':
-      db_users.delete_one({'_id': ObjectId(id)})
-      flash(f"Użytkownik został usunięty", "success")
-      return redirect(url_for('users.all_users'))
-    else: 
-      return render_template("confirmation.html", id=id, return_to="/users/all")
+        db_users.delete_one({'_id': ObjectId(id)})
+        flash(f"Użytkownik został usunięty", "success")
+        return redirect(url_for('users.all_users'))
+    else:
+        return render_template("confirmation.html", id=id, return_to="/users/all")

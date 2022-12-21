@@ -42,7 +42,7 @@ class AddHardware(FlaskForm):
     model = SelectField("Model", coerce=str, render_kw={
                         'id': 'select-model', 'required': True})
     system = SelectField("System", coerce=str, render_kw={
-                        'id': 'select-system'})
+        'id': 'select-system'})
     stan = SelectField("Stan", validators=[validators.DataRequired()], choices=[
                        state for state in collection['status']], coerce=str, render_kw={'id': 'select-stan'})
     opis_uszkodzenia = StringField("Opis uszkodzenia", render_kw={
@@ -55,8 +55,10 @@ class AddHardware(FlaskForm):
 
     login = StringField("Login")
     mocarz_id = StringField("Moccarz ID")
-    projekt = SelectField("Projekt", coerce=str, render_kw={'id': 'select-projekt'})
-    lokalizacja = SelectField("Lokalizacja", coerce=str, render_kw={'id': 'select-lokalizacja'})
+    projekt = SelectField("Projekt", coerce=str, render_kw={
+                          'id': 'select-projekt'})
+    lokalizacja = SelectField("Lokalizacja", coerce=str, render_kw={
+                              'id': 'select-lokalizacja'})
     sluchawki = SelectField("Słuchawki", choices=[
                             "Nie dotyczy", "Axtel", "Sennheiser"], coerce=str)
     przejsciowka = SelectField("Przejściówka", choices=[
@@ -112,8 +114,8 @@ class AddPaperwork(FlaskForm):
     faktury = StringField("Numery faktur")
     kartoteka_typ = SelectField("Kartoteka Typ", choices=[
                                 "", "Środek trwały", "Leasing"], validators=[validators.DataRequired()], coerce=str)
-    mpk = SelectField("MPK", validators=[
-                      validators.DataRequired()], coerce=str,  render_kw={'placeholder': 'Wybierz MPK', 'rows': 1, 'id': 'select-mpk'})
+    mpk = SelectField("MPK", coerce=str,  render_kw={
+                      'placeholder': 'Wybierz MPK', 'rows': 1, 'id': 'select-mpk'})
     data_przyjecia = DateField("Data przyjęcia", format='%Y-%m-%d')
     notatki = TextAreaField("Notatki", render_kw={'rows': 4})
     nowy_mpk = StringField(

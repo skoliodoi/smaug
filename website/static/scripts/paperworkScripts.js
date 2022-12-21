@@ -5,7 +5,6 @@ $("#add-mpk").on('click', (e) => {
     $("#add-mpk").addClass('cancel-button')
     $("#nowy_mpk").show()
     $("#select-mpk").hide()
-    $("#select-mpk").removeAttr('required')
     $("#select-mpk").val(null)
   } else {
     $("#add-mpk").removeClass('cancel-button')
@@ -14,7 +13,6 @@ $("#add-mpk").on('click', (e) => {
     $("#nowy_mpk").val(null)
     $("#select-mpk").show()
     $("#select-mpk").show()
-    $("#select-mpk").attr('required', true)
   }
 })
 
