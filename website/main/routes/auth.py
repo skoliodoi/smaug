@@ -86,7 +86,7 @@ def signup():
         collection = db_collection.find_one({})
         mpk_data = sort_and_assign(
                 collection['mpk']) if check_if_exists('mpk') else []
-        return render_template('signup.html', form=form, mpk_data=mpk_data, display_text="Dodaj")
+        return render_template('signup.html', form=form, mpk_data=mpk_data, return_to="/", display_text="Dodaj")
 
 
 @auth.route('/logout')

@@ -111,19 +111,21 @@ def edit_user(id):
 
         existing_mpk = db_users.find_one(
             {'mpk': {"$exists": True}, '_id': ObjectId(id)})
-        if existing_mpk:
+        if existing_mpk['mpk']:
             for each in mpk_data:
                 if each in user['mpk']:
                     assigned_mpk.append({'mpk': each, 'selected': True})
                 else:
                     assigned_mpk.append({'mpk': each, 'selected': False})
-            print(assigned_mpk)
             mpk_data = assigned_mpk
             edit_for_user = True
         else:
             edit_for_user = False
 
-    return render_template('signup.html', form=form, mpk_data=mpk_data, edit=edit_for_user, display_text="Edytuj")
+    return render_template('signup.html', form=form, mpk_data=mpk_data,
+                           edit=edit_for_user,
+                           return_to='users/all',
+                           display_text="Edytuj")
 
 
 @users.route('/delete/<id>', methods=["POST", "GET"])

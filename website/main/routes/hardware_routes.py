@@ -358,6 +358,7 @@ def add():
                 data_for_history['modyfikacja'] = 'Stworzony'
                 data_for_history['who_modified'] = data_to_send['adder']
                 db_history.insert_one(data_for_history)
+                update_for_cron('sm_history')
                 data_for_history = None
                 if hardware_form.login.data != None and hardware_form.login.data != "":
                     try:
@@ -392,6 +393,7 @@ def add():
                 # update_time("system", system_data)
 
                 db_items.insert_one(data_to_send)
+                update_for_cron('sm_items')
                 if data_to_send['rented_status'] == True:
                     data_for_history = data_to_send.copy()
                     data_for_history['modyfikacja'] = 'Wypożyczony'
@@ -512,6 +514,7 @@ def edit(id):
 
             db_items.update_one({'_id': ObjectId(id)}, {
                                 '$set': update_data}, upsert=True)
+            update_for_cron('sm_items')
             # data_for_history = db_items.find_one({'_id': ObjectId(id)}, {
             #     '_id': 0
             # })
@@ -885,4 +888,4 @@ def delete(id):
 
         return (redirect(url_for('hardware.see_all')))
     else:
-        return render_template("confirmation.html", id=id, return_to=f"/hardware/show_info/{id}")
+        return render_template("confirmation.html", id=id, return_to=f"/hardware/show_info/present/{id}")

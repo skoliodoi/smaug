@@ -44,14 +44,16 @@
         <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{user['email']}}</td>
         <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{user['dostep']}}</td>
         <td class="px-3 py-4 text-sm text-gray-500" style="text-align: center;">
-          {%if user['mpk']%}
-          <ul>
-            {%for each in user['mpk']%}
-            <li>{{each}}</li>
-            {%endfor%}
-          </ul>
+          {%if user['dostep'] != "User"%}
+          <span>Nie dotyczy</span>
           {%else%}
-          Brak
+          {%if user['mpk']%}
+          {%for each in user['mpk']%}
+          <span>-{{each}}-</span>
+          {%endfor%}
+          {%else%}
+          <span>Brak</span>
+          {%endif%}
           {%endif%}
         </td>
         <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

@@ -42,21 +42,21 @@ def data_handler(form_data, new_data, data_name):
         'data': form_data
     }
     if form_data or new_data:
-      if new_data:
-          returned_data['data'] = new_data
-          existing_data = db_collection.find_one(
-              {'_id': 'main', data_name: {"$elemMatch": {'nazwa': returned_data['data']}}}, {
-                  data_name: 1
-              })
-          if existing_data:
-              db_collection.update_one({f"{data_name}.nazwa": returned_data['data']}, {
-                  "$set": {f"{data_name}.$.last_update": local_time}})
-          else:
-              db_collection.update_one(
-                  {"_id": "main"}, {"$addToSet": {data_name: {"nazwa": returned_data['data'], "last_update": local_time}}})
-      else:
-          db_collection.update_one({f"{data_name}.nazwa": returned_data['data']}, {
-              "$set": {f"{data_name}.$.last_update": local_time}})
+        if new_data:
+            returned_data['data'] = new_data
+            existing_data = db_collection.find_one(
+                {'_id': 'main', data_name: {"$elemMatch": {'nazwa': returned_data['data']}}}, {
+                    data_name: 1
+                })
+            if existing_data:
+                db_collection.update_one({f"{data_name}.nazwa": returned_data['data']}, {
+                    "$set": {f"{data_name}.$.last_update": local_time}})
+            else:
+                db_collection.update_one(
+                    {"_id": "main"}, {"$addToSet": {data_name: {"nazwa": returned_data['data'], "last_update": local_time}}})
+        else:
+            db_collection.update_one({f"{data_name}.nazwa": returned_data['data']}, {
+                "$set": {f"{data_name}.$.last_update": local_time}})
     return returned_data['data']
 # def data_handler(form_data, new_data, data_name):
 #     returned_data = form_data
@@ -69,6 +69,12 @@ def data_handler(form_data, new_data, data_name):
 
 navbar_select_data = [('', ''), ('all', 'Wszystkie'), ('rented', 'Wypożyczone'), (
     'not-rented', 'Wolne'), ('no-barcode', 'Brak barcode\'u'), ('barcode', 'Z barcodem')]
+
+
+def update_for_cron(db_name):
+    db_updates.find_one_and_update({'_id': "updates"}, {"$set": {
+                                   db_name: datetime.now(
+                                       local_tz).strftime("%Y-%m-%d %H:%M:%S")}}, upsert=True)
 
 
 def check_existing_data(data, data_label, database):

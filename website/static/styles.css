@@ -88,6 +88,10 @@ body {
   font-family: 'Questrial', 'Oswald', 'Futura', sans-serif;
 }
 
+.component-header {
+  background-color: #1F2937 !important;
+}
+
 #wrapper {
   margin-top: 10% !important;
 }
@@ -158,9 +162,11 @@ nav select {
 #confirm-change-button {
   background: #16a34a;
 }
+
 #confirm-change-button:hover {
   background: #15803d;
 }
+
 #confirm-change-button:focus {
   background: #10b981;
 }
@@ -168,9 +174,11 @@ nav select {
 #cancel-change-button {
   background: #e11d48;
 }
+
 #cancel-change-button:hover {
   background: #be123c;
 }
+
 #cancel-change-button:focus {
   background: #f43f5e;
 }
@@ -204,6 +212,7 @@ footer {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(45deg);
   }
@@ -219,6 +228,7 @@ footer {
   from {
     transform: rotate(45deg);
   }
+
   to {
     transform: rotate(0deg);
   }
@@ -246,4 +256,3 @@ footer {
 #akcje-label {
   text-align: right !important;
 }
-

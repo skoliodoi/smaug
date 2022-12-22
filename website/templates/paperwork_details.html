@@ -31,6 +31,7 @@
     <dd class="mt-1 text-sm text-gray-900">{{hardware_data['rented_status']}}</dd>
   </div> -->
 </div>
+{%if not hide_buttons%}
 <div class="border-b mb-2 mt-5 border-gray-200"></div>
 <div class="col-span-6 sm:col-span-3 lg:col-span-8">
   <dt class="text-sm font-medium text-gray-500">Przypisane barcode'y</dt>
@@ -42,7 +43,7 @@
     {%endif%}
     {%endfor%}</dd>
 </div>
-
+{%endif%}
 {%if paperwork_data['kartoteka_notatki']%}
 <div class="border-b mb-2 mt-5 border-gray-200"></div>
 <div class="col-span-6 sm:col-span-3 lg:col-span-2">
