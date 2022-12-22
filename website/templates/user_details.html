@@ -1,11 +1,11 @@
 <div class="grid grid-cols-12 gap-4 ">
   <div class="col-span-6 sm:col-span-3 lg:col-span-3">
-    <dt class="text-sm font-medium text-gray-500">Mocarz ID użytkownika</dt>
+    <dt class="text-sm font-medium text-gray-500">Login użytkownika</dt>
     <dd class="mt-1 text-sm text-gray-900">{{
       hardware_data['login']
       if hardware_data['login']
       else "N/A"
-    }}</dd>
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-3">
     <dt class="text-sm font-medium text-gray-500">Mocarz ID użytkownika</dt>
@@ -13,7 +13,7 @@
       hardware_data['mocarz_id']
       if hardware_data['mocarz_id']
       else "N/A"
-    }}</dd>
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-3">
     <dt class="text-sm font-medium text-gray-500">Projekt</dt>
@@ -21,7 +21,7 @@
       hardware_data['projekt']
       if hardware_data['projekt']
       else "N/A"
-    }}</dd>
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-3">
     <dt class="text-sm font-medium text-gray-500">Lokalizacja</dt>
@@ -29,7 +29,7 @@
       hardware_data['lokalizacja']
       if hardware_data['lokalizacja']
       else "N/A"
-    }}</dd>
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-3">
     <dt class="text-sm font-medium text-gray-500">Karta zbliżeniowa</dt>
@@ -37,7 +37,7 @@
       hardware_data['karta_zblizeniowa']
       if hardware_data['karta_zblizeniowa']
       else "N/A"
-    }}</dd>
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-3">
     <dt class="text-sm font-medium text-gray-500">Słuchawki</dt>
@@ -45,7 +45,7 @@
       hardware_data['sluchawki']
       if hardware_data['sluchawki']
       else "N/A"
-    }}</dd>
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-3">
     <dt class="text-sm font-medium text-gray-500">Złącze</dt>
@@ -53,7 +53,7 @@
       hardware_data['zlacze']
       if hardware_data['zlacze']
       else "N/A"
-    }}</dd>
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-3">
     <dt class="text-sm font-medium text-gray-500">Przejściówka</dt>
@@ -61,7 +61,7 @@
       hardware_data['przejsciowka']
       if hardware_data['przejsciowka']
       else "N/A"
-    }}</dd>
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-3">
     <dt class="text-sm font-medium text-gray-500">Mysz</dt>
@@ -69,7 +69,7 @@
       hardware_data['mysz']
       if hardware_data['mysz']
       else "N/A"
-    }}</dd>
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-3">
     <dt class="text-sm font-medium text-gray-500">Torba</dt>
@@ -77,7 +77,7 @@
       hardware_data['torba']
       if hardware_data['torba']
       else "N/A"
-    }}</dd>
+      }}</dd>
   </div>
   <div class="col-span-6 sm:col-span-3 lg:col-span-3">
     <dt class="text-sm font-medium text-whigray-500te">Modem</dt>
@@ -85,43 +85,49 @@
       hardware_data['modem']
       if hardware_data['modem']
       else "N/A"
-    }}</dd>
+      }}</dd>
   </div>
-
-
-
 </div>
 <div class="border-b mb-2 mt-5 border-gray-200"></div>
 <div class="grid grid-cols-12 gap-4 ">
-  <div class="col-span-4 sm:col-span-4 lg:col-span-4 flex justify-center content-center">
-    <div>
-      <dt class="text-sm font-medium text-gray-500">
-        Data wypożyczenia</dt>
-      <dd class="mt-1 text-sm text-gray-900">{{
-        hardware_data['rent_date']
-        if hardware_data['rent_date']
-        else "N/A"
+  <div class="col-span-3 sm:col-span-3 lg:col-span-3">
+
+    <dt class="text-sm font-medium text-gray-500">
+      Data wypożyczenia</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['rent_date']
+      if hardware_data['rent_date']
+      else "N/A"
       }}</dd>
-    </div>
+
   </div>
-  <div class="col-span-4 sm:col-span-4 lg:col-span-4 flex justify-center content-center">
-    <div>
-      <dt class="text-sm font-medium text-gray-500">Osoba wypożyczająca</dt>
-      <dd class="mt-1 text-sm text-gray-900">{{
-        hardware_data['who_rented']
-        if hardware_data['who_rented']
-        else "N/A"
+  <div class="col-span-3 sm:col-span-3 lg:col-span-3">
+
+    <dt class="text-sm font-medium text-gray-500">Osoba wypożyczająca</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['who_rented']
+      if hardware_data['who_rented']
+      else "N/A"
       }}</dd>
-    </div>
   </div>
-  <div class="col-span-4 sm:col-span-4 lg:col-span-4 flex justify-center content-center">
-    <div>
-      <dt class="text-sm font-medium text-gray-500">Uwagi dotyczące wypożyczenia</dt>
-      <dd class="mt-1 text-sm text-gray-900">{{
-        hardware_data['notatki_wypozyczenie']
-        if hardware_data['notatki_wypozyczenie']
-        else "Brak"
+  <div class="col-span-3 sm:col-span-3 lg:col-span-3">
+
+    <dt class="text-sm font-medium text-gray-500">Uwagi dotyczące wypożyczenia</dt>
+    <dd class="mt-1 text-sm text-gray-900">{{
+      hardware_data['notatki_wypozyczenie']
+      if hardware_data['notatki_wypozyczenie']
+      else "Brak"
       }}</dd>
-    </div>
+
   </div>
 </div>
+{%if not being_returned and not hide_buttons%}
+
+<form method="get" class="mt-5">
+  <a href="/hardware/rent/edit/{{hardware_data['barcode']}}"
+  class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
+  <input type="button" name="{{hardware_data['barcode']}}"> Edytuj szczegóły udostępnienia </a>
+</form>
+
+
+{%endif%}

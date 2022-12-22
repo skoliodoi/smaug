@@ -2,7 +2,7 @@ from wtforms import *
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from website.extensions import *
-from website.dane import *
+# from dane import *
 
 
 collection = db_collection.find_one({})
@@ -42,7 +42,7 @@ class AddHardware(FlaskForm):
     model = SelectField("Model", coerce=str, render_kw={
                         'id': 'select-model', 'required': True})
     system = SelectField("System", coerce=str, render_kw={
-        'id': 'select-system'})
+                        'id': 'select-system'})
     stan = SelectField("Stan", validators=[validators.DataRequired()], choices=[
                        state for state in collection['status']], coerce=str, render_kw={'id': 'select-stan'})
     opis_uszkodzenia = StringField("Opis uszkodzenia", render_kw={
@@ -55,24 +55,21 @@ class AddHardware(FlaskForm):
 
     login = StringField("Login")
     mocarz_id = StringField("Moccarz ID")
-    projekt = SelectField("Projekt", coerce=str, render_kw={
-                          'id': 'select-projekt'})
-    lokalizacja = SelectField("Lokalizacja", coerce=str, render_kw={
-                              'id': 'select-lokalizacja'})
-    sluchawki = SelectField("Słuchawki", choices=[
-                            "Nie dotyczy", "Axtel", "Sennheiser"], coerce=str)
+    projekt = SelectField("Projekt", coerce=str, render_kw={'id': 'select-projekt'})
+    lokalizacja = SelectField("Lokalizacja", coerce=str, render_kw={'id': 'select-lokalizacja'})
+    sluchawki = SelectField("Słuchawki", coerce=str, render_kw={'id': 'select-sluchawki'})
     przejsciowka = SelectField("Przejściówka", choices=[
-                               "Nie dotyczy", "TAK", "NIE"], coerce=str)
+                               "Nie dotyczy", "Tak", "Nie"], coerce=str)
     zlacze = SelectField("Złącze", choices=[
                          "Nie dotyczy", "Typu USB", "Typu JACK"], coerce=str)
     mysz = SelectField(
-        "Mysz", choices=["Nie dotyczy", "TAK", "NIE"], coerce=str)
+        "Mysz", choices=["Nie dotyczy", "Tak", "Nie"], coerce=str)
     torba = SelectField(
-        "Torba", choices=["Nie dotyczy", "TAK", "NIE"], coerce=str)
+        "Torba", choices=["Nie dotyczy", "Tak", "Nie"], coerce=str)
     modem = SelectField(
-        "Modem", choices=["Nie dotyczy", "TAK", "NIE"], coerce=str)
+        "Modem", choices=["Nie dotyczy", "Tak", "Nie"], coerce=str)
     karta_zblizeniowa = SelectField("Karta zbliżeniowa RFID", choices=[
-                                    "Nie dotyczy", "TAK", "NIE"], coerce=str)
+                                    "Nie dotyczy", "Tak", "Nie"], coerce=str)
     notatki_wypozyczenie = TextAreaField(
         "Notatki dot. wypożyczenia", render_kw={'rows': 2})
 
@@ -92,6 +89,8 @@ class AddHardware(FlaskForm):
         render_kw={'style': 'display: none', 'id': 'nowy_projekt'})
     nowa_lokalizacja = StringField(
         render_kw={'style': 'display: none', 'id': 'nowa_lokalizacja'})
+    nowy_sluchawki = StringField(
+        render_kw={'style': 'display: none', 'id': 'nowe_sluchawki'})
 
 
 class AddHardwareFromField(FlaskForm):
@@ -114,8 +113,7 @@ class AddPaperwork(FlaskForm):
     faktury = StringField("Numery faktur")
     kartoteka_typ = SelectField("Kartoteka Typ", choices=[
                                 "", "Środek trwały", "Leasing"], validators=[validators.DataRequired()], coerce=str)
-    mpk = SelectField("MPK", coerce=str,  render_kw={
-                      'placeholder': 'Wybierz MPK', 'rows': 1, 'id': 'select-mpk'})
+    mpk = SelectField("MPK", coerce=str,  render_kw={'placeholder': 'Wybierz MPK', 'rows': 1, 'id': 'select-mpk'})
     data_przyjecia = DateField("Data przyjęcia", format='%Y-%m-%d')
     notatki = TextAreaField("Notatki", render_kw={'rows': 4})
     nowy_mpk = StringField(

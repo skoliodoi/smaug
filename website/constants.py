@@ -90,12 +90,14 @@ def generate_pass():
     return pw_hash, password
 
 
-def sort_and_assign(collection, mandatory=True):
+def sort_and_assign(collection, mandatory=True, sluchawki_zlacze=False):
     if collection and len(collection) > 0:
         sorted_table = [each['nazwa'] for each in sorted(
             collection, key=lambda d:d['last_update'], reverse=True)]
         if not mandatory:
             sorted_table.insert(0, "")
+        if sluchawki_zlacze:
+            sorted_table.insert(0, "Nie dotyczy")
         return sorted_table
     else:
         return []

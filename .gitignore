@@ -5,6 +5,10 @@ env
 *.png
 *.zip
 test.js
+dane.py
+sm_items.json
+sm_history.json
+sm_history_updated.json
 
 !flask.env
 

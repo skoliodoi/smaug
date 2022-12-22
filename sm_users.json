@@ -1,0 +1,91 @@
+[{
+  "_id": {
+    "$oid": "634563a6eba6f1e3e05d51f0"
+  },
+  "dostep": "Admin",
+  "email": "szymon.ulanowski@oex-vcc.com",
+  "imie": "Szymon ",
+  "login": "ulanowskisz",
+  "mpk": null,
+  "nazwisko": "Ułanowski",
+  "password": "$2b$12$xB0TfUCsuEdVxlDCyVRuo.tmtYVgDllOxDiBa5/PC1T0oFf5kQXBq"
+},{
+  "_id": {
+    "$oid": "6347fda8cfb39ad15eee6ce2"
+  },
+  "dostep": "Admin",
+  "email": "damian.janicki@oex-vcc.com",
+  "imie": "Damian",
+  "login": "JanickiDa",
+  "mpk": null,
+  "nazwisko": "Janicki",
+  "password": "$2b$12$nvqR7yvzA9lzwp0C6ILIoOds79.yfl9.mTknpHYMbHuOFjB2K0i3y"
+},{
+  "_id": {
+    "$oid": "6347fdd6cfb39ad15eee6ce3"
+  },
+  "dostep": "Admin",
+  "email": "sebastian.kowalicki@oex-vcc.com",
+  "imie": "Sebastian",
+  "login": "kowalickise",
+  "mpk": null,
+  "nazwisko": "Kowalicki",
+  "password": "$2b$12$4/9dYqC.bIx3FSxx65ojpeG0ycEbYQaCDSfLln6pzZLlqryOv2QiO"
+},{
+  "_id": {
+    "$oid": "6347fe59cfb39ad15eee6ce4"
+  },
+  "dostep": "Admin",
+  "email": "konrad.slugocki@oex-vcc.com",
+  "imie": "Konrad",
+  "login": "slugockiko",
+  "mpk": null,
+  "nazwisko": "Sługocki",
+  "password": "$2b$12$mpZFGpY0AKUYthJ7hMbfXeOd2PlIaJASCDyBl0F749EPj90.K1inq"
+},{
+  "_id": {
+    "$oid": "637602566bd3c3b8d5144333"
+  },
+  "dostep": "IT",
+  "email": "michal.szwajcar@oex-vcc.com",
+  "imie": "Michał",
+  "login": "michal.szwajcar@oex-vcc.com",
+  "mpk": null,
+  "nazwisko": "Szwajcar",
+  "password": "$2b$12$Ar8z2QHBb5ZbdTbMPCLfsuyb/WlBOmiqpnoKU.RL6dGqPAj/6ukoO"
+},{
+  "_id": {
+    "$oid": "6377770d6bd3c3b8d5144342"
+  },
+  "dostep": "IT",
+  "email": "oleksii.kriaz@oex-vcc.com",
+  "imie": "Oleksii",
+  "login": "oleksii.kriaz@oex-vcc.com",
+  "mpk": null,
+  "nazwisko": "Kriaż",
+  "password": "$2b$12$DNtVtmiNc4JQaa0GTqlHFO4dA4yiTqrHmZp.0Gl/sUi4WioclLF32"
+},{
+  "_id": {
+    "$oid": "637783e26bd3c3b8d5144360"
+  },
+  "dostep": "Admin",
+  "email": "sebastian.kowalicki@oex-vcc.com",
+  "imie": "Sebastian",
+  "login": "sebastian.kowalicki@oex-vcc.com",
+  "mpk": null,
+  "nazwisko": "Kowalicki",
+  "password": "$2b$12$QrcCYWu60kEbDZXJLD3ZNepWk/1NKLy0r40UQuiLiMGApy1H/sRga"
+},{
+  "_id": {
+    "$oid": "638b25a52da759702540279b"
+  },
+  "dostep": "User",
+  "email": "szulanowski@gmail.com",
+  "imie": "Agent",
+  "login": "agenttest",
+  "mpk": [
+    "V101"
+  ],
+  "nazwisko": "Testowy",
+  "password": "$2b$12$xETQ880odgFiKPVSSGgeZun.4zy81PlfZYqIDnOGAusfEMCbr1Z7y"
+}]

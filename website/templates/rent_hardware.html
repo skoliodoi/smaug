@@ -21,15 +21,16 @@
       <div style="display: flex; justify-content: space-between">
         {{form.projekt.label(class="block text-sm font-medium text-gray-700")}}
         <button type="button" id="add-projekt"
-        class="add-button ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full focus:outline-none">
-        <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
-          <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
-        </svg>
-      </button>
+          class="add-button ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full focus:outline-none">
+          <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+            <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+          </svg>
+        </button>
       </div>
       {{form.projekt(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
       focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-      {{form.nowy_projekt(placeholder="Wpisz nazwę projektu", class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+      {{form.nowy_projekt(placeholder="Wpisz nazwę projektu", class="mt-1 block w-full bg-white border border-gray-300
+      rounded-md shadow-sm py-2
       px-3
       focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
     </div>
@@ -38,15 +39,16 @@
       <div style="display: flex; justify-content: space-between">
         {{form.lokalizacja.label(class="block text-sm font-medium text-gray-700")}}
         <button type="button" id="add-lokalizacja"
-        class="add-button ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full focus:outline-none">
-        <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
-          <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
-        </svg>
-      </button>
+          class="add-button ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full focus:outline-none">
+          <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+            <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+          </svg>
+        </button>
       </div>
       {{form.lokalizacja(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
       focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-      {{form.nowa_lokalizacja(placeholder="Wpisz nazwę lokalizacji", class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2
+      {{form.nowa_lokalizacja(placeholder="Wpisz nazwę lokalizacji", class="mt-1 block w-full bg-white border
+      border-gray-300 rounded-md shadow-sm py-2
       px-3
       focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
     </div>
@@ -56,12 +58,14 @@
       {{form.karta_zblizeniowa(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
       focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="karta-zblizeniowa")}}
     </div>
-    <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+    <!-- <div class="col-span-6 sm:col-span-3 lg:col-span-3">
       {{form.sluchawki.label(class="block text-sm font-medium text-gray-700")}}
       {{form.sluchawki(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none
       focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", id="sluchawki")}}
+    </div> -->
+    <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+      {{myselect.select(form.sluchawki, form.nowy_sluchawki, "add-sluchawki", "Dodaj słuchawki")}}
     </div>
-
     <div class="col-span-6 sm:col-span-3 lg:col-span-3">
 
       {{form.zlacze.label(class="block text-sm font-medium text-gray-700")}}
@@ -99,10 +103,10 @@
 
 
   </div>
-      <div style="margin-top: 1rem; width: 100% !important" id="notatki-wypozyczenie">
-      {{form.notatki_wypozyczenie.label(class="block text-sm font-medium text-gray-700")}}
-      {{form.notatki_wypozyczenie(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
-      focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
-    </div>
+  <div style="margin-top: 1rem; width: 100% !important" id="notatki-wypozyczenie">
+    {{form.notatki_wypozyczenie.label(class="block text-sm font-medium text-gray-700")}}
+    {{form.notatki_wypozyczenie(class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3
+    focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")}}
+  </div>
 
 </div>

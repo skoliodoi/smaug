@@ -2,7 +2,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from website.extensions import *
 from ..forms import AddHardware, AddHardwareFromField, ReturnHardware
-from website.dane import *
+# from dane import *
 import openpyxl
 from flask_login import login_required, current_user
 from bson import ObjectId
@@ -111,16 +111,16 @@ def go_through_file(uploaded_file):
                     data['lokalizacja'] = data_handler(
                         None, lokalizacja_data, 'lokalizacja')
                     data['karta_zblizeniowa'] = cell_data(
-                        row[col_names['Karta']].value)
+                        row[col_names['Karta']].value).upper()
                     data['sluchawki'] = cell_data(
-                        row[col_names['Karta']].value)
-                    data['zlacze'] = cell_data(row[col_names['Karta']].value)
+                        row[col_names['Słuchawki']].value)
+                    data['zlacze'] = cell_data(row[col_names['Złącze']].value)
                     data['przejsciowka'] = cell_data(
-                        row[col_names['Karta']].value)
-                    data['mysz'] = cell_data(row[col_names['Karta']].value)
-                    data['torba'] = cell_data(row[col_names['Karta']].value)
-                    data['modem'] = cell_data(row[col_names['Karta']].value)
-                    notatki_wypozyczenie = row[col_names['Karta']].value
+                        row[col_names['Przejściówka']].value)
+                    data['mysz'] = cell_data(row[col_names['Mysz']].value)
+                    data['torba'] = cell_data(row[col_names['Torba']].value)
+                    data['modem'] = cell_data(row[col_names['Modem']].value)
+                    notatki_wypozyczenie = row[col_names['Notatki wypożyczenie']].value
                     if notatki_wypozyczenie:
                         data['notatki_wypozyczenie'] = f"""{notatki_wypozyczenie} 
                       (Sprzęt udostępniony z pliku - {datetime.now().strftime('%Y-%m-%d')})
@@ -581,7 +581,19 @@ def edit(id):
 def rent(route, barcode):
     local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
     hardware_form = AddHardware()
-    hardware_data = db_items.find_one({'barcode': barcode})
+    hardware_data = db_items.find_one({'barcode': barcode}, {
+        '_id': 0,
+        'login': 1,
+        'mocarz_id': 1,
+        'projekt': 1,
+        'lokalizacja': 1,
+        'karta_zblizeniowa': 1,
+        'sluchawki': 1,
+        'zlacze': 1,
+        'przejsciowka': 1,
+        'mysz': 1,
+        'modem': 1
+    })
     # if route == 'details':
     #     return_route_id = db_items.find_one(
     #         {'barcode': barcode}, {'_id': 1})['_id']
@@ -654,15 +666,26 @@ def rent(route, barcode):
             return (redirect(return_route))
 
     else:
+        collection = db_collection.find_one({"_id": "main"})
         hardware_form.projekt.choices = sort_and_assign(
             collection['projekt']) if check_if_exists('projekt') else []
         hardware_form.lokalizacja.choices = sort_and_assign(
             collection['lokalizacja']) if check_if_exists('lokalizacja') else []
+        hardware_form.sluchawki.choices = sort_and_assign(
+            collection['sluchawki'], mandatory=False, sluchawki_zlacze=True) if check_if_exists('sluchawki') else ['Nie dotyczy']
+
+        if route == 'edit':
+            header_text = "Edytuj"
+            for key, value in hardware_data.items():
+                hardware_form[key].data = value
+
+        else:
+            header_text = "Udostępnij"
         # return(redirect("/hardware/all"))
         return render_template('add_items.html',
                                udostepnienie=True,
-                               header_text="Udostępnij",
-                               hardware_data=hardware_data,
+                               header_text=header_text,
+                               #  hardware_data=hardware_data,
                                form=hardware_form,
                                return_to=return_route
                                )
@@ -689,6 +712,9 @@ def return_hardware(route, barcode):
     hardware_data = db_items.find_one({'barcode': barcode})
     return_route = adjust_return_route(route, barcode)
     if request.method == "POST":
+        print(form.stan.data)
+        print(hardware_data['stan'])
+
         stan = form.stan.data
         opis_szkod = form.opis_uszkodzenia.data
         dodatkowe_uwagi = form.dodatkowe_uwagi.data
@@ -741,10 +767,11 @@ def return_hardware(route, barcode):
         # db_history.insert_one(data_for_history)
         update_history('barcode', barcode, "Zwrócony")
         if route == 'all':
-          return (redirect(url_for('hardware.see_all')))
+            return (redirect(url_for('hardware.see_all')))
         else:
-          return (redirect(return_route))
+            return (redirect(return_route))
     else:
+        form['stan'].data = hardware_data['stan']
         return render_template("return_hardware.html",
                                hardware_data=hardware_data,
                                paperwork_data=None,
@@ -761,7 +788,7 @@ def show_info(data, id):
         hide_buttons = False
         return_route = "/hardware/all"
         check_kartoteka = db_items.find_one(
-        {"$and": [{'_id': ObjectId(id)}, {'kartoteka': {"$exists": True}}]})
+            {"$and": [{'_id': ObjectId(id)}, {'kartoteka': {"$exists": True}}]})
         if check_kartoteka == None:
             paperwork_data = None
         else:
@@ -775,7 +802,7 @@ def show_info(data, id):
         hide_buttons = True
         return_route = f"/hardware/see_history/{return_id}/{return_barcode}"
         check_kartoteka = db_history.find_one(
-        {"$and": [{'_id': ObjectId(id)}, {'kartoteka': {"$exists": True}}]})
+            {"$and": [{'_id': ObjectId(id)}, {'kartoteka': {"$exists": True}}]})
         if check_kartoteka == None:
             paperwork_data = None
         else:
@@ -783,7 +810,6 @@ def show_info(data, id):
     # history_data = db_history.find({'barcode': hardware_data['barcode']})
     # if len(list(history_data)) == 0:
     #     show_history = False
-
 
     return render_template("information_page.html",
                            hardware_data=hardware_data,

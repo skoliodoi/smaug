@@ -197,6 +197,23 @@ $("#add-lokalizacja").on('click', (e) => {
     $("#select-lokalizacja").attr('required', true)
   }
 })
+$("#add-sluchawki").on('click', (e) => {
+  const classes = e.currentTarget.classList;
+  if (Array.from(classes).includes("add-button")) {
+    $("#add-sluchawki").removeClass('add-button')
+    $("#add-sluchawki").addClass('cancel-button')
+    $("#nowe_sluchawki").show()
+    $("#select-sluchawki").hide()
+    $("#select-sluchawki").val(null)
+  } else {
+    $("#add-sluchawki").removeClass('cancel-button')
+    $("#add-sluchawki").addClass('add-button')
+    $("#nowe_sluchawki").hide()
+    $("#nowe_sluchawki").val(null)
+    $("#select-sluchawki").show()
+    $("#select-sluchawki").val('Nie dotyczy')
+  }
+})
 
 
 
