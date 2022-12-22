@@ -53,7 +53,7 @@ class AddHardware(FlaskForm):
     klucz_odzyskiwania = StringField("Klucz/dysk odzyskiwania")
     notatki = TextAreaField("Notatki dot. sprzętu", render_kw={'rows': 2})
 
-    login = StringField("Login")
+    login = StringField("Login", validators=[validators.DataRequired()])
     mocarz_id = StringField("Moccarz ID")
     projekt = SelectField("Projekt", coerce=str, render_kw={'id': 'select-projekt'})
     lokalizacja = SelectField("Lokalizacja", coerce=str, render_kw={'id': 'select-lokalizacja'})
@@ -102,7 +102,7 @@ class ReturnHardware(FlaskForm):
                        state for state in collection['status']], coerce=str, render_kw={'id': 'zwrot-stan'})
     opis_uszkodzenia = TextAreaField("Opis uszkodzenia", render_kw={
                                      'rows': 1, 'id': 'opis-uszkodzenia'})
-    dodatkowe_uwagi = TextAreaField("Dodatkowe uwagi", render_kw={
+    dodatkowe_uwagi = TextAreaField("Uwagi dot. sprzętu", render_kw={
                                     'rows': 1, 'id': 'zwrot-dodatkowe-uwagi'})
 
 

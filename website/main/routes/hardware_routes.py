@@ -66,6 +66,7 @@ def go_through_file(uploaded_file):
                 model_data = cell_data(row[col_names['Model']].value)
                 system_data = cell_data(row[col_names['System']].value)
                 mpk_data = cell_data(row[col_names['MPK']].value)
+                opis_szkod = cell_data(row[col_names['Opis uszkodzenia']].value)
                 notatki = row[col_names['Uwagi']].value
                 is_rented = row[col_names['Udostępniony']].value
                 rent_date = row[col_names['Data udostępnienia']].value
@@ -80,6 +81,7 @@ def go_through_file(uploaded_file):
                     'system': data_handler(None, system_data, 'system'),
                     'mpk': data_handler(None, mpk_data, 'mpk'),
                     'stan': row[col_names['Stan']].value if row[col_names['Stan']].value else "Sprawny",
+                    'opis_uszkodzenia': opis_szkod,
                     'bitlocker': cell_data(row[col_names['hasło/bitlocker']].value),
                     'serial': cell_data(row[col_names['Nazwa / serial']].value),
                     'identyfikator': cell_data(row[col_names['Indentyfikator klucza odzyskiwania']].value),
@@ -122,7 +124,7 @@ def go_through_file(uploaded_file):
                     data['modem'] = cell_data(row[col_names['Modem']].value)
                     notatki_wypozyczenie = row[col_names['Notatki wypożyczenie']].value
                     if notatki_wypozyczenie:
-                        data['notatki_wypozyczenie'] = f"""{notatki_wypozyczenie} 
+                        data['notatki_wypozyczenie'] = f"""{notatki_wypozyczenie}
                       (Sprzęt udostępniony z pliku - {datetime.now().strftime('%Y-%m-%d')})
                       """
                     else:
@@ -334,6 +336,8 @@ def add():
                     'rented_status': False,
                     'upload_date': local_time,
                     'last_updated': local_time,
+                    'notatki': hardware_form.notatki.data if hardware_form.notatki.data else "",
+                    'opis_uszkodzenia': opis_szkod if opis_szkod else "",
                     # 'rent_date': rent_date,
                     'adder': current_user.login,
                     # 'who_rented': who_rented
@@ -350,10 +354,10 @@ def add():
                     data_to_send['identyfikator'] = hardware_form.identyfikator.data
                 if hardware_form.klucz_odzyskiwania.data:
                     data_to_send['klucz_odzyskiwania'] = hardware_form.klucz_odzyskiwania.data
-                if hardware_form.notatki.data:
-                    data_to_send['notatki'] = hardware_form.notatki.data
-                if opis_szkod:
-                    data_to_send['opis_uszkodzenia'] = opis_szkod
+                # if hardware_form.notatki.data:
+                #     data_to_send['notatki'] = hardware_form.notatki.data
+                # if opis_szkod:
+                #     data_to_send['opis_uszkodzenia'] = opis_szkod
                 data_for_history = data_to_send.copy()
                 data_for_history['modyfikacja'] = 'Stworzony'
                 data_for_history['who_modified'] = data_to_send['adder']
@@ -715,9 +719,6 @@ def return_hardware(route, barcode):
     hardware_data = db_items.find_one({'barcode': barcode})
     return_route = adjust_return_route(route, barcode)
     if request.method == "POST":
-        print(form.stan.data)
-        print(hardware_data['stan'])
-
         stan = form.stan.data
         opis_szkod = form.opis_uszkodzenia.data
         dodatkowe_uwagi = form.dodatkowe_uwagi.data
@@ -728,11 +729,13 @@ def return_hardware(route, barcode):
         #     'last_updated': datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S"),
         #     'who_accepted_return': current_user.login
         # }})
-
+        print(opis_szkod)
         db_items.update_one({'barcode': barcode}, {
             "$set": {
                 'rented_status': False,
                 'last_updated': datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S"),
+                'notatki': dodatkowe_uwagi,
+                'opis_uszkodzenia': opis_szkod,
                 'stan': stan,
             },
             "$unset": {
@@ -753,15 +756,6 @@ def return_hardware(route, barcode):
         }, upsert=True
         )
 
-        if opis_szkod:
-            db_items.update_one({'barcode': barcode}, {
-                "$set": {
-                    'opis_uszkodzenia': opis_szkod
-                }})
-        if dodatkowe_uwagi:
-            full_notatki = f"{hardware_data['notatki']}, {dodatkowe_uwagi}"
-            db_items.update_one({'barcode': barcode}, {"$set": {
-                'notatki': full_notatki}})
         # data_for_history = db_items.find_one({'barcode': barcode}, {'_id': 0})
         # data_for_history['modyfikacja'] = 'Zwrócony'
         # data_for_history['who_modified'] = current_user.login
@@ -775,6 +769,10 @@ def return_hardware(route, barcode):
             return (redirect(return_route))
     else:
         form['stan'].data = hardware_data['stan']
+        if hardware_data['notatki']:
+          form['dodatkowe_uwagi'].data = hardware_data['notatki']
+        if hardware_data['opis_uszkodzenia']:
+          form['opis_uszkodzenia'].data = hardware_data['opis_uszkodzenia']
         return render_template("return_hardware.html",
                                hardware_data=hardware_data,
                                paperwork_data=None,
@@ -871,8 +869,9 @@ def get_data(parametr):
     return render_template('all_items.html', items=free_items, data=navbar_select_data, see_hardware=True, see_all=True)
 
 
-@ hardware.route('/delete/<id>', methods=["GET", "POST"])
-def delete(id):
+@ hardware.route('/delete/<route>/<id>', methods=["GET", "POST"])
+def delete(route, id):
+
     if request.method == 'POST':
         kartoteka_attached = db_items.find_one(
             {'_id': ObjectId(id), 'kartoteka': {"$exists": True}})
@@ -885,7 +884,10 @@ def delete(id):
                                             "$pull": {'przypisane_barcodes': barcode}})
         update_history('_id', ObjectId(id), "Usunięty")
         db_items.delete_one({'_id': ObjectId(id)})
-
         return (redirect(url_for('hardware.see_all')))
     else:
-        return render_template("confirmation.html", id=id, return_to=f"/hardware/show_info/present/{id}")
+        if route == 'all':
+            return_route = "/hardware/all"
+        else:
+            return_route = f"/hardware/show_info/present/{id}"
+        return render_template("confirmation.html", id=id, return_to=return_route)

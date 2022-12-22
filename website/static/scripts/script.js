@@ -52,10 +52,26 @@ $("#paperwork_container").on("click", () => {
 
 
 
-
+let uwagiVal = null;
+let uszkodzeniaVal = null;
 
 $("#zwrot-uwagi-btn").on('click', () => {
   $("#zwrot-uwagi-btn").hide();
+  $("#uwagi-box").hide();
+  $("#uszkodzenia-box").hide();
+  if ($("#uwagi-box-data")[0]) {
+    uwagiVal = $("#uwagi-box-data")[0].textContent.trim()
+  }
+  if ($("#uszkodzenia-box-data")[0]) {
+    uszkodzeniaVal = $("#uszkodzenia-box-data")[0].textContent.trim()
+  }
+  // uwagiVal = $("#uwagi-box-data")[0].textContent.trim()
+  stanVal = $("#zwrot-stan option:selected").val()
+  console.log(uwagiVal)
+  console.log(stanVal)
+  if (stanVal != "Sprawny") {
+    $("#opis-uszkodzenia-box").show()
+  }
   $("#cancel-uwagi-btn").show();
   $("#cancel-uwagi-btn").attr({ "style": "cursor: pointer" });
   $("#zwrot-uwagi").show()
@@ -64,12 +80,17 @@ $("#zwrot-uwagi-btn").on('click', () => {
 $("#cancel-uwagi-btn").on('click', () => {
   $("#cancel-uwagi-btn").hide();
   $("#zwrot-uwagi-btn").show();
+  $("#uwagi-box").show();
+  $("#uszkodzenia-box").show()
   $("#zwrot-uwagi-btn").attr({ "style": "cursor: pointer" });
   $("#zwrot-uwagi").hide()
-  $("#opis-uszkodzenia").val(null)
-  $("#zwrot-dodatkowe-uwagi").val(null)
-  $("#opis-uszkodzenia-box").hide()
-  $("#zwrot-stan option:selected").prop('selected', false)
+  $("#opis-uszkodzenia").val(uszkodzeniaVal)
+  $("#zwrot-dodatkowe-uwagi").val(uwagiVal)
+
+  $("#zwrot-stan").val(stanVal)
+  uwagiVal = null;
+  uszkodzeniaVal = null;
+
 })
 
 
