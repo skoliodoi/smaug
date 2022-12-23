@@ -3,6 +3,7 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
+from .schedules import scheduler
 from .models import User
 from .main.routes.routes import * 
 from .main.routes.hardware_routes import * 
@@ -28,6 +29,6 @@ def create_app():
   app.register_blueprint(paperwork, url_prefix='/paperwork')
   app.register_blueprint(users, url_prefix='/users')
 
-
+  scheduler.start()
   return app
 

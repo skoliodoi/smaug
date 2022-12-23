@@ -24,6 +24,7 @@ services:
   smaug:
     build: ./
     volumes:
+      - ./backup:/app/backup
       - ./website:/app/website
     ports:
       - '7150:7150'

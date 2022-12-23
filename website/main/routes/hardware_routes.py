@@ -387,10 +387,10 @@ def edit(route, id):
             existing_id = db_items.find_one({'barcode': new_barcode})
             if not existing_id:
                 update_db()
-                return (redirect(url_for('hardware.show_info', id=id)))
+                return (redirect(url_for('hardware.show_info', data='present', id=id)))
             else:
                 flash('Taki barcode już istnieje', category='error')
-                return (redirect(url_for('hardware.edit', id=id)))
+                return (redirect(url_for('hardware.edit', route=route, id=id)))
         else:
             update_db()
             return (redirect(url_for('hardware.show_info', data='present', id=id)))

@@ -1,13 +1,12 @@
 from website.extensions import *
 import pytz
-from datetime import datetime, time
+from datetime import datetime
 from flask_bcrypt import Bcrypt
 import random
 import string
 import yagmail
 import os
 import json
-from pathlib import Path
 
 yag = yagmail.SMTP(user={f"{os.environ['MAIL_ADDRESS']}": 'SMAUG'},
                    password=f"{os.environ['MAIL_PASS']}")
@@ -55,10 +54,10 @@ def data_handler(form_data, new_data, data_name):
             else:
                 db_collection.update_one(
                     {"_id": "main"}, {"$addToSet": {data_name: {"nazwa": returned_data['data'], "last_update": local_time}}})
+            update_for_cron("sm_selectables")
         else:
             db_collection.update_one({f"{data_name}.nazwa": returned_data['data']}, {
                 "$set": {f"{data_name}.$.last_update": local_time}})
-    update_for_cron("sm_selectables")
     return returned_data['data']
 # def data_handler(form_data, new_data, data_name):
 #     returned_data = form_data
@@ -126,7 +125,7 @@ def cron_updates(id, database):
     try:
         local_time = datetime.now(
             local_tz).strftime("%Y-%m-%d %H:%M:%S")
-        timestr = time.strftime("%Y%m%d-%H%M%S")
+        timestr = datetime.now(local_tz).strftime("%Y%m%d-%H%M%S")
         last_update = db_updates.find_one({'_id': id}).get('update')
         last_backup = db_updates.find_one({'_id': id}).get('db_backup')
         if last_update:
@@ -134,19 +133,21 @@ def cron_updates(id, database):
                 db_updates.update_one(
                     {'_id': id}, {"$set": {'db_backup': local_time}}, upsert=True)
             elif last_update > last_backup:
+                print(f'{id}: time for backup...')
                 dump = list(database.find({}))
                 for each in dump:
                     id_data = str(each['_id'])
                     each['_id'] = {"$oid": id_data}
-                Path("./backup").mkdir(parents=True, exist_ok=True)
+                # Path("/backup").mkdir(parents=True, exist_ok=True)
                 file_path = os.path.join(
-                    f'./backup/{id}_backup_{timestr}.json')
+                    f'./backup/{id}/{id}_backup_{timestr}.json')
                 with open(file_path, 'w') as j:
                     j.write(json.dumps(dump, indent=4, ensure_ascii=False))
                     j.close()
                 db_updates.update_one(
                     {'_id': id}, {"$set": {'db_backup': local_time}}, upsert=True)
+                print(f'{id} backup completed!')
             else:
-                print('No backup necessary')
+                print(f'{id} - no backup necessary')
     except AttributeError:
         return
