@@ -57,6 +57,7 @@ def data_handler(form_data, new_data, data_name):
         else:
             db_collection.update_one({f"{data_name}.nazwa": returned_data['data']}, {
                 "$set": {f"{data_name}.$.last_update": local_time}})
+    update_for_cron("sm_selectables")
     return returned_data['data']
 # def data_handler(form_data, new_data, data_name):
 #     returned_data = form_data

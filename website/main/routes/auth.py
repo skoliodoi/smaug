@@ -78,6 +78,7 @@ def signup():
         """
             if form.email.data != "":
                 yag.send(email, "Witamy w SMAUG-u", content)
+            update_for_cron("sm_users")
             return redirect(url_for('auth.signup'))
         else:
             flash('Użytkownik o podanych danych już istnieje!', category='error')

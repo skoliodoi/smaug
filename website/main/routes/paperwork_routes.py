@@ -12,11 +12,6 @@ paperwork = Blueprint('paperwork', __name__)
 navbar_select_data = [('', ''), ('all', 'Wszystkie'), ('no-faktura', 'Brak faktury'), (
     'faktura', 'Z fakturą'), ('no-barcode', 'Brak barcode\'u'), ('barcode', 'Z barcodem')]
 
-# local_tz = pytz.timezone('Europe/Warsaw')
-# local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-
-# collection = db_collection.find_one({})
-
 
 def check_existing_records(kartoteka):
     existing_record = db_paperwork.find_one({'kartoteka': kartoteka})
@@ -41,16 +36,7 @@ def copy_and_update_item(barcode, msg, faktury, kartoteka_typ,
     data_for_history['last_updated'] = datetime.now(
         tz=local_tz).strftime("%Y-%m-%d %H:%M:%S")
     db_history.insert_one(data_for_history)
-
-# def list_to_str(list):
-#     str = ""
-#     for id, val in enumerate(list, start=1):
-#         if id < len(list):
-#             str += val.strip() + ", "
-#         else:
-#             str += val.strip()
-#     return str
-
+    update_for_cron("sm_history")
 
 def go_through_file(uploaded_file):
     wb = openpyxl.load_workbook(uploaded_file)
@@ -78,6 +64,7 @@ def go_through_file(uploaded_file):
                     for barcode in barcodes:
                         db_items.update_one({'barcode': barcode}, {
                                             '$set': {'kartoteka': kartoteka}})
+                    update_for_cron("sm_items")
                     data['przypisane_barcodes'] = barcodes
                 if faktury_row:
                     faktury = []
@@ -103,15 +90,6 @@ def add_file():
         go_through_file(file)
         return redirect(url_for("paperwork.add"))
     return render_template('add_file.html', form=form)
-
-
-# def data_handler(form_data, new_data, data_name):
-#     returned_data = form_data
-#     if new_data:
-#         returned_data = new_data
-#         db_collection.update_one(
-#             {"_id": "main"}, {"$addToSet": {data_name: returned_data}})
-#     return returned_data
 
 
 @paperwork.route('/add', methods=['GET', 'POST'])
@@ -141,19 +119,10 @@ def add():
                     data['data_faktury'] = ""
                 if len(barcodes) > 0:
                     data['przypisane_barcodes'] = barcodes
-                    print(barcodes)
                     for each in data['przypisane_barcodes']:
                         db_items.update_one({'barcode': each}, {"$set": {
                             'kartoteka': form.kartoteka.data,
                         }})
-                        # updated_item = db_items.find_one(
-                        #     {'barcode': each}, {'_id': 0})
-                        # data_for_history = updated_item.copy()
-                        # data_for_history['modyfikacja'] = 'Dodano kartotekę'
-                        # data_for_history['who_modified'] = current_user.login
-                        # data_for_history['last_updated'] = datetime.now(
-                        #     tz=local_tz).strftime("%Y-%m-%d %H:%M:%S")
-                        # db_history.insert(data_for_history)
                         copy_and_update_item(
                             each,
                             'Dodano kartotekę',
@@ -162,7 +131,9 @@ def add():
                             mpk_data,
                             form.notatki.data,
                             data['data_faktury'])
+                    update_for_cron("sm_items")
                 db_paperwork.insert_one(data)
+                update_for_cron("sm_paperwork")
                 flash('Dodano kartotekę', 'success')
                 return redirect(url_for('paperwork.add'))
             else:
@@ -220,11 +191,13 @@ def edit(id):
                 'update_date': datetime.now(
                     local_tz).strftime("%Y-%m-%d %H:%M:%S")
             }}, upsert=True)
+            update_for_cron("sm_paperwork")
             for each in barcodes_from_select:
                 if not db_items.find_one({'barcode': each, 'kartoteka': form.kartoteka.data}):
                     db_items.update_one({'barcode': each}, {"$set": {
                         'kartoteka': form.kartoteka.data
                     }})
+                    update_for_cron("sm_items")
                     copy_and_update_item(
                         each,
                         'Dodano kartotekę',
@@ -250,6 +223,8 @@ def edit(id):
                     data_for_history['last_updated'] = datetime.now(
                         tz=local_tz).strftime("%Y-%m-%d %H:%M:%S")
                     db_history.insert_one(data_for_history)
+                update_for_cron("sm_items")
+                update_for_cron("sm_history")
 
             flash('Zaktualizowano kartotekę', 'success')
             return (redirect(url_for('paperwork.see_all')))
@@ -310,9 +285,10 @@ def delete(id):
                 db_items.update_one({'barcode': barcode}, {"$unset": {
                     'kartoteka': ""
                 }})
+            update_for_cron("sm_items")
         db_paperwork.delete_one({'_id': ObjectId(id)})
+        update_for_cron("sm_paperwork")
         return redirect(url_for('paperwork.see_all'))
-        # return render_template('all_papers.html', items=all_items, data=navbar_select_data, see_all=True)
     else:
         return render_template("confirmation.html", id=id, return_to="/paperwork/all")
 

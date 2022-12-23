@@ -42,6 +42,7 @@ def reset_pass(id):
         yag.send(user_mail, "Nowe hasło do systemu SMAUG", content)
         db_users.update_one({"_id": ObjectId(id)}, {
                             "$set": {"password": password[0]}})
+        update_for_cron("sm_users")
         flash(f"Hasło dla {user_mail} zostało zresetowane", "success")
         return redirect(url_for('users.all_users'))
     else:
@@ -92,6 +93,7 @@ def edit_user(id):
             else:
                 db_users.update_one({"_id": ObjectId(id)}, {
                                     "$unset": {"mpk": ""}}, upsert=True)
+            update_for_cron("sm_users")
             flash(
                 f"Użytkownik {user['login']} został zaktualizowany", "success")
             return redirect(url_for('users.all_users'))
@@ -133,6 +135,7 @@ def edit_user(id):
 def delete_user(id):
     if request.method == 'POST':
         db_users.delete_one({'_id': ObjectId(id)})
+        update_for_cron("sm_users")
         flash(f"Użytkownik został usunięty", "success")
         return redirect(url_for('users.all_users'))
     else:
