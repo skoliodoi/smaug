@@ -19,7 +19,8 @@ return_route = "/hardware/all"
 
 
 def adjust_return_route(route, barcode):
-    if route == 'details':
+    print(route)
+    if route == 'details' or route == 'edit':
         return_route_id = db_items.find_one(
             {'barcode': barcode}, {'_id': 1})['_id']
         return_route = f"/hardware/show_info/present/{return_route_id}"
@@ -456,9 +457,9 @@ def add():
         print(str(e))
 
 
-@hardware.route('/edit/<id>', methods=['GET', 'POST'])
+@hardware.route('/edit/<route>/<id>', methods=['GET', 'POST'])
 @login_required
-def edit(id):
+def edit(route, id):
 
     form = AddHardware()
     item_data = db_items.find_one({'_id': ObjectId(id)}, {'_id': 0,
@@ -574,13 +575,17 @@ def edit(id):
             collection['projekt']) if check_if_exists('projekt') else []
         form.lokalizacja.choices = sort_and_assign(
             collection['lokalizacja']) if check_if_exists('lokalizacja') else []
+        if route == 'all':
+          return_route = "/hardware/all"
+        else:
+          return_route = f"/hardware/show_info/present/{id}"
         return render_template('add_items.html',
                                header_text="Edytuj",
                                data=item_data,
                                hardware_data=False,
                                edit=True,
                                form=form,
-                               return_to=f"/hardware/show_info/present/{id}")
+                               return_to=return_route)
 
 
 @ hardware.route('/rent/<route>/<barcode>', methods=['GET', 'POST'])
@@ -680,6 +685,8 @@ def rent(route, barcode):
             collection['lokalizacja']) if check_if_exists('lokalizacja') else []
         hardware_form.sluchawki.choices = sort_and_assign(
             collection['sluchawki'], mandatory=False, sluchawki_zlacze=True) if check_if_exists('sluchawki') else ['Nie dotyczy']
+        hardware_form.zlacze.choices = sort_and_assign(
+            collection['zlacze'], mandatory=False, sluchawki_zlacze=True) if check_if_exists('sluchawki') else ['Nie dotyczy']
 
         if route == 'edit':
             header_text = "Edytuj"

@@ -31,7 +31,6 @@ $("#signup-button").on('click', (e) => {
   })
   access = $("#access").val()
   new_mpk = $("#signup-new-mpk").val()
-  console.log($("#access").val())
   if (checkedCount == 0 && access == 'User' && new_mpk == '') {
     e.preventDefault()
     $("#mpk-alert").show()

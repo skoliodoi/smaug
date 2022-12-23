@@ -72,9 +72,10 @@ navbar_select_data = [('', ''), ('all', 'Wszystkie'), ('rented', 'Wypożyczone')
 
 
 def update_for_cron(db_name):
-    db_updates.find_one_and_update({'_id': "updates"}, {"$set": {
-                                   db_name: datetime.now(
-                                       local_tz).strftime("%Y-%m-%d %H:%M:%S")}}, upsert=True)
+    db_updates.find_one_and_update({'_id': db_name}, {"$set": {
+                                   'update': datetime.now(
+                                       local_tz).strftime("%Y-%m-%d %H:%M:%S"),
+                                   }}, upsert=True)
 
 
 def check_existing_data(data, data_label, database):

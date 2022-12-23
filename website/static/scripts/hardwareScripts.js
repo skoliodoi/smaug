@@ -1,3 +1,25 @@
+jQuery(() => {
+  const pathName = document.location.pathname
+  const checkPathName = pathName.includes("rent")
+  if (!checkPathName) {
+    $("#login").removeAttr('required')
+  }
+  console.log(checkPathName)
+})
+
+$(document).on('ready', function () {
+  const pathName = document.location.pathname
+  const checkPathName = pathName.includes("rent")
+  if (!checkPathName) {
+    $("#login").removeAttr('required')
+  }
+  console.log(checkPathName)
+});
+
+$(window).on('beforeunload', function () {
+  $("#login").attr('required', true)
+});
+
 $('#rent_hardware').on("change", () => {
   $('#rent_hardware').is(':checked') ? $("#rent-hardware-bool").prop("checked", true) : $("#rent-hardware-bool").prop("checked", false);
   $("#rent_hardware_container").toggle()
@@ -46,14 +68,6 @@ $(function () {
 });
 
 /*Dodawanie nowych elementw do listy*/
-
-// $("#select-stanowisko").on('change', (e) => {
-//   if (e.target.value == 'DODAJ') {
-//     $("#cancel-stanowisko").show()
-//     $("#nowy_stanowisko").show()
-//     $("#select-stanowisko").hide()
-//   }
-// })
 
 $("#add-stanowisko").on('click', (e) => {
   const classes = e.currentTarget.classList;
@@ -212,6 +226,23 @@ $("#add-sluchawki").on('click', (e) => {
     $("#nowe_sluchawki").val(null)
     $("#select-sluchawki").show()
     $("#select-sluchawki").val('Nie dotyczy')
+  }
+})
+$("#add-zlacze").on('click', (e) => {
+  const classes = e.currentTarget.classList;
+  if (Array.from(classes).includes("add-button")) {
+    $("#add-zlacze").removeClass('add-button')
+    $("#add-zlacze").addClass('cancel-button')
+    $("#nowe_zlacze").show()
+    $("#select-zlacze").hide()
+    $("#select-zlacze").val(null)
+  } else {
+    $("#add-zlacze").removeClass('cancel-button')
+    $("#add-zlacze").addClass('add-button')
+    $("#nowe_zlacze").hide()
+    $("#nowe_zlacze").val(null)
+    $("#select-zlacze").show()
+    $("#select-zlacze").val('Nie dotyczy')
   }
 })
 

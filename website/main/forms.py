@@ -60,8 +60,7 @@ class AddHardware(FlaskForm):
     sluchawki = SelectField("Słuchawki", coerce=str, render_kw={'id': 'select-sluchawki'})
     przejsciowka = SelectField("Przejściówka", choices=[
                                "Nie dotyczy", "Tak", "Nie"], coerce=str)
-    zlacze = SelectField("Złącze", choices=[
-                         "Nie dotyczy", "Typu USB", "Typu JACK"], coerce=str)
+    zlacze = SelectField("Złącze", coerce=str, render_kw={'id': 'select-zlacze'})
     mysz = SelectField(
         "Mysz", choices=["Nie dotyczy", "Tak", "Nie"], coerce=str)
     torba = SelectField(
@@ -89,8 +88,10 @@ class AddHardware(FlaskForm):
         render_kw={'style': 'display: none', 'id': 'nowy_projekt'})
     nowa_lokalizacja = StringField(
         render_kw={'style': 'display: none', 'id': 'nowa_lokalizacja'})
-    nowy_sluchawki = StringField(
+    nowe_sluchawki = StringField(
         render_kw={'style': 'display: none', 'id': 'nowe_sluchawki'})
+    nowe_zlacze = StringField(
+        render_kw={'style': 'display: none', 'id': 'nowe_zlacze'})
 
 
 class AddHardwareFromField(FlaskForm):
