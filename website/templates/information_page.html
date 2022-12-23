@@ -1,122 +1,127 @@
 {%extends "index.html"%}{%block title%}Informacje o sprzęcie{%endblock%}{%block content%}
 <div class="page-container">
-<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-  <div class="p-8 component-header">
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="p-8 component-header">
 
-    <div class="md:flex md:items-center md:justify-between">
-      {%include "return_arrow.html"%}
-      <div class="flex-1 min-w-0">
+      <div class="md:flex md:items-center md:justify-between">
+        {%include "return_arrow.html"%}
+        <div class="flex-1 min-w-0">
 
-        <h2 class="text-2xl font-bold leading-7 text-white sm:text-3xl sm:truncate">{{hardware_data['barcode']}}
-          {%if hardware_data['rented_status']==True%}
-          (Udostępniony)
-          {%else%}
-          (Nieudostępniony)
-          {%endif%}
-        </h2>
-        <h3 class="text-xl font-bold leading-5 text-white sm:text-xl sm:truncate">Dodane
-          {{hardware_data['upload_date']}} przez {{hardware_data['adder']}}</h3>
-      </div>
-      <div class="mt-4 flex md:mt-0 md:ml-4 gap-2">
-        <!-- <button type="button"
+          <h2 class="text-2xl font-bold leading-7 text-white sm:text-3xl sm:truncate">{{hardware_data['barcode']}}
+            {%if hardware_data['rented_status']==True%}
+            (Udostępniony)
+            {%else%}
+            (Nieudostępniony)
+            {%endif%}
+          </h2>
+          <h3 class="text-xl font-bold leading-5 text-white sm:text-xl sm:truncate">Dodane
+            {{hardware_data['upload_date'] if hardware_data['upload_date'] else "N/A"}}
+            przez
+            {{hardware_data['adder']
+            if hardware_data['adder']
+            else "N/A"
+            }}</h3>
+        </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4 gap-2">
+          <!-- <button type="button"
           class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">Edytuj</button> -->
-        {%if not being_returned and not hide_buttons%}
-        <!-- <form method="get">
+          {%if not being_returned and not hide_buttons%}
+          <!-- <form method="get">
           <a href="/hardware/edit/{{hardware_data['_id']}}"
             class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
             <input type="button" name="{{hardware_data['_id']}}"> Edytuj informacje </a>
         </form> -->
-        <form method="get">
-          <a href="/hardware/delete/details/{{hardware_data['_id']}}"
-            class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
-            <input type="button" name="{{hardware_data['_id']}}"> Usuń sprzęt </a>
-        </form>
-        {%endif%}
-        {%if not hide_buttons%}
-        {%if hardware_data['barcode'] and hardware_data['barcode'] != "N/A" %}
-        <form method="GET">
-          <a href="/hardware/see_history/{{hardware_data['_id']}}/{{hardware_data['barcode']}}"
-            class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
-            <input type="button" name="{{hardware_data['barcode']}}"> Zobacz historię </a>
-        </form>
-        {%if hardware_data['rented_status']==True%}
-        <form method="POST" class="flex justify-between content-center">
-          <a href="/hardware/return/details/{{hardware_data['barcode']}}"
-            class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
-            <input type="button" name="{{hardware_data['barcode']}}"> Zwróć </a>
-        </form>
-        {%else%}
-        <form method="POST">
-          <a href="/hardware/rent/details/{{hardware_data['barcode']}}"
-            class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
-            <input type="button" name="{{hardware_data['barcode']}}"> Udostępnij </a>
-        </form>
-        {%endif%}
-        {%endif%}
-        {%endif%}
+          <form method="get">
+            <a href="/hardware/delete/details/{{hardware_data['_id']}}"
+              class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
+              <input type="button" name="{{hardware_data['_id']}}"> Usuń sprzęt </a>
+          </form>
+          {%endif%}
+          {%if not hide_buttons%}
+          {%if hardware_data['barcode'] and hardware_data['barcode'] != "N/A" %}
+          <form method="GET">
+            <a href="/hardware/see_history/{{hardware_data['_id']}}/{{hardware_data['barcode']}}"
+              class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
+              <input type="button" name="{{hardware_data['barcode']}}"> Zobacz historię </a>
+          </form>
+          {%if hardware_data['rented_status']==True%}
+          <form method="POST" class="flex justify-between content-center">
+            <a href="/hardware/return/details/{{hardware_data['barcode']}}"
+              class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
+              <input type="button" name="{{hardware_data['barcode']}}"> Zwróć </a>
+          </form>
+          {%else%}
+          <form method="POST">
+            <a href="/hardware/rent/details/{{hardware_data['barcode']}}"
+              class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
+              <input type="button" name="{{hardware_data['barcode']}}"> Udostępnij </a>
+          </form>
+          {%endif%}
+          {%endif%}
+          {%endif%}
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-    <div class="shadow sm:rounded-md sm:overflow-hidden">
-      <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-        <div>
-          <div class="sm:hidden">
-            <label for="tabs" class="sr-only">Select a tab</label>
-            <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
-            <select id="tabs" name="tabs"
-              class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-              <option>Sprzęt</option>
-              <option>Dokumenty</option>
-            </select>
-          </div>
-          {%with messages = get_flashed_messages(with_categories=true)%}
-          {%if messages%}
-          {% for category, message in messages %}
-          <div class="bg-green-300 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-            <span class="block sm:inline">{{message}}</span>
-          </div>
-          {%endfor%}
-          {%endif%}
-          {%endwith%}
-          <div class="hidden sm:block">
-            <div class="border-b border-gray-200">
-              <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
-                {%if not being_returned%}
-                <button
-                  class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
-                  id="hardware_container">Sprzęt</button>
-                {%endif%}
-                {%if hardware_data['rented_status']%}
-                <button id="rental_container"
-                  class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                  Szczegóły udostępnienia </button>
-                {%endif%}
-                {%if paperwork_data and not being_returned%}
-                <button id="paperwork_container"
-                  class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                  Dokumenty </button>
-                {%endif%}
-              </nav>
+    <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+      <div class="shadow sm:rounded-md sm:overflow-hidden">
+        <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+          <div>
+            <div class="sm:hidden">
+              <label for="tabs" class="sr-only">Select a tab</label>
+              <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
+              <select id="tabs" name="tabs"
+                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                <option>Sprzęt</option>
+                <option>Dokumenty</option>
+              </select>
+            </div>
+            {%with messages = get_flashed_messages(with_categories=true)%}
+            {%if messages%}
+            {% for category, message in messages %}
+            <div class="bg-green-300 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+              <span class="block sm:inline">{{message}}</span>
+            </div>
+            {%endfor%}
+            {%endif%}
+            {%endwith%}
+            <div class="hidden sm:block">
+              <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                  <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
+                  {%if not being_returned%}
+                  <button
+                    class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+                    id="hardware_container">Sprzęt</button>
+                  {%endif%}
+                  {%if hardware_data['rented_status']%}
+                  <button id="rental_container"
+                    class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    Szczegóły udostępnienia </button>
+                  {%endif%}
+                  {%if paperwork_data and not being_returned%}
+                  <button id="paperwork_container"
+                    class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    Dokumenty </button>
+                  {%endif%}
+                </nav>
+              </div>
             </div>
           </div>
-        </div>
-        <div id="hardware_details" {%if being_returned %} style="display: none;" {%endif%}>
-          {%include "hardware_details.html"%}
-        </div>
-        <div id="rental_details" {%if not being_returned %} style="display: none;" {%endif%}>
-          {%include "user_details.html"%}
-        </div>
-        <div id="paperwork_details" style="display: none;">
-          {%include "paperwork_details.html"%}
-        </div>
+          <div id="hardware_details" {%if being_returned %} style="display: none;" {%endif%}>
+            {%include "hardware_details.html"%}
+          </div>
+          <div id="rental_details" {%if not being_returned %} style="display: none;" {%endif%}>
+            {%include "user_details.html"%}
+          </div>
+          <div id="paperwork_details" style="display: none;">
+            {%include "paperwork_details.html"%}
+          </div>
 
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 </div>
 {%endblock%}
