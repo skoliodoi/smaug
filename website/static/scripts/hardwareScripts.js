@@ -1,23 +1,29 @@
 jQuery(() => {
   const pathName = document.location.pathname
   const checkPathName = pathName.includes("rent")
+  const checkEditName = pathName.includes("edit")
   if (!checkPathName) {
     $("#login").removeAttr('required')
+  }
+  if (checkEditName) {
+    $("#barcode").attr('disabled', true)
   }
   console.log(checkPathName)
 })
 
-$(document).on('ready', function () {
-  const pathName = document.location.pathname
-  const checkPathName = pathName.includes("rent")
-  if (!checkPathName) {
-    $("#login").removeAttr('required')
-  }
-  console.log(checkPathName)
-});
+
+// $(document).on('ready', function () {
+//   const pathName = document.location.pathname
+//   const checkPathName = pathName.includes("rent")
+//   if (!checkPathName) {
+//     $("#login").removeAttr('required')
+//   }
+//   console.log(checkPathName)
+// });
 
 $(window).on('beforeunload', function () {
   $("#login").attr('required', true)
+  $("#barcode").removeAttr('disabled')
 });
 
 $('#rent_hardware').on("change", () => {

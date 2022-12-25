@@ -15,21 +15,29 @@ nav {
   z-index: 10;
 }
 
-#all_items_table {
+#history_table, 
+#all_items_table, 
+#all_users_table {
   height: 100%;
   /* height: calc(100vh - 64px) !important; */
   overflow: auto !important;
 }
 
 
-#all_items_table_wrapper {
+#history_table_wrapper, 
+#all_items_table_wrapper, 
+#all_users_table_wrapper {
   background-color: whitesmoke !important;
   position: sticky !important;
   top: 40px !important;
 }
 
+#ahistory_table_length,
+#ahistory_table_filter, 
 #all_items_table_length,
-#all_items_table_filter {
+#all_items_table_filter, 
+#all_users_table_length,
+#all_users_table_filter {
   position: sticky;
   top: 64px;
   background: whitesmoke;

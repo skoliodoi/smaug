@@ -1,11 +1,33 @@
 const table = $('#all_items_table').DataTable(
   {
     dom: 'lfrt<"#table-bottom-container" <"#table-bottom-left" i B> p>',
+    order: [[1, 'desc']],
     buttons: {
       buttons: ['csv', 'excel']
     }
   }
 );
+
+const usersTable = $('#all_users_table').DataTable(
+  {
+    dom: 'lfrt<"#table-bottom-container" <"#table-bottom-left" i B> p>',
+    order: [[0, 'asc'], [1, 'asc']],
+    buttons: {
+      buttons: ['csv', 'excel']
+    }
+  }
+);
+
+const historyTable = $('#history_table').DataTable(
+  {
+    dom: 'lfrt<"#table-bottom-container" <"#table-bottom-left" i B> p>',
+    order: [[0, 'desc'], [1, 'desc']],
+    buttons: {
+      buttons: ['csv', 'excel']
+    }
+  }
+);
+
 
 $("#items-filter").on('change', (e) => {
   if (e.target.value == 'all') {

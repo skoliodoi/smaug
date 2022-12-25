@@ -61,7 +61,7 @@ def edit_user(id):
         try:
             db_users.update_one({'_id': ObjectId(id)}, {
                 '$set': {
-                    "login": form.login.data,
+                    "login": form.email.data,
                     "email": form.email.data,
                     "imie": form.imie.data,
                     "nazwisko": form.nazwisko.data,
@@ -126,7 +126,7 @@ def edit_user(id):
 
     return render_template('signup.html', form=form, mpk_data=mpk_data,
                            edit=edit_for_user,
-                           return_to='users/all',
+                           return_to='/users/all',
                            display_text="Edytuj")
 
 

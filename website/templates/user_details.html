@@ -122,7 +122,7 @@
   </div>
 </div>
 {%if not being_returned and not hide_buttons%}
-
+{%if current_user.dostep=='Admin' or current_user.dostep=='IT'%}
 <form method="get" class="mt-5">
   <a href="/hardware/rent/edit/{{hardware_data['barcode']}}"
   class="tml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
@@ -130,4 +130,5 @@
 </form>
 
 
+{%endif%}
 {%endif%}

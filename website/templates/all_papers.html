@@ -15,6 +15,8 @@
     <tr>
       <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Nr kartoteki
       </th>
+      <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Data dodania dokumentów
+      </th>
       <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Typ
         kartoteki
       </th>
@@ -34,6 +36,11 @@
       <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
         {{item['kartoteka']}}
       </td>
+      <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">{{
+        item['data_dodania']
+        if item['data_dodania']
+        else "Brak"
+      }}</td>
       <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">{{item['kartoteka_typ']}}</td>
       <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{item['kartoteka_mpk']}}</td>
       <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">

@@ -14,7 +14,6 @@ return_route = "/hardware/all"
 
 
 def adjust_return_route(route, barcode):
-    print(route)
     if route == 'details' or route == 'edit':
         return_route_id = db_items.find_one(
             {'barcode': barcode}, {'_id': 1})['_id']
@@ -343,57 +342,46 @@ def edit(route, id):
     else:
         old_barcode = None
     if request.method == 'POST':
-        def update_db():
-            kartoteka_exists = db_items.find_one(
-                {'_id': ObjectId(id), 'kartoteka': {"$exists": True}})
-            if kartoteka_exists:
-                existing_kartoteka = db_paperwork.find_one(
-                    {'kartoteka': kartoteka_exists['kartoteka']})
-            else:
-                existing_kartoteka = None
-            update_data = {
-                'barcode': form.barcode.data,
-                'stanowisko': data_handler(form.stanowisko.data, form.nowy_stanowisko.data, "stanowisko"),
-                'typ': data_handler(form.typ.data, form.nowy_typ.data, "type"),
-                'marka': data_handler(form.marka.data, form.nowa_marka.data, "marka"),
-                'model': data_handler(form.model.data, form.nowy_model.data, "model"),
-                'system': data_handler(form.system.data, form.nowy_system.data, "system"),
-                'mpk': data_handler(form.mpk.data, form.nowy_mpk.data, "mpk"),
-                'stan': form.stan.data,
-                'bitlocker': form.bitlocker.data,
-                'serial': form.serial.data,
-                'identyfikator': form.identyfikator.data,
-                'klucz_odzyskiwania': form.klucz_odzyskiwania.data,
-                'notatki': form.notatki.data,
-                'opis_uszkodzenia': form.opis_uszkodzenia.data
-            }
-            db_items.update_one({'_id': ObjectId(id)}, {
-                                '$set': update_data}, upsert=True)
-            update_for_cron('sm_items')
-            update_history('_id', ObjectId(id), 'Edytowany')
-            if existing_kartoteka:
-                for barcode in existing_kartoteka['przypisane_barcodes']:
-                    if barcode == old_barcode:
-                        existing_kartoteka['przypisane_barcodes'].remove(
-                            barcode)
-                        existing_kartoteka['przypisane_barcodes'].append(
-                            form.barcode.data)
-                db_paperwork.update_one({'kartoteka': existing_kartoteka['kartoteka']}, {'$set': {
-                                        'przypisane_barcodes': existing_kartoteka['przypisane_barcodes']}}, upsert=True)
-                update_for_cron("sm_paperwork")
-            flash('Zmiany naniesione pomyślnie', category='success')
-        new_barcode = form.barcode.data
-        if new_barcode != old_barcode:
-            existing_id = db_items.find_one({'barcode': new_barcode})
-            if not existing_id:
-                update_db()
-                return (redirect(url_for('hardware.show_info', data='present', id=id)))
-            else:
-                flash('Taki barcode już istnieje', category='error')
-                return (redirect(url_for('hardware.edit', route=route, id=id)))
+
+        kartoteka_exists = db_items.find_one(
+            {'_id': ObjectId(id), 'kartoteka': {"$exists": True}})
+        if kartoteka_exists:
+            existing_kartoteka = db_paperwork.find_one(
+                {'kartoteka': kartoteka_exists['kartoteka']})
         else:
-            update_db()
-            return (redirect(url_for('hardware.show_info', data='present', id=id)))
+            existing_kartoteka = None
+        update_data = {
+            'stanowisko': data_handler(form.stanowisko.data, form.nowy_stanowisko.data, "stanowisko"),
+            'typ': data_handler(form.typ.data, form.nowy_typ.data, "type"),
+            'marka': data_handler(form.marka.data, form.nowa_marka.data, "marka"),
+            'model': data_handler(form.model.data, form.nowy_model.data, "model"),
+            'system': data_handler(form.system.data, form.nowy_system.data, "system"),
+            'mpk': data_handler(form.mpk.data, form.nowy_mpk.data, "mpk"),
+            'stan': form.stan.data,
+            'bitlocker': form.bitlocker.data,
+            'serial': form.serial.data,
+            'identyfikator': form.identyfikator.data,
+            'klucz_odzyskiwania': form.klucz_odzyskiwania.data,
+            'notatki': form.notatki.data,
+            'opis_uszkodzenia': form.opis_uszkodzenia.data
+        }
+        db_items.update_one({'_id': ObjectId(id)}, {
+                            '$set': update_data}, upsert=True)
+        update_for_cron('sm_items')
+        update_history('_id', ObjectId(id), 'Edytowany')
+        if existing_kartoteka:
+            for barcode in existing_kartoteka['przypisane_barcodes']:
+                if barcode == old_barcode:
+                    existing_kartoteka['przypisane_barcodes'].remove(
+                        barcode)
+                    existing_kartoteka['przypisane_barcodes'].append(
+                        form.barcode.data)
+            db_paperwork.update_one({'kartoteka': existing_kartoteka['kartoteka']}, {'$set': {
+                                    'przypisane_barcodes': existing_kartoteka['przypisane_barcodes']}}, upsert=True)
+            update_for_cron("sm_paperwork")
+        flash('Zmiany naniesione pomyślnie', category='success')
+        # update_db()
+        return (redirect(url_for('hardware.show_info', data='present', id=id)))
     else:
         for key, value in item_data.items():
             form[key].data = value

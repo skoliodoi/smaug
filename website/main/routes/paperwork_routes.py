@@ -111,6 +111,7 @@ def add():
                     'kartoteka_typ': form.kartoteka_typ.data,
                     'kartoteka_mpk': mpk_data,
                     'kartoteka_notatki': form.notatki.data,
+                    'data_dodania': datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S"),
                 }
                 if form.data_przyjecia.data:
                     data['data_faktury'] = form.data_przyjecia.data.strftime(
@@ -275,7 +276,6 @@ def see_all():
 @ paperwork.route('/delete/<id>', methods=["GET", "POST"])
 def delete(id):
     if request.method == "POST":
-        print('boof')
         all_items = db_paperwork.find({})
         db_has_barcodes = db_paperwork.find_one(
             {'_id': ObjectId(id), 'przypisane_barcodes': {"$exists": True}})

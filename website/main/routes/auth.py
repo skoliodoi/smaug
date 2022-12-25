@@ -35,7 +35,6 @@ def login():
 def check_existing_users(login, email):
     existing_user = db_users.find_one(
         {"$or": [{'login': login}, {'email': email}]})
-    print(existing_user)
     if existing_user == None:
         return True
     else:
@@ -63,7 +62,7 @@ def signup():
             flash('Użytkownik dodany', category='success')
             # pw_hash = bcrypt.generate_password_hash(
             #     form.password.data).decode('utf-8')
-            login = form.login.data
+            login = form.email.data
             email = form.email.data
             # password = form.password.data
             imie = form.imie.data
